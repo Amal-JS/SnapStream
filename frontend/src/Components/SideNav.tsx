@@ -6,10 +6,15 @@ import { MdOutlineAddBox } from "react-icons/md";
 import { BiCompass, BiMoviePlay, BiNavigation } from "react-icons/bi";
 import { useWindowSize } from "../hooks/useWindowSize";
 import { Link } from "react-router-dom";
+import { ReactNode } from "react";
 
-export const SideNav = () => {
+
+interface SideNavProps {
+    children : ReactNode
+}
+export const SideNav : React.FC<SideNavProps>= ({children}) => {
   const { width } = useWindowSize(); // Get the current window width using the useWindowSize hook
-  const isSmallScreen = width < 640; // Define a threshold for small screens (e.g., 640px)
+  const isSmallScreen = width < 640; //when width less than 640 the nav will be on bottom of screen
 
   return (
     <div className="  w-full h-full   md:flex ">
@@ -41,7 +46,7 @@ export const SideNav = () => {
         <FaUserCircle className="text-white   mt-2 text-4xl     ml-9 md:ml-3   md:text-4xl md:mb-9 hover:cursor-pointer mr-4" />
       </div>
 
-      <div className="bg-blue-600   w-screen h-screen">sjlfjslfjlsdjf</div>
+      <div className="bg-blue-600   w-screen h-screen">{children}</div>
     </div>
   );
 };
