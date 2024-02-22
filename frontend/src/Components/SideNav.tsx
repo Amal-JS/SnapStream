@@ -21,8 +21,8 @@ export const SideNav : React.FC<SideNavProps>= ({children}) => {
       <div
         className={` md:w-24 bg-black   ${
           isSmallScreen
-            ? "   bottom-0 left-0  w-full flex justify-between absolute py-4 h-auto"
-            : "h-screen pb-2  flex flex-col justify-center items-center "
+            ? "   bottom-0 left-0  w-full flex justify-between fixed py-4 h-auto"
+            : " fixed h-screen pb-2  flex flex-col justify-center items-center md:border-r-gray-600 md:border-r-2 "
         }`}
       >
         <Link to="/">
@@ -35,7 +35,7 @@ export const SideNav : React.FC<SideNavProps>= ({children}) => {
         </Link>
 
         <Link to="/">
-          <IoMdHome className=" text-white  mt-2  text-4xl      md:text-4xl md:mb-9 hover:cursor-pointer " />
+          <IoMdHome className=" text-white  mt-2  text-4xl      md:text-4xl md:mb-9 hover:cursor-pointer  " />
         </Link>
         <IoIosSearch className=" text-white  mt-2  text-4xl  ml-9 md:ml-0     md:text-4xl md:mb-9 hover:cursor-pointer " />
         <BiCompass className="hidden md:block mt-2 text-white ml-9 md:ml-0  md:text-4xl md:mb-9 hover:cursor-pointer" />
