@@ -11,5 +11,5 @@ export default {
   theme: {
     extend: {},
   },
-  plugins: [nextui(),require('flowbite/plugin'),],
+  plugins: [nextui(),require('flowbite/plugin')],
 }

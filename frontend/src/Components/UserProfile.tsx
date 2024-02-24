@@ -2,9 +2,11 @@ import { IoAddCircleOutline } from "react-icons/io5";
 import { SideNav } from "./SideNav";
 import { Button, Image } from "@nextui-org/react";
 import { useState } from "react";
-import { MdCoPresent, MdOutlineCalendarViewMonth, MdOutlineVideoLibrary } from "react-icons/md";
+import {  MdOutlineCalendarViewMonth, MdOutlineVideoLibrary } from "react-icons/md";
 import { LuUserSquare2 } from "react-icons/lu";
-
+import sampleImage from '../assets/logos/logo_type_b_black.png'
+import { RxVideo } from "react-icons/rx";
+import { PiVideoFill } from "react-icons/pi";
 
 const Profile = () => {
 
@@ -20,27 +22,28 @@ const Profile = () => {
         {/* profile first secion */}
         <div className=" border-b-gray-500 border-b-2  mt-6">
           {/* profile pic , user profile info */}
-          <div className="md:flex md:justify-between ">
+          <div className="">
+            <div className="flex justify-between md:justify-normal pl-3 pr-3 mb-5">
             <div className="flex justify-center mt-4">
             <Image
-              className="w-24 text-center md:w-64 sm:mb-3 md:mb-0"
+              className="w-16 text-center md:w-64 sm:mb-3 md:mb-2"
               style={{ borderRadius: "50%" }}
               alt="profile picture"
               src="https://img.freepik.com/premium-vector/user-profile-icon-flat-style-member-avatar-vector-illustration-isolated-background-human-permission-sign-business-concept_157943-15752.jpg?size=338&ext=jpg&ga=GA1.1.1700460183.1708473600&semt=ais"
             />
             </div>
-           
-          
-          <div>
-            <div className="block md:flex mb-5 md:pl-32 ">
-              <h2 className="font-medium text-xl md:text-2xl text-white mr-4 pl-4 md:pl-0 hover:cursor-pointer" >amal.adamzz</h2>
+            <div className="block  mb-5  md:pl-28  pl-2">
+              <h2 className="font-medium text-xl md:text-2xl text-white mr-4 pl-4 md:pl-0 md:pb-5 md:mt-10 hover:cursor-pointer" >amal.adamzz</h2>
 
-              <div className="flex md:mt-0 mt-4">
+              <div className="flex md:mt-0 mt-4 pl-2 md:pl-1" >
               <Button className="bg-gray-600 "><h3 className="text-base  font-medium text-white ">Edit Profile</h3></Button>
               <Button className="bg-gray-600 ml-4 "><h3 className="text-base  font-medium text-white ">View stories</h3></Button>
              
               </div>
             </div>
+          </div>
+          <div>
+            
             <div className="flex mb-7  md:pl-32 ">
               <h2 className=" text-white text-sm md:text-xl mr-4 ">2 posts</h2>
               <h2 className=" text-white text-sm md:text-xl mr-4 hover:cursor-pointer">304 followers</h2>
@@ -58,49 +61,93 @@ const Profile = () => {
           </div>
           </div>
           {/* profile second secion */}
-          <div className="flex overflow-x-auto border-b-0 mt-5 text-white mb-5">
+          <div className="flex  overflow-x-auto border-b-0 mt-5 text-white mb-5">
             <div className="text-center">
-            <IoAddCircleOutline className="mx-3 text-base md:text-5xl"/>
+            <IoAddCircleOutline className="mx-3 text-base md:text-5xl hover:cursor-pointer"/>
             <p className='text-sm text-white'>New</p>
             </div>
             <div className="text-center mx-4">
-            <IoAddCircleOutline className="mx-3 text-base md:text-5xl"/>
+            <IoAddCircleOutline className="mx-3 text-base md:text-5xl hover:cursor-pointer"/>
             <p className='text-sm text-white'>New</p>
             </div>
             <div className="text-center mx-4">
-            <IoAddCircleOutline className="mx-3 text-base md:text-5xl"/>
-            <p className='text-sm text-white'>New</p>
-            </div>
-            
-            <div className="text-center mx-4">
-            <IoAddCircleOutline className="mx-3 text-base md:text-5xl"/>
-            <p className='text-sm text-white'>New</p>
-            </div>
-            <div className="text-center mx-4">
-            <IoAddCircleOutline className="mx-3 text-base md:text-5xl"/>
+            <IoAddCircleOutline className="mx-3 text-base md:text-5xl hover:cursor-pointer"/>
             <p className='text-sm text-white'>New</p>
             </div>
             
             <div className="text-center mx-4">
-            <IoAddCircleOutline className="mx-3 text-base md:text-5xl"/>
+            <IoAddCircleOutline className="mx-3 text-base md:text-5xl hover:cursor-pointer"/>
+            <p className='text-sm text-white'>New</p>
+            </div>
+            <div className="text-center mx-4">
+            <IoAddCircleOutline className="mx-3 text-base md:text-5xl hover:cursor-pointer"/>
             <p className='text-sm text-white'>New</p>
             </div>
             
             <div className="text-center mx-4">
-            <IoAddCircleOutline className="mx-3 text-base md:text-5xl"/>
+            <IoAddCircleOutline className="mx-3 text-base md:text-5xl hover:cursor-pointer"/>
+            <p className='text-sm text-white'>New</p>
+            </div>
+            
+            <div className="text-center mx-4">
+            <IoAddCircleOutline className="mx-3 text-base md:text-5xl hover:cursor-pointer"/>
             <p className='text-sm text-white'>New</p>
             </div>
             
             <div className="text-center">
-            <IoAddCircleOutline className="mx-3 text-base md:text-5xl"/>
+            <IoAddCircleOutline className="mx-3 text-base md:text-5xl hover:cursor-pointer"/>
             <p className='text-sm text-white'>New</p>
             </div>
             <div className="text-center mx-4">
-            <IoAddCircleOutline className="mx-3 text-base md:text-5xl"/>
+            <IoAddCircleOutline className="mx-3 text-base md:text-5xl hover:cursor-pointer"/>
             <p className='text-sm text-white'>New</p>
             </div>
             <div className="text-center mx-4">
-            <IoAddCircleOutline className="mx-3 text-base md:text-5xl"/>
+            <IoAddCircleOutline className="mx-3 text-base md:text-5xl hover:cursor-pointer"/>
+            <p className='text-sm text-white'>New</p>
+            </div>
+            <div className="text-center">
+            <IoAddCircleOutline className="mx-3 text-base md:text-5xl hover:cursor-pointer"/>
+            <p className='text-sm text-white'>New</p>
+            </div>
+            <div className="text-center mx-4">
+            <IoAddCircleOutline className="mx-3 text-base md:text-5xl hover:cursor-pointer"/>
+            <p className='text-sm text-white'>New</p>
+            </div>
+            <div className="text-center mx-4">
+            <IoAddCircleOutline className="mx-3 text-base md:text-5xl hover:cursor-pointer"/>
+            <p className='text-sm text-white'>New</p>
+            </div>
+            
+            <div className="text-center mx-4">
+            <IoAddCircleOutline className="mx-3 text-base md:text-5xl hover:cursor-pointer"/>
+            <p className='text-sm text-white'>New</p>
+            </div>
+            <div className="text-center mx-4">
+            <IoAddCircleOutline className="mx-3 text-base md:text-5xl hover:cursor-pointer"/>
+            <p className='text-sm text-white'>New</p>
+            </div>
+            
+            <div className="text-center mx-4">
+            <IoAddCircleOutline className="mx-3 text-base md:text-5xl hover:cursor-pointer"/>
+            <p className='text-sm text-white'>New</p>
+            </div>
+            
+            <div className="text-center mx-4">
+            <IoAddCircleOutline className="mx-3 text-base md:text-5xl hover:cursor-pointer"/>
+            <p className='text-sm text-white'>New</p>
+            </div>
+            
+            <div className="text-center">
+            <IoAddCircleOutline className="mx-3 text-base md:text-5xl hover:cursor-pointer"/>
+            <p className='text-sm text-white'>New</p>
+            </div>
+            <div className="text-center mx-4">
+            <IoAddCircleOutline className="mx-3 text-base md:text-5xl hover:cursor-pointer"/>
+            <p className='text-sm text-white'>New</p>
+            </div>
+            <div className="text-center mx-4">
+            <IoAddCircleOutline className="mx-3 text-base md:text-5xl hover:cursor-pointer"/>
             <p className='text-sm text-white'>New</p>
             </div>
             
@@ -133,17 +180,17 @@ const Profile = () => {
 
     <div className="hidden p-4 bg-black rounded-lg  " id="profile" role="tabpanel" aria-labelledby="profile-tab">
     <div className="grid grid-cols-3 gap-1">
-  <div className="bg-blue-500 text-white  h-32  md:h-96">lkjdfkl</div>
+  <div className="bg-blue-500 text-white  h-32  md:h-96 hover:cursor-pointer ">lkjdfkl</div>
   <div className="bg-red-600 text-white  h-32  md:h-96">lkjdfkl</div>
-  <div className="bg-blue-500 text-white  h-32  md:h-96">lkjdfkl</div>
+  <div className="bg-blue-500 text-white  h-32  md:h-96 hover:cursor-pointer ">lkjdfkl</div>
   <div className="bg-red-600 text-white  h-32  md:h-96">lkjdfkl</div>
-  <div className="bg-blue-500 text-white  h-32  md:h-96">lkjdfkl</div>
+  <div className="bg-blue-500 text-white  h-32  md:h-96 hover:cursor-pointer ">lkjdfkl</div>
   <div className="bg-red-600 text-white  h-32  md:h-96">lkjdfkl</div>
-  <div className="bg-blue-500 text-white  h-32  md:h-96">lkjdfkl</div>
+  <div className="bg-blue-500 text-white  h-32  md:h-96 hover:cursor-pointer ">lkjdfkl</div>
   <div className="bg-red-600 text-white  h-32  md:h-96">lkjdfkl</div>
-  <div className="bg-blue-500 text-white  h-32  md:h-96">lkjdfkl</div>
+  <div className="bg-blue-500 text-white  h-32  md:h-96 hover:cursor-pointer ">lkjdfkl</div>
   <div className="bg-red-600 text-white  h-32  md:h-96">lkjdfkl</div>
-  <div className="bg-blue-500 text-white  h-32  md:h-96">lkjdfkl</div>
+  <div className="bg-blue-500 text-white  h-32  md:h-96 hover:cursor-pointer ">lkjdfkl</div>
   <div className="bg-red-600 text-white  h-32  md:h-96">lkjdfkl</div>
   
 
@@ -153,18 +200,80 @@ const Profile = () => {
 
     <div className="hidden p-4 rounded-lg bg-black" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
     <div className="grid grid-cols-3 gap-1">
-  <div className="bg-blue-500 text-white  h-32  md:h-96">lkjdfkl</div>
-  <div className="bg-red-600 text-white  h-32  md:h-96">lkjdfkl</div>
-  <div className="bg-blue-500 text-white  h-32  md:h-96">lkjdfkl</div>
-  <div className="bg-red-600 text-white  h-32  md:h-96">lkjdfkl</div>
-  <div className="bg-blue-500 text-white  h-32  md:h-96">lkjdfkl</div>
-  <div className="bg-red-600 text-white  h-32  md:h-96">lkjdfkl</div>
-  <div className="bg-blue-500 text-white  h-32  md:h-96">lkjdfkl</div>
-  <div className="bg-red-600 text-white  h-32  md:h-96">lkjdfkl</div>
-  <div className="bg-blue-500 text-white  h-32  md:h-96">lkjdfkl</div>
-  <div className="bg-red-600 text-white  h-32  md:h-96">lkjdfkl</div>
-  <div className="bg-blue-500 text-white  h-32  md:h-96">lkjdfkl</div>
-  <div className="bg-red-600 text-white  h-32  md:h-96">lkjdfkl</div>
+  <div className="bg-blue-500 text-white  h-32  md:h-96 hover:cursor-pointer "><Image
+              className="ww-full2"
+              
+              alt="profile picture"
+              src={sampleImage}
+            /></div>
+  <div className="bg-red-600 text-white  h-32  md:h-96"><Image
+              className="w-full"
+              
+              alt="profile picture"
+              src={sampleImage}
+            /></div>
+  <div className="bg-blue-500 text-white  h-32  md:h-96 hover:cursor-pointer "><Image
+              className="w-full"
+              
+              alt="profile picture"
+              src={sampleImage}
+            /></div>
+  <div className="bg-red-600 text-white  h-32  md:h-96"><Image
+              className="w-full"
+              
+              alt="profile picture"
+              src={sampleImage}
+            /></div>
+  <div className="bg-blue-500 text-white  h-32  md:h-96 hover:cursor-pointer "><Image
+              className="w-full"
+              
+              alt="profile picture"
+              src={sampleImage}
+            /></div>
+  <div className="bg-red-600 text-white  h-32  md:h-96 ">
+  <PiVideoFill className="text-4xl  md:text-6xl text-gray-200 z-20 top-3 right-3 md:top-7 md:right-6 absolute "/>
+    <Image
+              className="w-full"
+              
+              alt="profile picture"
+              src={sampleImage}
+            /></div>
+  <div className="bg-blue-500 text-white  h-32  md:h-96 hover:cursor-pointer "><Image
+              className="w-full"
+              
+              alt="profile picture"
+              src={sampleImage}
+            /></div>
+  <div className="bg-red-600 text-white  h-32  md:h-96"><Image
+              className="w-full"
+              
+              alt="profile picture"
+              src={sampleImage}
+            /></div>
+  <div className="bg-blue-500 text-white  h-32  md:h-96 hover:cursor-pointer "><Image
+              className="w-full"
+              
+              alt="profile picture"
+              src={sampleImage}
+            /></div>
+  <div className="bg-red-600 text-white  h-32  md:h-96"><Image
+              className="w-full"
+              
+              alt="profile picture"
+              src={sampleImage}
+            /></div>
+  <div className="bg-blue-500 text-white  h-32  md:h-96 hover:cursor-pointer "><Image
+              className="w-full"
+              
+              alt="profile picture"
+              src={sampleImage}
+            /></div>
+  <div className="bg-red-600 text-white  h-32  md:h-96"><Image
+              className="w-full"
+              
+              alt="profile picture"
+              src={sampleImage}
+            /></div>
   
 
 </div>
@@ -173,17 +282,17 @@ const Profile = () => {
 
     <div className="hidden p-4 rounded-lg bg-black" id="settings" role="tabpanel" aria-labelledby="settings-tab">
     <div className="grid grid-cols-3 gap-1">
-  <div className="bg-blue-500 text-white  h-32  md:h-96">lkjdfkl</div>
+  <div className="bg-blue-500 text-white  h-32  md:h-96 hover:cursor-pointer ">lkjdfkl</div>
   <div className="bg-red-600 text-white  h-32  md:h-96">lkjdfkl</div>
-  <div className="bg-blue-500 text-white  h-32  md:h-96">lkjdfkl</div>
+  <div className="bg-blue-500 text-white  h-32  md:h-96 hover:cursor-pointer ">lkjdfkl</div>
   <div className="bg-red-600 text-white  h-32  md:h-96">lkjdfkl</div>
-  <div className="bg-blue-500 text-white  h-32  md:h-96">lkjdfkl</div>
+  <div className="bg-blue-500 text-white  h-32  md:h-96 hover:cursor-pointer ">lkjdfkl</div>
   <div className="bg-red-600 text-white  h-32  md:h-96">lkjdfkl</div>
-  <div className="bg-blue-500 text-white  h-32  md:h-96">lkjdfkl</div>
+  <div className="bg-blue-500 text-white  h-32  md:h-96 hover:cursor-pointer ">lkjdfkl</div>
   <div className="bg-red-600 text-white  h-32  md:h-96">lkjdfkl</div>
-  <div className="bg-blue-500 text-white  h-32  md:h-96">lkjdfkl</div>
+  <div className="bg-blue-500 text-white  h-32  md:h-96 hover:cursor-pointer ">lkjdfkl</div>
   <div className="bg-red-600 text-white  h-32  md:h-96">lkjdfkl</div>
-  <div className="bg-blue-500 text-white  h-32  md:h-96">lkjdfkl</div>
+  <div className="bg-blue-500 text-white  h-32  md:h-96 hover:cursor-pointer ">lkjdfkl</div>
   <div className="bg-red-600 text-white  h-32  md:h-96">lkjdfkl</div>
   
 

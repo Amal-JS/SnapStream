@@ -14,14 +14,14 @@ interface SideNavProps {
 }
 export const SideNav : React.FC<SideNavProps>= ({children}) => {
   const { width } = useWindowSize(); // Get the current window width using the useWindowSize hook
-  const isSmallScreen = width < 640; //when width less than 640 the nav will be on bottom of screen
+  const isSmallScreen = width < 740; //when width less than 640 the nav will be on bottom of screen
 
   return (
     <div className="  w-full h-full   md:flex ">
       <div
-        className={` md:w-24 bg-black   ${
+        className={` md:w-24 bg-black z-50  ${
           isSmallScreen
-            ? "   bottom-0 left-0  w-full flex justify-between fixed py-4 h-auto"
+            ? "   bottom-0 left-0  w-full flex justify-between fixed py-2 h-auto"
             : " fixed h-screen pb-2  flex flex-col justify-center items-center md:border-r-gray-600 md:border-r-2 "
         }`}
       >
