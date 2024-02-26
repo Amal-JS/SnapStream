@@ -12,6 +12,7 @@ import { RxVideo } from "react-icons/rx";
 import { PiVideoFill } from "react-icons/pi";
 import { FaComment, FaHeart, FaRegHeart } from "react-icons/fa";
 import { FaRegComment } from "react-icons/fa6";
+import { BsClipboard2Heart } from "react-icons/bs";
 
 const Profile = () => {
   const [activeTab, setActiveTab] = useState("profile");
@@ -203,6 +204,7 @@ const Profile = () => {
                 </div>
               </button>
             </li>
+
             <li className="me-2" role="presentation">
               <button
                 className={`inline-block p-4  text-white  hover:cursor-pointer md:text-base ${
@@ -221,6 +223,27 @@ const Profile = () => {
                 <div className="flex items-center">
                   <MdOutlineVideoLibrary className="pr-1 text-3xl" />
                   REELS
+                </div>
+              </button>
+            </li>
+            <li className="me-2" role="presentation">
+              <button
+                className={`inline-block p-4  text-white  hover:cursor-pointer md:text-base ${
+                  activeTab === "saved"
+                    ? "border-t-4 border-red-700"
+                    : "  hover:text-gray-200 hover:border-b-red-300 dark:hover:text-white"
+                }`}
+                onClick={() => handleTabClick("saved")}
+                id="saved-tab"
+                data-tabs-target="#saved"
+                type="button"
+                role="tab"
+                aria-controls="saved"
+                aria-selected="false"
+              >
+                <div className="flex items-center">
+                  <BsClipboard2Heart className="pr-1 text-3xl" />
+                  SAVED
                 </div>
               </button>
             </li>
@@ -373,6 +396,12 @@ const Profile = () => {
             aria-labelledby="dashboard-tab"
           ></div>
 
+          <div
+            className="hidden p-4 rounded-lg bg-black"
+            id="saved"
+            role="tabpanel"
+            aria-labelledby="saved-tab"
+          >saved tab</div>
           <div
             className="hidden p-4 rounded-lg bg-black"
             id="settings"
