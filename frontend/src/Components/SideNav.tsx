@@ -19,10 +19,10 @@ export const SideNav : React.FC<SideNavProps>= ({children}) => {
   return (
     <div className="  w-full h-full   md:flex ">
       <div
-        className={` md:2/12 bg-black z-50  ${
+        className={` md:4/12 bg-black z-50  ${
           isSmallScreen
-            ? "   bottom-0 left-0  w-full flex justify-between fixed py-2 h-auto"
-            : " fixed h-screen pb-2  flex flex-col justify-center items-center md:border-r-gray-600 md:border-r-2 "
+            ? "   bottom-0 left-0  w-full flex justify-between fixed py-2"
+            : " fixed h-[500-px] pb-2  flex flex-col justify-center items-center md:border-r-gray-600 md:border-r-2 "
         }`}
       >
         <Link to="/">
@@ -35,15 +35,15 @@ export const SideNav : React.FC<SideNavProps>= ({children}) => {
         </Link>
 
         <Link to="/">
-          <IoMdHome className=" text-white  mt-2  text-4xl      md:text-4xl md:mb-9 hover:cursor-pointer  " />
+          <IoMdHome className=" text-white  mt-2  text-4xl      md:text-4xl md:mb-6 hover:cursor-pointer  " />
         </Link>
-        <IoIosSearch className=" text-white  mt-2  text-4xl  ml-9 md:ml-0     md:text-4xl md:mb-9 hover:cursor-pointer " />
-        <BiCompass className="hidden md:block mt-2 text-white ml-9 md:ml-0  md:text-4xl md:mb-9 hover:cursor-pointer" />
-        <BiMoviePlay className="text-white   mt-2 text-4xl    ml-9 md:ml-0  md:text-4xl md:mb-9 hover:cursor-pointer" />
-        <BiNavigation className="hidden md:block mt-2 text-white  ml-9 md:ml-0   md:text-4xl md:mb-9 hover:cursor-pointer" />
-        <FaRegHeart className="hidden md:block mt-2 text-white   ml-9 md:ml-0  md:text-4xl md:mb-9 hover:cursor-pointer" />
-        <MdOutlineAddBox className="text-white  mt-2  text-4xl   ml-9 md:ml-0   md:text-4xl md:mb-9 hover:cursor-pointer" />
-        <FaUserCircle className="text-white   mt-2 text-4xl     ml-9 md:ml-3   md:text-4xl md:mb-9 hover:cursor-pointer mr-4" />
+        <IoIosSearch className=" text-white  mt-2  text-4xl  ml-9 md:ml-0     md:text-4xl md:mb-6 hover:cursor-pointer " />
+        <BiCompass className="hidden md:block mt-2 text-white ml-9 md:ml-0  md:text-4xl md:mb-6 hover:cursor-pointer" />
+        <BiMoviePlay className="text-white   mt-2 text-4xl    ml-9 md:ml-0  md:text-4xl md:mb-6 hover:cursor-pointer" />
+        <BiNavigation className="hidden md:block mt-2 text-white  ml-9 md:ml-0   md:text-4xl md:mb-6 hover:cursor-pointer" />
+        <FaRegHeart className="hidden md:block mt-2 text-white   ml-9 md:ml-0  md:text-4xl md:mb-6 hover:cursor-pointer" />
+        <MdOutlineAddBox className="text-white  mt-2  text-4xl   ml-9 md:ml-0   md:text-4xl md:mb-6 hover:cursor-pointer" />
+        <FaUserCircle className="text-white   mt-2 text-4xl     ml-9 md:ml-3   md:text-4xl md:mb-24 hover:cursor-pointer mr-4" />
       </div>
 
       <div className="bg-blue-600  h-screen">{children}</div>
