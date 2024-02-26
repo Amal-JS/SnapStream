@@ -1,5 +1,5 @@
-import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure} from "@nextui-org/react";
-import { ReactNode, useEffect, useState } from "react";
+import {Modal, ModalContent, useDisclosure} from "@nextui-org/react";
+import { ReactNode, } from "react";
 
 
 
@@ -33,23 +33,7 @@ export const CustomModal : React.FC<ModalProps>= ({modalToggle,children,isDismis
 
 
 
-// export const ModalBody: React.FC<React.HTMLAttributes<HTMLDivElement> > = ({ children }) => {
-//     return (
-//       <div className="modal-content-inner">
-//         {children}
-//       </div>
-//     );
-//   };
 
 
 
 
-// export const ModalFooter : React.FC<React.HTMLAttributes<HTMLDivElement> >= ({ children }) => {
-//     return (
-//       <div className="modal-footer">
-//         {children}
-       
-//       </div>
-//     );
-//   };
-  
