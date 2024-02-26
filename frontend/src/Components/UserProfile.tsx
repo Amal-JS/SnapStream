@@ -10,6 +10,8 @@ import { LuUserSquare2 } from "react-icons/lu";
 import sampleImage from "../assets/logos/logo_type_b_black.png";
 import { RxVideo } from "react-icons/rx";
 import { PiVideoFill } from "react-icons/pi";
+import { FaComment, FaHeart, FaRegHeart } from "react-icons/fa";
+import { FaRegComment } from "react-icons/fa6";
 
 const Profile = () => {
   const [activeTab, setActiveTab] = useState("profile");
@@ -253,87 +255,110 @@ const Profile = () => {
             aria-labelledby="profile-tab"
           >
             <div className="grid grid-cols-3 gap-1">
-              <div className="bg-blue-500 text-white  h-32  md:h-96 hover:cursor-pointer ">
+              <div className="bg-red-600 text-white relative h-32 md:h-96">
+                <div className="w-full h-full bg-slate-400 hidden hover:flex justify-center items-center z-30 hover-show-div bg-opacity-75 absolute inset-0 rounded-3xl">
+                  snf,nsd,mfnasd
+                </div>
+
                 <Image
-                  className="ww-full2"
+                  className="w-full   z-20  bg-opacity-100"
                   alt="profile picture"
                   src={sampleImage}
                 />
               </div>
-              <div className="bg-red-600 text-white  h-32  md:h-96">
+
+              <div className="bg-red-600 text-white relative h-32 md:h-96 hover:cursor-pointer ">
+                <div className="w-full h-full bg-slate-400 hidden hover:flex justify-center items-center z-30 hover-show-div bg-opacity-75 absolute  rounded-3xl">
+                  <FaRegHeart className="ml-2 text-white md:text-3xl" />
+                  <p className="mr-2 text-base text-white md:text-3xl">10</p>
+
+                  <FaRegComment className=" ml-3 text-white md:text-3xl" />
+                  <p className=" text-base text-white md:text-3xl">10</p>
+                </div>
+                <PiVideoFill className="text-4xl md:text-6xl text-gray-200 z-40 top-3 right-3 md:top-7 md:right-6 absolute" />
                 <Image
-                  className="w-full"
+                  className="w-full z-20 bg-opacity-100"
                   alt="profile picture"
                   src={sampleImage}
                 />
               </div>
-              <div className="bg-blue-500 text-white  h-32  md:h-96 hover:cursor-pointer ">
+              <div className="bg-red-600 text-white relative h-32 md:h-96">
+                <div className="w-full h-full bg-slate-400 hidden hover:flex justify-center items-center z-30 hover-show-div bg-opacity-75 absolute inset-0 rounded-3xl">
+                  snf,nsd,mfnasd
+                </div>
+
                 <Image
-                  className="w-full"
+                  className="w-full   z-20  bg-opacity-100"
                   alt="profile picture"
                   src={sampleImage}
                 />
               </div>
-              <div className="bg-red-600 text-white  h-32  md:h-96">
+
+              <div className="bg-red-600 text-white relative h-32 md:h-96 hover:cursor-pointer ">
+                <div className="w-full h-full bg-slate-400 hidden hover:flex justify-center items-center z-30 hover-show-div bg-opacity-75 absolute  rounded-3xl">
+                  <FaRegHeart className="ml-2 text-white md:text-3xl" />
+                  <p className="mr-2 text-base text-white md:text-3xl">10</p>
+
+                  <FaRegComment className=" ml-3 text-white md:text-3xl" />
+                  <p className=" text-base text-white md:text-3xl">10</p>
+                </div>
+                <PiVideoFill className="text-4xl md:text-6xl text-gray-200 z-40 top-3 right-3 md:top-7 md:right-6 absolute" />
                 <Image
-                  className="w-full"
+                  className="w-full z-20 bg-opacity-100"
                   alt="profile picture"
                   src={sampleImage}
                 />
               </div>
-              <div className="bg-blue-500 text-white  h-32  md:h-96 hover:cursor-pointer ">
+              <div className="bg-red-600 text-white relative h-32 md:h-96">
+                <div className="w-full h-full bg-slate-400 hidden hover:flex justify-center items-center z-30 hover-show-div bg-opacity-75 absolute inset-0 rounded-3xl">
+                  snf,nsd,mfnasd
+                </div>
+
                 <Image
-                  className="w-full"
+                  className="w-full   z-20  bg-opacity-100"
                   alt="profile picture"
                   src={sampleImage}
                 />
               </div>
-              <div className="bg-red-600 text-white  h-32  md:h-96 relative">
-                <PiVideoFill className="text-4xl  md:text-6xl text-gray-200 z-20 top-3 right-3 md:top-7 md:right-6 absolute " />
+
+              <div className="bg-red-600 text-white relative h-32 md:h-96 hover:cursor-pointer ">
+                <div className="w-full h-full bg-slate-400 hidden hover:flex justify-center items-center z-30 hover-show-div bg-opacity-75 absolute  rounded-3xl">
+                  <FaRegHeart className="ml-2 text-white md:text-3xl" />
+                  <p className="mr-2 text-base text-white md:text-3xl">10</p>
+
+                  <FaRegComment className=" ml-3 text-white md:text-3xl" />
+                  <p className=" text-base text-white md:text-3xl">10</p>
+                </div>
+                <PiVideoFill className="text-4xl md:text-6xl text-gray-200 z-40 top-3 right-3 md:top-7 md:right-6 absolute" />
                 <Image
-                  className="w-full"
+                  className="w-full z-20 bg-opacity-100"
                   alt="profile picture"
                   src={sampleImage}
                 />
               </div>
-              <div className="bg-blue-500 text-white  h-32  md:h-96 hover:cursor-pointer ">
+              <div className="bg-red-600 text-white relative h-32 md:h-96">
+                <div className="w-full h-full bg-slate-400 hidden hover:flex justify-center items-center z-30 hover-show-div bg-opacity-75 absolute inset-0 rounded-3xl">
+                  snf,nsd,mfnasd
+                </div>
+
                 <Image
-                  className="w-full"
+                  className="w-full   z-20  bg-opacity-100"
                   alt="profile picture"
                   src={sampleImage}
                 />
               </div>
-              <div className="bg-red-600 text-white  h-32  md:h-96">
+
+              <div className="bg-red-600 text-white relative h-32 md:h-96 hover:cursor-pointer ">
+                <div className="w-full h-full bg-slate-400 hidden hover:flex justify-center items-center z-30 hover-show-div bg-opacity-75 absolute  rounded-3xl">
+                  <FaRegHeart className="ml-2 text-white md:text-3xl" />
+                  <p className="mr-2 text-base text-white md:text-3xl">10</p>
+
+                  <FaRegComment className=" ml-3 text-white md:text-3xl" />
+                  <p className=" text-base text-white md:text-3xl">10</p>
+                </div>
+                <PiVideoFill className="text-4xl md:text-6xl text-gray-200 z-40 top-3 right-3 md:top-7 md:right-6 absolute" />
                 <Image
-                  className="w-full"
-                  alt="profile picture"
-                  src={sampleImage}
-                />
-              </div>
-              <div className="bg-blue-500 text-white  h-32  md:h-96 hover:cursor-pointer ">
-                <Image
-                  className="w-full"
-                  alt="profile picture"
-                  src={sampleImage}
-                />
-              </div>
-              <div className="bg-red-600 text-white  h-32  md:h-96">
-                <Image
-                  className="w-full"
-                  alt="profile picture"
-                  src={sampleImage}
-                />
-              </div>
-              <div className="bg-blue-500 text-white  h-32  md:h-96 hover:cursor-pointer ">
-                <Image
-                  className="w-full"
-                  alt="profile picture"
-                  src={sampleImage}
-                />
-              </div>
-              <div className="bg-red-600 text-white  h-32  md:h-96">
-                <Image
-                  className="w-full"
+                  className="w-full z-20 bg-opacity-100"
                   alt="profile picture"
                   src={sampleImage}
                 />
@@ -346,9 +371,7 @@ const Profile = () => {
             id="dashboard"
             role="tabpanel"
             aria-labelledby="dashboard-tab"
-          >
-            
-          </div>
+          ></div>
 
           <div
             className="hidden p-4 rounded-lg bg-black"
