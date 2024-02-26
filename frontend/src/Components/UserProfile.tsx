@@ -7,21 +7,80 @@ import {
   MdOutlineVideoLibrary,
 } from "react-icons/md";
 import { LuUserSquare2 } from "react-icons/lu";
-import sampleImage from "../assets/logos/logo_type_b_black.png";
-import { RxVideo } from "react-icons/rx";
+import sampleImage from "../assets/react.svg";
 import { PiVideoFill } from "react-icons/pi";
-import { FaComment, FaHeart, FaRegHeart } from "react-icons/fa";
+import { FaRegHeart } from "react-icons/fa";
 import { FaRegComment } from "react-icons/fa6";
 import { BsClipboard2Heart } from "react-icons/bs";
+import { useModal } from "../hooks/useModal";
+import { CustomModal } from "./Modal/Modal";
+import { ModalTitle } from "./Modal/ModalTitle";
+
+interface modalContentType {
+      isDismissable : boolean | true,
+      modalToggle:boolean | false,
+      title:string,
+      handleModalToggle:() => void,
+
+}
 
 const Profile = () => {
   const [activeTab, setActiveTab] = useState("profile");
+  const { isModalOpened, handleModalToggle } = useModal();
+  const [modalContent,setModalContent] = useState <modalContentType> ()
+
+  const showUserFollowers = () => {
+    console.log("all follower");
+
+      setModalContent(prev => (
+        {
+          isDismissable : true,
+          modalToggle:isModalOpened,
+          title:'Followers',
+          handleModalToggle:handleModalToggle,
+          }
+      ))
+      handleModalToggle();
+    
+  };
+  const showUserFollowing = () => {
+    console.log("all following");
+    setModalContent(prev => (
+      {
+        isDismissable : true,
+        modalToggle:isModalOpened,
+        title:'Following',
+        handleModalToggle:handleModalToggle,
+        }
+    ))
+    handleModalToggle();
+  };
+  const createNewMemory = () => {
+    console.log("create new memory");
+    setModalContent(prev => (
+      {
+        isDismissable : true,
+        modalToggle:isModalOpened,
+        title:'New Memory',
+        handleModalToggle:handleModalToggle,
+        }
+    ))
+    handleModalToggle();
+  };
 
   const handleTabClick = (tabId: string) => {
     setActiveTab(tabId);
   };
   return (
     <>
+     {
+      isModalOpened &&  modalContent  &&
+      <CustomModal isDismissable={modalContent.isDismissable} modalToggle={modalContent.isDismissable}>
+        <ModalTitle title={modalContent.title} handleModalToggle={modalContent.handleModalToggle}  isDismissable={modalContent.isDismissable}>
+          
+        </ModalTitle>
+      </CustomModal>
+     }
       <div className="w-screen p-2  bg-black md:pl-72 mb-5">
         {/* profile first secion */}
         <div className=" border-b-gray-500 border-b-2  mt-6">
@@ -60,10 +119,16 @@ const Profile = () => {
                 <h2 className=" text-white text-sm md:text-xl mr-4 ">
                   2 posts
                 </h2>
-                <h2 className=" text-white text-sm md:text-xl mr-4 hover:cursor-pointer">
+                <h2
+                  className=" text-white text-sm md:text-xl mr-4 hover:cursor-pointer"
+                  onClick={() => showUserFollowers()}
+                >
                   304 followers
                 </h2>
-                <h2 className=" text-white text-sm md:text-xl hover:cursor-pointer">
+                <h2
+                  className=" text-white text-sm md:text-xl hover:cursor-pointer"
+                  onClick={() => showUserFollowing()}
+                >
                   735 following
                 </h2>
               </div>
@@ -82,91 +147,7 @@ const Profile = () => {
           </div>
           {/* profile second secion */}
           <div className="flex  overflow-x-auto border-b-0 mt-5 text-white mb-5">
-            <div className="text-center">
-              <IoAddCircleOutline className="mx-3 text-base md:text-5xl hover:cursor-pointer" />
-              <p className="text-sm text-white">New</p>
-            </div>
-            <div className="text-center mx-4">
-              <IoAddCircleOutline className="mx-3 text-base md:text-5xl hover:cursor-pointer" />
-              <p className="text-sm text-white">New</p>
-            </div>
-            <div className="text-center mx-4">
-              <IoAddCircleOutline className="mx-3 text-base md:text-5xl hover:cursor-pointer" />
-              <p className="text-sm text-white">New</p>
-            </div>
-
-            <div className="text-center mx-4">
-              <IoAddCircleOutline className="mx-3 text-base md:text-5xl hover:cursor-pointer" />
-              <p className="text-sm text-white">New</p>
-            </div>
-            <div className="text-center mx-4">
-              <IoAddCircleOutline className="mx-3 text-base md:text-5xl hover:cursor-pointer" />
-              <p className="text-sm text-white">New</p>
-            </div>
-
-            <div className="text-center mx-4">
-              <IoAddCircleOutline className="mx-3 text-base md:text-5xl hover:cursor-pointer" />
-              <p className="text-sm text-white">New</p>
-            </div>
-
-            <div className="text-center mx-4">
-              <IoAddCircleOutline className="mx-3 text-base md:text-5xl hover:cursor-pointer" />
-              <p className="text-sm text-white">New</p>
-            </div>
-
-            <div className="text-center">
-              <IoAddCircleOutline className="mx-3 text-base md:text-5xl hover:cursor-pointer" />
-              <p className="text-sm text-white">New</p>
-            </div>
-            <div className="text-center mx-4">
-              <IoAddCircleOutline className="mx-3 text-base md:text-5xl hover:cursor-pointer" />
-              <p className="text-sm text-white">New</p>
-            </div>
-            <div className="text-center mx-4">
-              <IoAddCircleOutline className="mx-3 text-base md:text-5xl hover:cursor-pointer" />
-              <p className="text-sm text-white">New</p>
-            </div>
-            <div className="text-center">
-              <IoAddCircleOutline className="mx-3 text-base md:text-5xl hover:cursor-pointer" />
-              <p className="text-sm text-white">New</p>
-            </div>
-            <div className="text-center mx-4">
-              <IoAddCircleOutline className="mx-3 text-base md:text-5xl hover:cursor-pointer" />
-              <p className="text-sm text-white">New</p>
-            </div>
-            <div className="text-center mx-4">
-              <IoAddCircleOutline className="mx-3 text-base md:text-5xl hover:cursor-pointer" />
-              <p className="text-sm text-white">New</p>
-            </div>
-
-            <div className="text-center mx-4">
-              <IoAddCircleOutline className="mx-3 text-base md:text-5xl hover:cursor-pointer" />
-              <p className="text-sm text-white">New</p>
-            </div>
-            <div className="text-center mx-4">
-              <IoAddCircleOutline className="mx-3 text-base md:text-5xl hover:cursor-pointer" />
-              <p className="text-sm text-white">New</p>
-            </div>
-
-            <div className="text-center mx-4">
-              <IoAddCircleOutline className="mx-3 text-base md:text-5xl hover:cursor-pointer" />
-              <p className="text-sm text-white">New</p>
-            </div>
-
-            <div className="text-center mx-4">
-              <IoAddCircleOutline className="mx-3 text-base md:text-5xl hover:cursor-pointer" />
-              <p className="text-sm text-white">New</p>
-            </div>
-
-            <div className="text-center">
-              <IoAddCircleOutline className="mx-3 text-base md:text-5xl hover:cursor-pointer" />
-              <p className="text-sm text-white">New</p>
-            </div>
-            <div className="text-center mx-4">
-              <IoAddCircleOutline className="mx-3 text-base md:text-5xl hover:cursor-pointer" />
-              <p className="text-sm text-white">New</p>
-            </div>
-            <div className="text-center mx-4">
+            <div className="text-center" onClick={() => createNewMemory()}>
               <IoAddCircleOutline className="mx-3 text-base md:text-5xl hover:cursor-pointer" />
               <p className="text-sm text-white">New</p>
             </div>
@@ -401,7 +382,9 @@ const Profile = () => {
             id="saved"
             role="tabpanel"
             aria-labelledby="saved-tab"
-          >saved tab</div>
+          >
+            saved tab
+          </div>
           <div
             className="hidden p-4 rounded-lg bg-black"
             id="settings"

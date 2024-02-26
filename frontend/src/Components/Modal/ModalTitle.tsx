@@ -1,4 +1,5 @@
-import { IoIosCloseCircle } from "react-icons/io";
+
+import { IoClose } from "react-icons/io5";
 
 interface ModalTitleProps {
     title ?: string,
@@ -8,9 +9,9 @@ interface ModalTitleProps {
 
 export const ModalTitle  : React.FC<ModalTitleProps> = ({  title , handleModalToggle , isDismissable}) => {
     return (
-        <div className="flex pl-5 pr-1 justify-between">
-        <h2 className=" text-xl font-medium md:pl-10 ">{title}</h2>
-        { isDismissable && <IoIosCloseCircle className="text-3xl text-red-700 hover:cursor-pointer" onClick={handleModalToggle}/>
+        <div className="flex pl-5 pr-1 items-center">
+        <h2 className=" text-xl text-black font-medium md:pl-10 w-11/12 text-center p-2">{title}</h2>
+        { isDismissable && <IoClose className="text-3xl text-black hover:cursor-pointer " onClick={handleModalToggle}/>
         }
         
         </div>
