@@ -19,7 +19,7 @@ export const SideNav : React.FC<SideNavProps>= ({children}) => {
   return (
     <div className="  w-full h-full   md:flex ">
       <div
-        className={` md:w-24 bg-black z-50  ${
+        className={` md:2/12 bg-black z-50  ${
           isSmallScreen
             ? "   bottom-0 left-0  w-full flex justify-between fixed py-2 h-auto"
             : " fixed h-screen pb-2  flex flex-col justify-center items-center md:border-r-gray-600 md:border-r-2 "
@@ -46,7 +46,7 @@ export const SideNav : React.FC<SideNavProps>= ({children}) => {
         <FaUserCircle className="text-white   mt-2 text-4xl     ml-9 md:ml-3   md:text-4xl md:mb-9 hover:cursor-pointer mr-4" />
       </div>
 
-      <div className="bg-blue-600   w-screen h-screen">{children}</div>
+      <div className="bg-blue-600  h-screen">{children}</div>
     </div>
   );
 };

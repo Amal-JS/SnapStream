@@ -11,7 +11,7 @@ import { SideNav } from './SideNav';
  const UserStoriesContent = () => {
   return (
     <>
-      <div className="w-screen p-10 h-screen bg-black md:pl-52 mb-5 ">
+      <div className="w-full p-10 h-screen bg-black md:pl-52 mb-5 ">
   
 
         <div className='border-b-2 border-b-gray-600 mb-5'>
