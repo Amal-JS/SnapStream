@@ -15,6 +15,7 @@ import { BsClipboard2Heart } from "react-icons/bs";
 import { useModal } from "../hooks/useModal";
 import { CustomModal } from "./Modal/Modal";
 import { ModalTitle } from "./Modal/ModalTitle";
+import { Link } from "react-router-dom";
 
 interface modalContentType {
       isDismissable : boolean | true,
@@ -103,7 +104,8 @@ const Profile = () => {
                 <div className="flex md:mt-0 mt-4 pl-2 md:pl-1">
                   <Button className="bg-gray-600 ">
                     <h3 className="text-base  font-medium text-white ">
-                      Edit Profile
+                      <Link to='/edituserprofile/ljlaksjf'>Edit Profile</Link>
+                      
                     </h3>
                   </Button>
                   <Button className="bg-gray-600 ml-4 ">

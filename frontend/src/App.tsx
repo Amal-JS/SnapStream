@@ -6,7 +6,7 @@ import { PasswordUpdate } from './Components/PasswordUpdate.tsx'
 import {Signup} from './Components/Signup.tsx'
 import { BrowserRouter, Routes , Route, Navigate } from 'react-router-dom'
 import { OtpVerification } from './Components/OtpVerification.tsx'
-import { SideNav } from './Components/SideNav.tsx'
+import { UserEdit } from './Components/UserEdit.tsx'
 import { UserProfile } from './Components/UserProfile.tsx'
 import { UserStories } from './Components/UserStories.tsx'
 function App() {
@@ -25,7 +25,7 @@ function App() {
     <Route path='/password/update' element={<Navigate to="/404" />} />
     <Route path='/otpverify/:id' element={<OtpVerification/>} />
     <Route path='/viewstories/:id' element={<UserStories />}/>
-   
+    <Route path='/edituserprofile/:id' element={<UserEdit />}/>
 
     <Route path='*' element={<PageNotFound />}/>
 
