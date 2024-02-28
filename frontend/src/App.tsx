@@ -1,4 +1,4 @@
-
+import { Toast } from './Toast.tsx'
 import { PageNotFound } from './Components/PageNotFound.tsx'
 import { ForgotPassword } from './Components/ForgotPassword.tsx'
 import {Login} from './Components/Login.tsx'
@@ -16,7 +16,7 @@ function App() {
 
   return (
   <>
-  
+ <Toast />
   <BrowserRouter>
   <Routes>
     <Route path='/' element={<UserHome />} />

@@ -1,4 +1,5 @@
 
+
 import { useEffect, useState } from "react";
 
 
@@ -6,15 +7,16 @@ interface PasswordInputProps  {
     type?:string,  //optional value either text or email
     name:string,
     error:string,
-    handleChange:(event:React.ChangeEvent<HTMLInputElement>)=> void, //when passing event handling
+    handleChange:(event:React.FocusEvent<HTMLInputElement>)=> void, //when passing event handling
                                                                     // function need to pass the event
                                                                     //also 
     placeholder:string,
-    Icon:React.ElementType                                          //Icon type to pass as props
+    Icon:React.ElementType                                          //Icon type to pass as props,
+    updateUserDataError:(field:string,value:string)=>void
 }
 
 
-export const TextInput :React.FC<PasswordInputProps> = ({type,name,error,handleChange,placeholder,Icon})=> {
+export const TextInput :React.FC<PasswordInputProps> = ({type,name,error,handleChange,placeholder,Icon,updateUserDataError})=> {
 
     //when input element is focused then the icon next to it also neededed
     //be focused and the error field needs to be set to empty
@@ -22,14 +24,16 @@ export const TextInput :React.FC<PasswordInputProps> = ({type,name,error,handleC
     //state to manage the input error state
     const [inputError,setInputError] = useState('')
 
+
     //focus function handles the emptying of state
     const handleFocus = ()=>{
         setInputFocused(true);
-        setInputError('')
+        updateUserDataError(name,'')
     }
 
     //whenever the error change the value or input error is updated
     useEffect(()=>{
+        console.log('updating error state')
             setInputError(error)
     },[error])
 
@@ -39,9 +43,12 @@ export const TextInput :React.FC<PasswordInputProps> = ({type,name,error,handleC
                 <input name={name} 
                 type={type ? 'email' : 'text'}
                  className={`w-full border-1 border-gray-400 rounded-xl ${  inputError && 'border-[3px] border-red-500'}`} 
-                  onChange={handleChange}
+                //   onChange={}
                   onFocus={handleFocus}
-                  onBlur={()=>setInputFocused(false)}
+                  onBlur={(event)=>{
+                    setInputFocused(false)
+                    handleChange(event)
+                  }}
                   placeholder={placeholder}
                   />
 

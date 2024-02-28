@@ -4,10 +4,11 @@ import { AiFillEyeInvisible  , AiFillEye} from "react-icons/ai";
 interface PasswordInputProps  {
     name:string,
     error:string,
-    handleChange:(event:React.ChangeEvent<HTMLInputElement>)=> void,
-    placeholder:string
+    handleChange:(event:React.FocusEvent<HTMLInputElement>)=> void,
+    placeholder:string,
+    updateUserDataError:(field:string,value:string)=>void
 }
-export const PasswordInput :React.FC<PasswordInputProps> = ({name,error,handleChange,placeholder})=> {
+export const PasswordInput :React.FC<PasswordInputProps> = ({name,error,handleChange,placeholder,updateUserDataError})=> {
 
     const [inputFocused,setInputFocused] = useState(false)
 
@@ -18,7 +19,7 @@ export const PasswordInput :React.FC<PasswordInputProps> = ({name,error,handleCh
     const [inputError,setInputError] = useState('')
     const handleFocus = ()=>{
         setInputFocused(true);
-        setInputError('')
+        updateUserDataError(name,'')
     }
 
     useEffect(()=>{setInputError(error)},[error])
@@ -28,9 +29,12 @@ export const PasswordInput :React.FC<PasswordInputProps> = ({name,error,handleCh
                 <input name={name} 
                 type={isVisible ? 'text' : 'password'} 
                 className={`w-full border-1 border-gray-400 rounded-xl ${inputError && 'border-[3px] border-red-500'}`}  
-                onChange={handleChange}
+                // onChange={handleChange}
                 onFocus={handleFocus}
-                onBlur={()=>setInputFocused(false)}
+                onBlur={(event)=>{
+                    setInputFocused(false)
+                    handleChange(event)
+                }}
                 placeholder={placeholder}
                 />
 
