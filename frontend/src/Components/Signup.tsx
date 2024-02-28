@@ -17,6 +17,8 @@ interface UserData {
 }
 
 export const Signup = () => {
+
+  //state to store user data
   const [userData, setUserData] = useState<UserData>({
     userName: "",
     fullName: "",
@@ -24,10 +26,15 @@ export const Signup = () => {
     password: "",
   });
 
+
+  //function to update the user input data
   const handleUserData = (evt: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = evt.target;
     console.log(name, value);
   };
+
+
+
   return (
     <>
       <div className="h-screen">
@@ -61,7 +68,7 @@ export const Signup = () => {
                 error={""}
                 handleChange={handleUserData}
                 placeholder="userName"
-                Icon={FaUser}
+                Icon={FaUser} //importing the icons and passing to component
               />
               <TextInput
                 name="phoneOrEmail"
@@ -76,7 +83,7 @@ export const Signup = () => {
                 error={""}
                 handleChange={handleUserData}
                 placeholder="Full Name"
-                Icon={PiIdentificationBadgeFill}
+                Icon={PiIdentificationBadgeFill}  
               />
               <PasswordInput
                 name={"password"}

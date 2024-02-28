@@ -3,22 +3,32 @@ import { useEffect, useState } from "react";
 
 
 interface PasswordInputProps  {
-    type?:string,
+    type?:string,  //optional value either text or email
     name:string,
     error:string,
-    handleChange:(event:React.ChangeEvent<HTMLInputElement>)=> void,
+    handleChange:(event:React.ChangeEvent<HTMLInputElement>)=> void, //when passing event handling
+                                                                    // function need to pass the event
+                                                                    //also 
     placeholder:string,
-    Icon:React.ElementType
+    Icon:React.ElementType                                          //Icon type to pass as props
 }
+
+
 export const TextInput :React.FC<PasswordInputProps> = ({type,name,error,handleChange,placeholder,Icon})=> {
 
+    //when input element is focused then the icon next to it also neededed
+    //be focused and the error field needs to be set to empty
     const [inputFocused,setInputFocused] = useState(false)
+    //state to manage the input error state
     const [inputError,setInputError] = useState('')
 
+    //focus function handles the emptying of state
     const handleFocus = ()=>{
         setInputFocused(true);
         setInputError('')
     }
+
+    //whenever the error change the value or input error is updated
     useEffect(()=>{
             setInputError(error)
     },[error])
@@ -38,7 +48,7 @@ export const TextInput :React.FC<PasswordInputProps> = ({type,name,error,handleC
                 <Icon className={`text-2xl text-default-400 hover:cursor-pointer  absolute right-6  top-4  ${ inputFocused ? 'text-blue-600' : inputError &&  'text-red-500'}`}  />
                
               </div>
-              { inputError && <p className="text-red-600  ">{error}</p>}
+              { inputError && <p className="text-red-600  text-sm sm:text-base">{error}</p>}
               </div>
     )
 }
