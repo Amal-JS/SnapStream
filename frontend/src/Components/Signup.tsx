@@ -2,9 +2,32 @@
 import { Input, Button } from "@nextui-org/react";
 import { FaGoogle } from "react-icons/fa";
 import '../App.css';
+import { useState } from "react";
+import { PasswordInput } from "./Form/PasswordInput";
+import { log } from "console";
+import { TextInput } from "./Form/TextInput";
 
+
+interface UserData {
+  username : string,
+  email:string,
+  phone:string,
+  password:string
+}
 
 export const Signup = () => {
+
+const [userData,setUserData]  = useState<UserData>({
+                                                    username : '',
+                                                    email:'',
+                                                    phone:'',
+                                                    password:''
+                                                  })
+
+const handleUserData = (evt:React.ChangeEvent<HTMLInputElement>) =>{
+        const {name,value} = evt.target
+        console.log(name,value)
+}
   return (
     <>
       <div className="h-screen">
@@ -56,24 +79,9 @@ export const Signup = () => {
                 errorMessage=""
                 className="w-full mb-2"
               />
-              <Input
-                type="text"
-                label="Username"
-                variant="bordered"
-                defaultValue=""
-                isInvalid={false}
-                errorMessage=""
-                className="w-full mb-2 "
-              />
-              <Input
-                type="password"
-                label="Password"
-                variant="bordered"
-                defaultValue=""
-                isInvalid={false}
-                errorMessage=""
-                className="w-full mb-8"
-              />
+             
+              <TextInput name='username' error={''} handleChange={handleUserData}/>
+              <PasswordInput  name={'password'} error={'asfsadf'} handleChange={handleUserData}/>
 
               <Button color="primary" className="mt-3 w-full bg-blue-500">
                 <p className="text-base font-medium ">Sign up</p>
