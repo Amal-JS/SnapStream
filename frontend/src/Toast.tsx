@@ -10,7 +10,8 @@ export const Toast=()=> {
     const {width} = useWindowSize()
 
     return(
-        
+        <Toaster  position={width < 740 ? 'top-right' : 'top-center'} 
+          />
     )
 }
 
