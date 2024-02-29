@@ -4,15 +4,13 @@ import { SiIfixit } from "react-icons/si";
 import { useWindowSize } from './hooks/useWindowSize';
 import { FaCheckCircle } from 'react-icons/fa';
 
-type ToastPositionType = 'top-right' | 'top-center' | 'top-left';
-
 
 export const Toast=()=> {
 
     const {width} = useWindowSize()
-    console.log(width)
+
     return(
-        <Toaster  position={width < 740 ? 'top-right' : 'top-center'}/>
+        
     )
 }
 
@@ -68,11 +66,11 @@ export const Toast=()=> {
   // Custom error toast
   export const customErrorToast = (message: string) => {
     toast((t) => (
-      <div className='bg-[#BA0517]  flex justify-center  items-center pl-1 pr-3 py-2  '  >
-        <div className='flex py-1 md:w-72 justify-start px-8 items-center '>
+      <div className='bg-[#BA0517]  flex justify-center  items-center pl-1 pr-3 py-2  md:w-72'  >
+        <div className='flex py-1  justify-start px-8 items-center  '>
         <SiIfixit className='text-white text-2xl ' />
 
-            <p className='text-base  ml-3 text-white' >{message}</p>
+            <p className=' text-sm md:text-base  ml-3 text-white' >{message}</p>
         </div>
        
         <IoClose onClick={() => toast.dismiss(t.id)} className='text-white text-2xl hover:cursor-pointer'/>

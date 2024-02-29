@@ -33,7 +33,7 @@ export const TextInput :React.FC<PasswordInputProps> = ({type,name,error,handleC
 
     //whenever the error change the value or input error is updated
     useEffect(()=>{
-        console.log('updating error state')
+
             setInputError(error)
     },[error])
 

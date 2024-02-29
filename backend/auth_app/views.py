@@ -19,3 +19,8 @@ class CheckUserValues(View):
             value_exist = CustomUser.objects.filter(phone=value).exists()
         
         return JsonResponse({'valueExist':value_exist})
+    
+#send otp to phone or email
+class SendOtp(View):
+    def post(self,request):
+        return JsonResponse({'otpSendindFailed':True})

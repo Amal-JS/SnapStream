@@ -195,6 +195,18 @@ export const Signup = () => {
         "otp",
         JSON.stringify({ otp: otp, process: "newAccountCreation" })
       );
+
+      //sending otp and phoneOrEmail  value to backend to send otp in email or in phone number
+      const sendOtp = async () => {
+        const response = await axios.post(rootUrlPath+authRoot+'sendEmail/',{'otp':otp,'value':userData.phoneOrEmail})
+        if (response.data.otpSendindFailed){
+          customErrorToast('Otp sending failed')
+          customErrorToast('Sign up again.')
+          navigate(-1)
+          localStorage.removeItem('otp')
+        }
+      }
+      sendOtp()
       navigate("/otpverify/");
     };
 
