@@ -1,6 +1,6 @@
 import { Button } from "@nextui-org/react";
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 interface inputRefType {
   [key: string]: React.RefObject<HTMLInputElement>;
@@ -11,6 +11,12 @@ interface OtpType {
   thirdDigit: string;
   fourthDigit: string;
 }
+
+interface LocalOtpData {
+  otp:string,
+  process:string
+}
+
 export const OtpVerification = () => {
   const [otp, setOtp] = useState<OtpType>({
     firstDigit: "",
@@ -26,6 +32,8 @@ export const OtpVerification = () => {
     "3": useRef<HTMLInputElement>(null),
   });
 
+  const navigate = useNavigate()
+
   //event type specify
 
   useEffect(()=> {
@@ -37,19 +45,42 @@ if (firstInput && firstInput.current){
   firstInput.current.addEventListener('paste',pasteText);
 }
 
+handleOtp();
 
-  return () =>{
+ return () =>{
     //write clean up function again check for the value to avoid errors.
     if (firstInput.current){
       firstInput.current.removeEventListener('paste',pasteText)
-    }
-    
-
-  } 
-
+    }} 
   },[])
 
+//otp page is only accessible when there is otp in storage
+const handleOtp = ()=>{
+  
+//check if user is in the page as a sign up process or the password reset for the account
 
+  //get the otp from local storage and parse it
+  const otp : string | null = localStorage.getItem('otp');
+  const parsedOtp :LocalOtpData | null = otp ? JSON.parse(otp) : null;
+  
+  //if no otp exist then user doesn't need to access this page
+  if( !parsedOtp){
+      navigate(-1)
+  }
+const newUserData: string | null = localStorage.getItem('newUserData');
+if(parsedOtp?.process == 'newAccountCreation'){
+  console.log('user account creation');
+}else if(parsedOtp?.process == 'userAccountPasswordUpdate')
+{
+  console.log('user password update');
+  
+}
+
+}
+
+
+
+  
 //   const pasteText = (event : ClipboardEvent) => {
 //       const pastedText = event.clipboardData?.getData('text')
 //       const fieldValues = {
@@ -162,6 +193,7 @@ const pasteText = (event: ClipboardEvent) => {
 
   return (
     <>
+    
       <div className="h-screen">
         <div className="p-4 my-4 border-b-2 border-b-gray-200">
           <h2 className="pacifico-regular text-center  text-4xl md:text-4xl  pr-2 md:text-start md:pl-32">

@@ -7,8 +7,10 @@ import { FaUser } from "react-icons/fa";
 import { FaMobileScreenButton } from "react-icons/fa6";
 import { TextInput } from "./Form/TextInput";
 import { PiIdentificationBadgeFill } from "react-icons/pi";
-import { customErrorToast,customSuccessToast } from "../Toast";
-
+import { customErrorToast, customSuccessToast } from "../Toast";
+import axios from "axios";
+import { authRoot, rootUrlPath } from "../utils/url";
+import { useNavigate } from "react-router-dom";
 
 interface UserData {
   userName: string;
@@ -25,7 +27,6 @@ interface UserDataError {
 }
 
 export const Signup = () => {
-
   //state to store user data
   const [userData, setUserData] = useState<UserData>({
     userName: "",
@@ -34,162 +35,171 @@ export const Signup = () => {
     password: "",
   });
 
-const [userDataError,setUserDataError] = useState<UserDataError>({
-  userName: "",
-  fullName: "",
-  phoneOrEmail: "",
-  password: "",
-})
-  
-const [formFilled,setFormFilled] = useState<boolean>(true);
+  const [userDataError, setUserDataError] = useState<UserDataError>({
+    userName: "",
+    fullName: "",
+    phoneOrEmail: "",
+    password: "",
+  });
+
+  const [formFilled, setFormFilled] = useState<boolean>(true);
+
+  const navigate = useNavigate();
 
   // function to update the user Data Value Errors
-  const updateUserDataError = (field:string,value:string)=>{
+  const updateUserDataError = (field: string, value: string) => {
+    setUserDataError((prev) => ({
+      ...prev,
+      [field]: " ",
+    }));
+    setUserDataError((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
 
-    setUserDataError(prev=>(
-      {
-        ...prev,
-        [field]:' '
-      }
-    ))
-    setUserDataError(prev=>(
-      {
-        ...prev,
-        [field]:value
-      }
-    ))
+  const CheckMininumLengthOfValue = (value: string): boolean => {
+    return value.length > 5 ? true : false;
+  };
 
+  const checkFieldValueAlreadyUsed = async (field: string, value: string) => {
+    const response = await axios.get(
+      rootUrlPath +
+        authRoot +
+        `check_value_exist/?field=${field}&value=${value}`
+    );
+    return response.data.valueExist;
+  };
 
-  }
-
-
-  
-
-  const CheckMininumLengthOfValue = (value : string) : boolean=>{
-    return value.length > 5 ?  true :  false;
-  }
-
-  const validateUsername = (value :string ,field : string) : boolean => {
-
+  const validateUsername = (value: string, field: string): boolean => {
+    if (!CheckMininumLengthOfValue(value)) {
+      updateUserDataError(field, "Mininum length of characters is 6");
+      return false;
+    }
     //network call
-    if(!CheckMininumLengthOfValue(value)){
-      updateUserDataError(field,'Mininum length of characters is 6')
+    return !checkFieldValueAlreadyUsed(field, value) ? true : false;
+  };
+  const validatePhoneOrEmail = (
+    value: string,
+    lengthOfValue: number,
+    field: string
+  ): boolean => {
+    if (lengthOfValue < 10) {
+      updateUserDataError(field, "Provide a valid value");
       return false;
-  }
+    }
 
-
-    return true;
-
-  }
-  const validatePhoneOrEmail = (value :string ,lengthOfValue : number,field : string) : boolean => {
-    
-         
-            if(lengthOfValue < 10){
-              updateUserDataError(field,'Provide a valid value')
-              return false;
-            }
-            if(lengthOfValue === 10){
-
-              //network call to check if phone number exist
-            
-
-              if(isNaN(Number(value))){
-                updateUserDataError(field,'Provide a valid phone')
-                return false;
-              }else{
-              
-                return true
-              }
-              
-            }
-            else if (! value.match(/^\S+@\S+\.\S+$/)){
-              
-              //networkcall
-              
-              updateUserDataError(field,'Provide a valid email')
-              return false;
-            }
-            
-            return true;
-  }
-  const validatePassword = (value :string ,field : string) : boolean => {
-      if(!CheckMininumLengthOfValue(value)){
-          
-          updateUserDataError(field,'Mininum length of characters is 6')
-          return false;
+    if (lengthOfValue === 10) {
+      //check if value only contains number
+      if (isNaN(Number(value))) {
+        updateUserDataError(field, "Provide a valid phone");
+        return false;
+      } else {
+        //check value already used
+        return !checkFieldValueAlreadyUsed("phone", value) ? true : false;
       }
+    } else {
+      //checks valid email
+      if (!value.match(/^\S+@\S+\.\S+$/)) {
+        updateUserDataError(field, "Provide a valid email");
+        return false;
+      }
+      return !checkFieldValueAlreadyUsed("email", value) ? true : false;
+    }
+  };
 
-    return true;
-  }
-  const validateFullName = (value :string ,field : string) : boolean => {
-    if(!CheckMininumLengthOfValue(value)){
-      
-      updateUserDataError(field,'Mininum length of characters is 6')
+  const validatePassword = (value: string, field: string): boolean => {
+    if (!CheckMininumLengthOfValue(value)) {
+      updateUserDataError(field, "Mininum length of characters is 6");
       return false;
-  }
-
+    }
     return true;
-  }
+  };
 
-
+  const validateFullName = (value: string, field: string): boolean => {
+    if (!CheckMininumLengthOfValue(value)) {
+      updateUserDataError(field, "Mininum length of characters is 6");
+      return false;
+    }
+    return true;
+  };
 
   //function to update the user input data
   const handleUserData = (evt: React.FocusEvent<HTMLInputElement>) => {
     const { name, value } = evt.target;
-    
+
     let valuePassedValidation = false;
 
-      //if all values in form filled then enable submit button
-      if(Object.values(userData).every(value => value.trim().length > 1)){
-   
-        setFormFilled(true);
-      }else{
-      
-        setFormFilled(false);
-      }
+    //if all values in form filled then enable submit button
+    if (Object.values(userData).every((value) => value.trim().length > 1)) {
+      setFormFilled(true);
+    } else {
+      setFormFilled(false);
+    }
 
-    if (name === 'userName'){
-      
-      valuePassedValidation = validateUsername(value,name)
+    if (name === "userName") {
+      valuePassedValidation = validateUsername(value, name);
     }
-    
-    if (name === 'phoneOrEmail'){
-      valuePassedValidation = validatePhoneOrEmail(value,value.length,name)
+
+    if (name === "phoneOrEmail") {
+      valuePassedValidation = validatePhoneOrEmail(value, value.length, name);
     }
-    if (name === 'password'){
-      valuePassedValidation = validatePassword(value,name)
+    if (name === "password") {
+      valuePassedValidation = validatePassword(value, name);
     }
-    if( name === 'fullName'){
-      valuePassedValidation = validateFullName(value,name)
+    if (name === "fullName") {
+      valuePassedValidation = validateFullName(value, name);
     }
 
     //some value is not accepted so returning from the function
-    if (!valuePassedValidation){
-      return ;
+    if (!valuePassedValidation) {
+      return;
     }
 
-
-//update user data if pass all validations
-    setUserData(prev => ({
+    //update user data if pass all validations
+    setUserData((prev) => ({
       ...prev,
-      [name]:value,
+      [name]: value,
     }));
   };
 
+  //function generates a four digit otp and return it
+  const generateOtp = () => {
+    let otp = "";
+    for (let i = 0; i < 4; i++) {
+      otp += Math.floor(Math.random() * 10);
+    }
+    return Number(otp);
+  };
 
   //logic to handle subitting form
-  const handleSubmit = ()=>{
-    //check if any error exist on any field then  return from here after a toast to 
-    
-    if (Object.values(userDataError).some(value => value !== '')){
-      // toast.error('Give proper values.')
-      
-      customErrorToast('Give proper values.')    
-      // customSuccessToast('Give proper values.')  
-      return ;
+  const handleSubmit = () => {
+    //check if any error exist on any field then  return from here after a toast too
+    if (Object.values(userDataError).some((value) => value !== "")) {
+      customErrorToast("Give proper values.");
+      // customSuccessToast('Give proper values.')
+      return;
     }
-  }
+    // this function saves the userData to local storage and generates a 4 digit otp saves
+    // that otp in the local storage also.
+    //then it will send the otp and  emailOrphone value along with it
+    const handleUserSignUp = () => {
+      const otp = generateOtp();
 
+      const newUserData = {
+        ...userData,
+      };
+
+      localStorage.setItem("newUserData", JSON.stringify(newUserData));
+      localStorage.setItem(
+        "otp",
+        JSON.stringify({ otp: otp, process: "newAccountCreation" })
+      );
+      navigate("/otpverify/");
+    };
+
+    handleUserSignUp();
+  };
 
   return (
     <>
@@ -221,7 +231,7 @@ const [formFilled,setFormFilled] = useState<boolean>(true);
 
               <TextInput
                 name="userName"
-                error={userDataError['userName']}
+                error={userDataError["userName"]}
                 handleChange={handleUserData}
                 placeholder="Username"
                 updateUserDataError={updateUserDataError}
@@ -229,7 +239,7 @@ const [formFilled,setFormFilled] = useState<boolean>(true);
               />
               <TextInput
                 name="phoneOrEmail"
-                error={userDataError['phoneOrEmail']}
+                error={userDataError["phoneOrEmail"]}
                 handleChange={handleUserData}
                 placeholder="Mobile Number or Email"
                 Icon={FaMobileScreenButton}
@@ -238,22 +248,27 @@ const [formFilled,setFormFilled] = useState<boolean>(true);
 
               <TextInput
                 name="fullName"
-                error={userDataError['fullName']}
+                error={userDataError["fullName"]}
                 handleChange={handleUserData}
                 placeholder="Full Name"
-                Icon={PiIdentificationBadgeFill}  
+                Icon={PiIdentificationBadgeFill}
                 updateUserDataError={updateUserDataError}
               />
               <PasswordInput
                 name={"password"}
-                error={userDataError['password']}
+                error={userDataError["password"]}
                 handleChange={handleUserData}
                 placeholder="Password"
                 updateUserDataError={updateUserDataError}
               />
 
-              <Button color="primary" className="mt-3 w-full bg-blue-500 disabled:bg-blue-400" disabled={formFilled} onClick={handleSubmit}>
-                <p className="text-base font-medium " >Sign up</p>
+              <Button
+                color="primary"
+                className="mt-3 w-full bg-blue-500 disabled:bg-blue-400"
+                disabled={formFilled}
+                onClick={handleSubmit}
+              >
+                <p className="text-base font-medium ">Sign up</p>
               </Button>
             </div>
 
