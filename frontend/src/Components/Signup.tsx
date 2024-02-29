@@ -7,7 +7,7 @@ import { FaUser } from "react-icons/fa";
 import { FaMobileScreenButton } from "react-icons/fa6";
 import { TextInput } from "./Form/TextInput";
 import { PiIdentificationBadgeFill } from "react-icons/pi";
-import toast from "react-hot-toast";
+import { customErrorToast,customSuccessToast } from "../Toast";
 
 
 interface UserData {
@@ -41,6 +41,7 @@ const [userDataError,setUserDataError] = useState<UserDataError>({
   password: "",
 })
   
+const [formFilled,setFormFilled] = useState<boolean>(true);
 
   // function to update the user Data Value Errors
   const updateUserDataError = (field:string,value:string)=>{
@@ -82,16 +83,24 @@ const [userDataError,setUserDataError] = useState<UserDataError>({
   }
   const validatePhoneOrEmail = (value :string ,lengthOfValue : number,field : string) : boolean => {
     
-          
+         
             if(lengthOfValue < 10){
               updateUserDataError(field,'Provide a valid value')
               return false;
             }
-            if(lengthOfValue === 10 && ! isNaN(Number(value))){
+            if(lengthOfValue === 10){
+
               //network call to check if phone number exist
+            
+
+              if(isNaN(Number(value))){
+                updateUserDataError(field,'Provide a valid phone')
+                return false;
+              }else{
               
-              updateUserDataError(field,'Provide a valid phone')
-              return false;
+                return true
+              }
+              
             }
             else if (! value.match(/^\S+@\S+\.\S+$/)){
               
@@ -130,20 +139,14 @@ const [userDataError,setUserDataError] = useState<UserDataError>({
     
     let valuePassedValidation = false;
 
-    // if (!CheckMininumLengthOfValue(value)){
-    //   toast.error('Minimun length four')
-    //   return false;
-    // }
-
-        // Reset error for the current field
-       
-        
-    
-      setUserDataError(prev => ({
-        ...prev,
-        [name]: '',
-      }));
+      //if all values in form filled then enable submit button
+      if(Object.values(userData).every(value => value.trim().length > 1)){
+   
+        setFormFilled(true);
+      }else{
       
+        setFormFilled(false);
+      }
 
     if (name === 'userName'){
       
@@ -173,6 +176,19 @@ const [userDataError,setUserDataError] = useState<UserDataError>({
     }));
   };
 
+
+  //logic to handle subitting form
+  const handleSubmit = ()=>{
+    //check if any error exist on any field then  return from here after a toast to 
+    
+    if (Object.values(userDataError).some(value => value !== '')){
+      // toast.error('Give proper values.')
+      
+      customErrorToast('Give proper values.')    
+      // customSuccessToast('Give proper values.')  
+      return ;
+    }
+  }
 
 
   return (
@@ -236,8 +252,8 @@ const [userDataError,setUserDataError] = useState<UserDataError>({
                 updateUserDataError={updateUserDataError}
               />
 
-              <Button color="primary" className="mt-3 w-full bg-blue-500">
-                <p className="text-base font-medium ">Sign up</p>
+              <Button color="primary" className="mt-3 w-full bg-blue-500 disabled:bg-blue-400" disabled={formFilled} onClick={handleSubmit}>
+                <p className="text-base font-medium " >Sign up</p>
               </Button>
             </div>
 
