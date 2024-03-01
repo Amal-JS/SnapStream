@@ -7,16 +7,17 @@ interface PasswordInputProps  {
     type?:string,  //optional value either text or email
     name:string,
     error:string,
-    handleChange:(event:React.FocusEvent<HTMLInputElement>)=> void, //when passing event handling
+    handleBlur:(event:React.FocusEvent<HTMLInputElement>)=> void, //when passing event handling
                                                                     // function need to pass the event
-                                                                    //also 
+                    
+    handleChange:(event:React.ChangeEvent<HTMLInputElement>)=> void,                                                //also 
     placeholder:string,
     Icon:React.ElementType                                          //Icon type to pass as props,
     updateUserDataError:(field:string,value:string)=>void
 }
 
 
-export const TextInput :React.FC<PasswordInputProps> = ({type,name,error,handleChange,placeholder,Icon,updateUserDataError})=> {
+export const TextInput :React.FC<PasswordInputProps> = ({type,name,error,handleBlur,handleChange,placeholder,Icon,updateUserDataError})=> {
 
     //when input element is focused then the icon next to it also neededed
     //be focused and the error field needs to be set to empty
@@ -47,9 +48,10 @@ export const TextInput :React.FC<PasswordInputProps> = ({type,name,error,handleC
                   onFocus={handleFocus}
                   onBlur={(event)=>{
                     setInputFocused(false)
-                    handleChange(event)
+                    handleBlur(event)
                   }}
                   placeholder={placeholder}
+                  onChange={(event)=>{handleChange(event)}}
                   />
 
                 <Icon className={`text-2xl text-default-400 hover:cursor-pointer  absolute right-6  top-4  ${ inputFocused ? 'text-blue-600' : inputError &&  'text-red-500'}`}  />

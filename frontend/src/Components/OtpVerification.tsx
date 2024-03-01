@@ -1,6 +1,7 @@
 import { Button } from "@nextui-org/react";
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useButtonState } from "../hooks/useButtonState";
 
 interface inputRefType {
   [key: string]: React.RefObject<HTMLInputElement>;
@@ -37,6 +38,19 @@ export const OtpVerification = () => {
   //timer 
   const [timeRunning,setTimeRunning] = useState<boolean>(true)
   const [remainingTime,setRemainingTime] = useState<number>(60)
+
+  //button disable enable hook
+ const {formFilled,setFormFilled} = useButtonState()
+ // Check if all input fields are filled
+ useEffect(()=>{
+     const filled = Object.values(otp).every(value => value.trim() !== '');
+     if (filled){
+      setFormFilled(false)
+     }else{
+      setFormFilled(true)
+     }
+  }
+ ,[otp])
 
 
   //event type specify
@@ -235,7 +249,7 @@ const handleResendOtp = () =>{
 }
 
 const handleOtpMatch = ()=> {
-  
+
 }
   return (
     <>
@@ -274,8 +288,8 @@ const handleOtpMatch = ()=> {
                 </Button>}
 
               </div>
-              <Button color="primary" className="mt-3 w-full bg-blue-500" onClick={handleOtpMatch}>
-                <p className="text-base font-medium ">Check otp</p>
+              <Button className="mt-3 w-full bg-blue-500 disabled:bg-blue-400 disabled:cursor-crosshair"  disabled={formFilled} onClick={handleOtpMatch}>
+                <p className="text-base font-medium text-white" >Check otp</p>
               </Button>
             </div>
           </form>

@@ -28,6 +28,13 @@ interface UserDataError {
   password: string;
 }
 
+interface UserDataEachFieldCharCount {
+  userName: number;
+  fullName: number;
+  phoneOrEmail: number;
+  password: number;
+}
+
 export const Signup = () => {
   const navigate = useNavigate()
 
@@ -46,6 +53,12 @@ export const Signup = () => {
     password: "",
   });
 
+  const [fieldsCharCount,setFieldCharcount] = useState<UserDataEachFieldCharCount>({
+    userName: 0,
+    fullName: 0,
+    phoneOrEmail: 0,
+    password: 0,
+  })
   //button disable enable hook
   const {formFilled, setFormFilled} = useButtonState()
 
@@ -88,7 +101,7 @@ export const Signup = () => {
     lengthOfValue: number,
     field: string
   ): Promise<boolean> => {
-    if (lengthOfValue < 10) {
+    if (lengthOfValue < 9) {
       updateUserDataError(field, "Provide a valid value");
       return false;
     }
@@ -133,9 +146,7 @@ export const Signup = () => {
     const { name, value } = evt.target;
 
     let valuePassedValidation = false;
-
-    
-
+ 
     if (name === "userName") {
       valuePassedValidation = validateUsername(value, name);
       
@@ -163,20 +174,28 @@ export const Signup = () => {
       [name]: value,
     }));
 
-
+    
  
   };
 
-useEffect(()=>{
+  const handleFormFilledButtonState = (event:React.ChangeEvent<HTMLInputElement>)=>{
      //if all values in form filled then enable submit button
-     if (Object.values(userData).every((value) => value.trim().length > 2)) {
-      
-      setFormFilled(false);
-    } else {
-    
-      setFormFilled(true);
+   
+     const {name,value} = event.target;
+        //update the char count in each field for disable enable signup button
+    setFieldCharcount((prev) => ( {
+      ...prev,
+      [name]:value.length,
+    }))
+const filled = Object.values(fieldsCharCount).every((value) => value >1)
+     if (filled){
+      setFormFilled(false)
+     }else{
+      setFormFilled(true)
+     }
     }
-},[userData])
+
+
   //function generates a four digit otp and return it
   const generateOtp = () => {
     let otp = "";
@@ -264,34 +283,38 @@ useEffect(()=>{
               </div>
 
               <TextInput
+                handleChange={handleFormFilledButtonState}
                 name="userName"
                 error={userDataError["userName"]}
-                handleChange={handleUserData}
+                handleBlur={handleUserData}
                 placeholder="Username"
                 updateUserDataError={updateUserDataError}
                 Icon={FaUser} //importing the icons and passing to component
               />
               <TextInput
+                handleChange={handleFormFilledButtonState}
                 name="phoneOrEmail"
                 error={userDataError["phoneOrEmail"]}
-                handleChange={handleUserData}
+                handleBlur={handleUserData}
                 placeholder="Mobile Number or Email"
                 Icon={FaMobileScreenButton}
                 updateUserDataError={updateUserDataError}
               />
 
               <TextInput
+                handleChange={handleFormFilledButtonState}
                 name="fullName"
                 error={userDataError["fullName"]}
-                handleChange={handleUserData}
+                handleBlur={handleUserData}
                 placeholder="Full Name"
                 Icon={PiIdentificationBadgeFill}
                 updateUserDataError={updateUserDataError}
               />
               <PasswordInput
+                handleChange={handleFormFilledButtonState}
                 name={"password"}
                 error={userDataError["password"]}
-                handleChange={handleUserData}
+                handleBlur={handleUserData}
                 placeholder="Password"
                 updateUserDataError={updateUserDataError}
               />

@@ -4,11 +4,12 @@ import { AiFillEyeInvisible  , AiFillEye} from "react-icons/ai";
 interface PasswordInputProps  {
     name:string,
     error:string,
-    handleChange:(event:React.FocusEvent<HTMLInputElement>)=> void,
+    handleBlur:(event:React.FocusEvent<HTMLInputElement>)=> void,
+    handleChange:(event:React.ChangeEvent<HTMLInputElement>)=> void,
     placeholder:string,
     updateUserDataError:(field:string,value:string)=>void
 }
-export const PasswordInput :React.FC<PasswordInputProps> = ({name,error,handleChange,placeholder,updateUserDataError})=> {
+export const PasswordInput :React.FC<PasswordInputProps> = ({name,error,handleBlur,handleChange,placeholder,updateUserDataError})=> {
 
     const [inputFocused,setInputFocused] = useState(false)
 
@@ -33,9 +34,10 @@ export const PasswordInput :React.FC<PasswordInputProps> = ({name,error,handleCh
                 onFocus={handleFocus}
                 onBlur={(event)=>{
                     setInputFocused(false)
-                    handleChange(event)
+                    handleBlur(event)
                 }}
                 placeholder={placeholder}
+                onChange={(event)=>{handleChange(event)}}
                 />
 
                
