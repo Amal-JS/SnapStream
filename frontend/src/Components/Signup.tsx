@@ -11,6 +11,7 @@ import { customErrorToast, customSuccessToast } from "../Toast";
 import axios from "axios";
 import { authRoot, rootUrlPath } from "../utils/url";
 import { useNavigate } from "react-router-dom";
+import { sendOtp } from "../utils/sendOtp";
 
 interface UserData {
   userName: string;
@@ -27,6 +28,8 @@ interface UserDataError {
 }
 
 export const Signup = () => {
+  const navigate = useNavigate()
+  
   //state to store user data
   const [userData, setUserData] = useState<UserData>({
     userName: "",
@@ -44,8 +47,7 @@ export const Signup = () => {
 
   const [formFilled, setFormFilled] = useState<boolean>(true);
 
-  const navigate = useNavigate();
-
+ 
   // function to update the user Data Value Errors
   const updateUserDataError = (field: string, value: string) => {
     setUserDataError((prev) => ({
@@ -193,7 +195,7 @@ useEffect(()=>{
     // this function saves the userData to local storage and generates a 4 digit otp saves
     // that otp in the local storage also.
     //then it will send the otp and  emailOrphone value along with it
-    const handleUserSignUp = () => {
+    const handleUserSignUp = async () => {
       const otp = generateOtp();
 
       const newUserData = {
@@ -206,43 +208,22 @@ useEffect(()=>{
         JSON.stringify({ otp: otp, process: "newAccountCreation" })
       );
 
-      const  getCsrfToken = async () =>{
-          try {
-        const response =  await axios.get(rootUrlPath+authRoot+'get_csrf_token/')
-        return response.data.csrfToken
-    } catch (error) {
-        console.error(error);
-    }
-      }
       
-      //sending otp and phoneOrEmail  value to backend to send otp in email or in phone number
-      const sendOtp = async () => {
-       
-        const csrfToken = await getCsrfToken()
-      
-        const response = await axios.post(
-          rootUrlPath + authRoot + 'sendEmail/',
-          { otp: otp, value: userData.phoneOrEmail }, 
-        );
-        
-        
-        if (response.data.otpSendindFailed){
-          customErrorToast('Otp sending failed')
-          customErrorToast('Sign up again.')
-          navigate(-1)
-          localStorage.removeItem('otp')
-        }
-        else{
+     //send otp 
+      const otpSendingSuccess = await sendOtp(otp,userData.phoneOrEmail)
+         if (otpSendingSuccess){
+          
           customSuccessToast(`Otp has successfully sent to ${userData.phoneOrEmail}`)
           //just wait for one second then navigate to verify otp
           setTimeout(()=>{
             navigate("/otpverify/");
           },1000)
-        }
-      }
-      sendOtp()
-    
-      
+         }else{
+          customErrorToast('Otp sending failed')
+            
+            navigate('-1')
+            localStorage.removeItem('otp')
+         }
     };
 
     handleUserSignUp();
