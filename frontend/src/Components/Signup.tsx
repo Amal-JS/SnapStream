@@ -1,7 +1,7 @@
 import { Button } from "@nextui-org/react";
 import { FaGoogle } from "react-icons/fa";
 import "../App.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PasswordInput } from "./Form/PasswordInput";
 import { FaUser } from "react-icons/fa";
 import { FaMobileScreenButton } from "react-icons/fa6";
@@ -77,13 +77,13 @@ export const Signup = () => {
       return false;
     }
     //network call
-    return !checkFieldValueAlreadyUsed(field, value) ? true : false;
+    return !checkFieldValueAlreadyUsed(field, value) ? false : true;
   };
-  const validatePhoneOrEmail = (
+  const validatePhoneOrEmail = async (
     value: string,
     lengthOfValue: number,
     field: string
-  ): boolean => {
+  ): Promise<boolean> => {
     if (lengthOfValue < 10) {
       updateUserDataError(field, "Provide a valid value");
       return false;
@@ -96,7 +96,7 @@ export const Signup = () => {
         return false;
       } else {
         //check value already used
-        return !checkFieldValueAlreadyUsed("phone", value) ? true : false;
+        return await checkFieldValueAlreadyUsed("phone", value) ? false : true;
       }
     } else {
       //checks valid email
@@ -104,7 +104,7 @@ export const Signup = () => {
         updateUserDataError(field, "Provide a valid email");
         return false;
       }
-      return !checkFieldValueAlreadyUsed("email", value) ? true : false;
+      return await checkFieldValueAlreadyUsed("email", value) ? false : true;
     }
   };
 
@@ -125,24 +125,21 @@ export const Signup = () => {
   };
 
   //function to update the user input data
-  const handleUserData = (evt: React.FocusEvent<HTMLInputElement>) => {
+  const handleUserData = async (evt: React.FocusEvent<HTMLInputElement>) => {
     const { name, value } = evt.target;
 
     let valuePassedValidation = false;
 
-    //if all values in form filled then enable submit button
-    if (Object.values(userData).every((value) => value.trim().length > 1)) {
-      setFormFilled(true);
-    } else {
-      setFormFilled(false);
-    }
+    
 
     if (name === "userName") {
       valuePassedValidation = validateUsername(value, name);
+      
+      
     }
 
     if (name === "phoneOrEmail") {
-      valuePassedValidation = validatePhoneOrEmail(value, value.length, name);
+      valuePassedValidation = await validatePhoneOrEmail(value, value.length, name);
     }
     if (name === "password") {
       valuePassedValidation = validatePassword(value, name);
@@ -161,8 +158,21 @@ export const Signup = () => {
       ...prev,
       [name]: value,
     }));
+
+
+ 
   };
 
+useEffect(()=>{
+     //if all values in form filled then enable submit button
+     if (Object.values(userData).every((value) => value.trim().length > 2)) {
+      
+      setFormFilled(false);
+    } else {
+    
+      setFormFilled(true);
+    }
+},[userData])
   //function generates a four digit otp and return it
   const generateOtp = () => {
     let otp = "";
@@ -196,22 +206,50 @@ export const Signup = () => {
         JSON.stringify({ otp: otp, process: "newAccountCreation" })
       );
 
+      const  getCsrfToken = async () =>{
+          try {
+        const response =  await axios.get(rootUrlPath+authRoot+'get_csrf_token/')
+        return response.data.csrfToken
+    } catch (error) {
+        console.error(error);
+    }
+      }
+      
       //sending otp and phoneOrEmail  value to backend to send otp in email or in phone number
       const sendOtp = async () => {
-        const response = await axios.post(rootUrlPath+authRoot+'sendEmail/',{'otp':otp,'value':userData.phoneOrEmail})
+       
+        const csrfToken = await getCsrfToken()
+      
+        const response = await axios.post(
+          rootUrlPath + authRoot + 'sendEmail/',
+          { otp: otp, value: userData.phoneOrEmail }, 
+        );
+        
+        
         if (response.data.otpSendindFailed){
           customErrorToast('Otp sending failed')
           customErrorToast('Sign up again.')
           navigate(-1)
           localStorage.removeItem('otp')
         }
+        else{
+          customSuccessToast(`Otp has successfully sent to ${userData.phoneOrEmail}`)
+          //just wait for one second then navigate to verify otp
+          setTimeout(()=>{
+            navigate("/otpverify/");
+          },1000)
+        }
       }
       sendOtp()
-      navigate("/otpverify/");
+    
+      
     };
 
     handleUserSignUp();
   };
+
+
+
 
   return (
     <>

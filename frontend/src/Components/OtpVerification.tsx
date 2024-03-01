@@ -34,6 +34,11 @@ export const OtpVerification = () => {
 
   const navigate = useNavigate()
 
+  //timer 
+  const [timeRunning,setTimeRunning] = useState<boolean>(true)
+  const [remainingTime,setRemainingTime] = useState<number>(60)
+
+
   //event type specify
 
   useEffect(()=> {
@@ -184,13 +189,50 @@ const pasteText = (event: ClipboardEvent) => {
           name={element}
           onChange={(event) => handleChange(event, index)}
           onKeyUp={(event)=>handleBackspace(event,index)}
+          disabled={!timeRunning}
         ></input>
       );
     });
   };
 
- 
+ // Format seconds into minutes and seconds
+ const formatTime = (seconds:number) => {
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+  return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+};
 
+//timer running function
+useEffect(() => {
+  let intervalId : NodeJS.Timeout | undefined;
+
+  // Start the timer when timerRunning is true
+  if (timeRunning) {
+    intervalId = setInterval(() => {
+      setRemainingTime((prevTime) => {
+        if (prevTime <= 1) {
+          setTimeRunning(false); // Stop the timer when remainingTime reaches 0
+          clearInterval(intervalId);
+          return 0; // Set remainingTime to 0 when it reaches 0
+        } else {
+          return prevTime - 1; // Decrement remaining time
+        }
+      });
+    }, 1000);
+  }
+
+  // Clear interval when component unmounts or timerRunning becomes false
+  return () => clearInterval(intervalId);
+}, [timeRunning]);
+//resend function
+const handleResendOtp = () =>{
+  console.log('otp send')
+
+  setRemainingTime(60); // Reset timer to initial value
+  
+  // will set the timer to run
+  setTimeRunning(true)
+}
   return (
     <>
     
@@ -213,7 +255,20 @@ const pasteText = (event: ClipboardEvent) => {
               </div>
 
               <div>
-                <p className="my-5 p-2 text-2xl font-medium"> 01:00</p>
+              {!timeRunning ?
+               
+                  <p className="text-base font-medium text-red-600 mt-3">Otp Expired</p>
+               
+                :
+                <p className="my-5 p-2 text-2xl font-medium">{formatTime(remainingTime)}</p>
+                }
+
+                
+                {!timeRunning && 
+                <Button className="bg-blue-500 mt-3 w-full " onClick={handleResendOtp}>
+                  <p className="text-base font-medium text-white">Resend otp</p>
+                </Button>}
+
               </div>
               <Button color="primary" className="mt-3 w-full bg-blue-500">
                 <p className="text-base font-medium ">Check otp</p>
