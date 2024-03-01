@@ -233,6 +233,10 @@ const handleResendOtp = () =>{
   // will set the timer to run
   setTimeRunning(true)
 }
+
+const handleOtpMatch = ()=> {
+  
+}
   return (
     <>
     
@@ -270,7 +274,7 @@ const handleResendOtp = () =>{
                 </Button>}
 
               </div>
-              <Button color="primary" className="mt-3 w-full bg-blue-500">
+              <Button color="primary" className="mt-3 w-full bg-blue-500" onClick={handleOtpMatch}>
                 <p className="text-base font-medium ">Check otp</p>
               </Button>
             </div>

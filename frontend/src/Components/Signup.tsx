@@ -12,6 +12,7 @@ import axios from "axios";
 import { authRoot, rootUrlPath } from "../utils/url";
 import { useNavigate } from "react-router-dom";
 import { sendOtp } from "../utils/sendOtp";
+import { useButtonState } from "../hooks/useButtonState";
 
 interface UserData {
   userName: string;
@@ -29,7 +30,7 @@ interface UserDataError {
 
 export const Signup = () => {
   const navigate = useNavigate()
-  
+
   //state to store user data
   const [userData, setUserData] = useState<UserData>({
     userName: "",
@@ -45,7 +46,8 @@ export const Signup = () => {
     password: "",
   });
 
-  const [formFilled, setFormFilled] = useState<boolean>(true);
+  //button disable enable hook
+  const {formFilled, setFormFilled} = useButtonState()
 
  
   // function to update the user Data Value Errors
@@ -186,6 +188,7 @@ useEffect(()=>{
 
   //logic to handle subitting form
   const handleSubmit = () => {
+
     //check if any error exist on any field then  return from here after a toast too
     if (Object.values(userDataError).some((value) => value !== "")) {
       customErrorToast("Give proper values.");
