@@ -249,8 +249,12 @@ const handleResendOtp = () =>{
     
     if (otpData.phoneOrEmail && otpData.process == 'newAccountCreation'){
       
-     
-        sendOtp(generateOtp(),otpData.phoneOrEmail)
+        const newOtp = generateOtp()
+        const newOtpValueInLocalStorage = {...otpData,['otp']:newOtp}
+        //update the local state otp
+        setOtpInLocalStorage(newOtp)
+        sendOtp(newOtp,otpData.phoneOrEmail)
+
         setRemainingTime(120); // Reset timer to initial value
         // will set the timer to run
         setTimeRunning(true)
@@ -262,12 +266,13 @@ const handleResendOtp = () =>{
 
   
 }
-
+console.log('local otp :',otpInLocalStorage)
 const handleOtpMatch = ()=> {
 
     const otpValue = Number(Object.values(otp).join(''))
     if (otpInLocalStorage == otpValue){
-
+      console.log('otp matched');
+      
     }else{
       // set time running false
       setTimeRunning(false)
