@@ -34,10 +34,11 @@ const  getCsrfToken = async () =>{
       { otp: otp, value: phoneOrEmail },
       { headers: { 'X-CSRFToken': csrfToken } }
     );
- 
+
     return response.data.otpSendingFailed; // Corrected typo
   } catch (error) {
-    console.error(error);
+   
+
     return true; // Assuming failure if there's an error
   }
   

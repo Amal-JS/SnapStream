@@ -54,7 +54,7 @@ export const TextInput :React.FC<PasswordInputProps> = ({type,name,error,handleB
                   onChange={(event)=>{handleChange(event)}}
                   />
 
-                <Icon className={`text-2xl text-default-400 hover:cursor-pointer  absolute right-6  top-4  ${ inputFocused ? 'text-blue-600' : inputError &&  'text-red-500'}`}  />
+                <Icon className={`text-2xl text-default-400 pl-2 hover:cursor-pointer  absolute right-6  top-4  ${ inputFocused ? 'text-blue-600' : inputError &&  'text-red-500'}`}  />
                
               </div>
               { inputError && <p className="text-red-600  text-sm sm:text-base">{error}</p>}

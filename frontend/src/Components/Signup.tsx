@@ -88,14 +88,19 @@ export const Signup = () => {
     return response.data.valueExist;
   };
 
-  const validateUsername = (value: string, field: string): boolean => {
+  const validateUsername  = async (value: string, field: string) :Promise<boolean> => {
     if (!CheckMininumLengthOfValue(value)) {
       updateUserDataError(field, "Mininum length of characters is 6");
       return false;
     }
-    //network call
-    return !checkFieldValueAlreadyUsed(field, value) ? false : true;
+    
+    if( await checkFieldValueAlreadyUsed("username", value)){
+      updateUserDataError(field, "Username already taken.");
+      return false;
+     }
+      return true;
   };
+
   const validatePhoneOrEmail = async (
     value: string,
     lengthOfValue: number,
@@ -113,7 +118,12 @@ export const Signup = () => {
         return false;
       } else {
         //check value already used
-        return await checkFieldValueAlreadyUsed("phone", value) ? false : true;
+        //email exist
+     if(await checkFieldValueAlreadyUsed("phone", value)){
+      updateUserDataError(field, "phone number already taken.");
+      return false;
+     }
+      return true;
       }
     } else {
       //checks valid email
@@ -121,7 +131,12 @@ export const Signup = () => {
         updateUserDataError(field, "Provide a valid email");
         return false;
       }
-      return await checkFieldValueAlreadyUsed("email", value) ? false : true;
+     //email exist
+     if(await checkFieldValueAlreadyUsed("email", value)){
+      updateUserDataError(field, "Email already taken.");
+      return false;
+     }
+      return true;
     }
   };
 
@@ -148,13 +163,14 @@ export const Signup = () => {
     let valuePassedValidation = false;
  
     if (name === "userName") {
-      valuePassedValidation = validateUsername(value, name);
+      valuePassedValidation = await validateUsername(value, name);
       
       
     }
 
     if (name === "phoneOrEmail") {
       valuePassedValidation = await validatePhoneOrEmail(value, value.length, name);
+      
     }
     if (name === "password") {
       valuePassedValidation = validatePassword(value, name);
@@ -165,9 +181,11 @@ export const Signup = () => {
 
     //some value is not accepted so returning from the function
     if (!valuePassedValidation) {
+      console.log('not returning');
+      
       return;
     }
-
+    console.log('state updating');
     //update user data if pass all validations
     setUserData((prev) => ({
       ...prev,
@@ -225,12 +243,11 @@ const filled = Object.values(fieldsCharCount).every((value) => value >1)
 
       
      //send otp 
+     console.log(userData)
       const otpSendingFailed = await sendOtp(otp,userData.phoneOrEmail)
          if (otpSendingFailed){
           
           customErrorToast('Otp sending failed')
-            
-            navigate(-1)
             localStorage.removeItem('otp')
             localStorage.removeItem('newUserData')
          }else{
@@ -238,7 +255,7 @@ const filled = Object.values(fieldsCharCount).every((value) => value >1)
           customSuccessToast(`Otp has successfully sent to ${userData.phoneOrEmail}`)
           //just wait for one second then navigate to verify otp
           setTimeout(()=>{
-            navigate("/otpverify/");
+            // navigate("/otpverify/");
           },1000)
          }
     };

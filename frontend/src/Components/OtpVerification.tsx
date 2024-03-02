@@ -3,6 +3,9 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useButtonState } from "../hooks/useButtonState";
 import { generateOtp, sendOtp } from "../utils/sendOtp";
+import { authRoot, rootUrlPath } from "../utils/url";
+import axios from "axios";
+import { customErrorToast, customSuccessToast } from "../Toast";
 
 interface inputRefType {
   [key: string]: React.RefObject<HTMLInputElement>;
@@ -273,10 +276,42 @@ const handleOtpMatch = ()=> {
 
     const otpValue = Number(Object.values(otp).join(''))
     if (otpInLocalStorage == otpValue){
-      console.log('otp matched');
+      
+      const createUserAccountInDb = async ()=>{
+
+        const userDataExistInLocalStorage = localStorage.getItem('newUserData')
+        if (userDataExistInLocalStorage){
+          console.log(otpInLocalStorage,' ',otpValue)
+          const response = await axios.post(rootUrlPath+authRoot+'createNewUserAccount/',
+          JSON.parse(userDataExistInLocalStorage)
+          )
+          if(response.data.userAccountCreatedSuccessfully){
+              customSuccessToast('User account created Successfully.Login please.')
+              
+              setTimeout(()=>{
+                navigate('/login/')
+              },1500)
+          }else{
+            customErrorToast('Some error occured please try again.')
+            navigate('/signup/')
+          }
+          localStorage.removeItem('otp')
+          localStorage.removeItem('newUserData')
+        }
+        
+      }
+      //all verification is done and account can be created
+      createUserAccountInDb()
+      setTimeRunning(false)
       
     }else{
       // set time running false
+      setOtp({
+        firstDigit: "",
+        secondDigit: "",
+        thirdDigit: "",
+        fourthDigit: "",
+      })
       setTimeRunning(false)
     }
     
@@ -308,7 +343,7 @@ const handleOtpMatch = ()=> {
               {!timeRunning ?
                
                 ((!timeRunning &&  Number(Object.values(otp).join('')) != otpInLocalStorage &&
-                Object.values(otp).every(value => value !== '')) ?
+                Object.values(otp).every(value => value === '')) ?
                 <p className="text-base font-medium text-red-600 mt-3">Otp Doesn't match</p>      
                 :
                 <p className="text-base font-medium text-red-600 mt-3">Otp Expired</p>
