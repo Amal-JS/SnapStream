@@ -227,7 +227,7 @@ const filled = Object.values(fieldsCharCount).every((value) => value >1)
       localStorage.setItem("newUserData", JSON.stringify(newUserData));
       localStorage.setItem(
         "otp",
-        JSON.stringify({ otp: otp, process: "newAccountCreation" })
+        JSON.stringify({ otp: otp, process: "newAccountCreation" ,phoneOrEmail:userData.phoneOrEmail})
       );
 
       
