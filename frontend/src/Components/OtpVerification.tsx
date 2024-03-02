@@ -250,7 +250,9 @@ const handleResendOtp = () =>{
     if (otpData.phoneOrEmail && otpData.process == 'newAccountCreation'){
       
         const newOtp = generateOtp()
+        //may need to update the local storage of otp 
         const newOtpValueInLocalStorage = {...otpData,['otp']:newOtp}
+
         //update the local state otp
         setOtpInLocalStorage(newOtp)
         sendOtp(newOtp,otpData.phoneOrEmail)
