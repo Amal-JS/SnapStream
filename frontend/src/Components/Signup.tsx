@@ -11,7 +11,7 @@ import { customErrorToast, customSuccessToast } from "../Toast";
 import axios from "axios";
 import { authRoot, rootUrlPath } from "../utils/url";
 import { useNavigate } from "react-router-dom";
-import { sendOtp } from "../utils/sendOtp";
+import { generateOtp, sendOtp } from "../utils/sendOtp";
 import { useButtonState } from "../hooks/useButtonState";
 
 interface UserData {
@@ -196,14 +196,7 @@ const filled = Object.values(fieldsCharCount).every((value) => value >1)
     }
 
 
-  //function generates a four digit otp and return it
-  const generateOtp = () => {
-    let otp = "";
-    for (let i = 0; i < 4; i++) {
-      otp += Math.floor(Math.random() * 10);
-    }
-    return Number(otp);
-  };
+  
 
   //logic to handle subitting form
   const handleSubmit = () => {
@@ -232,19 +225,21 @@ const filled = Object.values(fieldsCharCount).every((value) => value >1)
 
       
      //send otp 
-      const otpSendingSuccess = await sendOtp(otp,userData.phoneOrEmail)
-         if (otpSendingSuccess){
+      const otpSendingFailed = await sendOtp(otp,userData.phoneOrEmail)
+         if (otpSendingFailed){
+          
+          customErrorToast('Otp sending failed')
+            
+            navigate(-1)
+            localStorage.removeItem('otp')
+            localStorage.removeItem('newUserData')
+         }else{
           
           customSuccessToast(`Otp has successfully sent to ${userData.phoneOrEmail}`)
           //just wait for one second then navigate to verify otp
           setTimeout(()=>{
             navigate("/otpverify/");
           },1000)
-         }else{
-          customErrorToast('Otp sending failed')
-            
-            navigate('-1')
-            localStorage.removeItem('otp')
          }
     };
 

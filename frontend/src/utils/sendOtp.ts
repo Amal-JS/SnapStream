@@ -1,6 +1,18 @@
 import axios from "axios";
 import { authRoot, rootUrlPath } from "./url";
 
+
+//function generates a four digit otp and return it
+export const generateOtp = () => {
+    let otp = "";
+    for (let i = 0; i < 4; i++) {
+      otp += Math.floor(Math.random() * 10);
+    }
+    return Number(otp);
+  };
+
+
+
 const  getCsrfToken = async () =>{
     try {
   const response =  await axios.get(rootUrlPath+authRoot+'get_csrf_token/')
@@ -22,7 +34,7 @@ const  getCsrfToken = async () =>{
       { otp: otp, value: phoneOrEmail },
       { headers: { 'X-CSRFToken': csrfToken } }
     );
-
+ console.log('otp response :',response.data.otpSendingFailed)
     return response.data.otpSendingFailed; // Corrected typo
   } catch (error) {
     console.error(error);

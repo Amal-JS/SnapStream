@@ -2,6 +2,7 @@ import { Button } from "@nextui-org/react";
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useButtonState } from "../hooks/useButtonState";
+import { generateOtp, sendOtp } from "../utils/sendOtp";
 
 interface inputRefType {
   [key: string]: React.RefObject<HTMLInputElement>;
@@ -14,8 +15,9 @@ interface OtpType {
 }
 
 interface LocalOtpData {
-  otp:string,
-  process:string
+  otp:number,
+  process:string,
+  phoneOrEmail:string
 }
 
 export const OtpVerification = () => {
@@ -37,7 +39,8 @@ export const OtpVerification = () => {
 
   //timer 
   const [timeRunning,setTimeRunning] = useState<boolean>(true)
-  const [remainingTime,setRemainingTime] = useState<number>(60)
+  const [remainingTime,setRemainingTime] = useState<number>(120)
+  const [otpInLocalStorage,setOtpInLocalStorage] = useState<number>(0)
 
   //button disable enable hook
  const {formFilled,setFormFilled} = useButtonState()
@@ -79,21 +82,18 @@ const handleOtp = ()=>{
 //check if user is in the page as a sign up process or the password reset for the account
 
   //get the otp from local storage and parse it
-  const otp : string | null = localStorage.getItem('otp');
-  const parsedOtp :LocalOtpData | null = otp ? JSON.parse(otp) : null;
+  const otpDataInLocalStorage : string | null = localStorage.getItem('otp');
+  const parsedOtp :LocalOtpData | null = otpDataInLocalStorage ? JSON.parse(otpDataInLocalStorage) : null;
   
   //if no otp exist then user doesn't need to access this page
   if( !parsedOtp){
       navigate(-1)
   }
-const newUserData: string | null = localStorage.getItem('newUserData');
-if(parsedOtp?.process == 'newAccountCreation'){
-  console.log('user account creation');
-}else if(parsedOtp?.process == 'userAccountPasswordUpdate')
-{
-  console.log('user password update');
-  
-}
+
+  //set the otp in local storage to a state
+  if (parsedOtp && parsedOtp.otp){
+    setOtpInLocalStorage(parsedOtp.otp)
+  }
 
 }
 
@@ -238,17 +238,42 @@ useEffect(() => {
   // Clear interval when component unmounts or timerRunning becomes false
   return () => clearInterval(intervalId);
 }, [timeRunning]);
+
 //resend function
 const handleResendOtp = () =>{
-  console.log('otp send')
 
-  setRemainingTime(60); // Reset timer to initial value
+  const otpInLocalStorage = localStorage.getItem('otp') ? localStorage.getItem('otp') : null;
+    if (otpInLocalStorage){
+      
+    const otpData = JSON.parse(otpInLocalStorage)
+    
+    if (otpData.phoneOrEmail && otpData.process == 'newAccountCreation'){
+      
+     
+        sendOtp(generateOtp(),otpData.phoneOrEmail)
+        setRemainingTime(120); // Reset timer to initial value
+        // will set the timer to run
+        setTimeRunning(true)
+    }else{
+      //user profile password update , process userProfilePasswordUpdate
+
+    }
+  }
+
   
-  // will set the timer to run
-  setTimeRunning(true)
 }
 
 const handleOtpMatch = ()=> {
+
+    const otpValue = Number(Object.values(otp).join(''))
+    if (otpInLocalStorage == otpValue){
+
+    }else{
+      // set time running false
+      setTimeRunning(false)
+    }
+    
+    
 
 }
   return (
@@ -275,7 +300,12 @@ const handleOtpMatch = ()=> {
               <div>
               {!timeRunning ?
                
-                  <p className="text-base font-medium text-red-600 mt-3">Otp Expired</p>
+                ((!timeRunning &&  Number(Object.values(otp).join('')) != otpInLocalStorage &&
+                Object.values(otp).every(value => value !== '')) ?
+                <p className="text-base font-medium text-red-600 mt-3">Otp Doesn't match</p>      
+                :
+                <p className="text-base font-medium text-red-600 mt-3">Otp Expired</p>
+                )
                
                 :
                 <p className="my-5 p-2 text-2xl font-medium">{formatTime(remainingTime)}</p>

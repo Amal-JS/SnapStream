@@ -49,6 +49,7 @@ class SendOtp(View):
                         [email_or_phone_value],
                         fail_silently=False,
                     )
+            print('otp send successfully')
             return JsonResponse({'otpSendingFailed': False})
-            
+        
         return JsonResponse({'otpSendingFailed': True})
