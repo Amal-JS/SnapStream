@@ -5,8 +5,13 @@ import { FcGoogle } from "react-icons/fc";
 import '../App.css';
 import { TextInput } from "./Form/TextInput";
 import { FaRegUser } from "react-icons/fa";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PasswordInput } from "./Form/PasswordInput";
+import { useButtonState } from "../hooks/useButtonState";
+import axios from "axios";
+import { authRoot, rootUrlPath } from "../utils/url";
+import { customSuccessToast } from "../Toast";
+import { useNavigate } from "react-router-dom";
 
 interface LoginFormData {
   username:string,
@@ -20,6 +25,11 @@ export const Login = () => {
                                                           password:''
                                                         })
 
+  const [error,setError] = useState<string>('')
+  //Login button disable enable
+  const {formFilled,setFormFilled} = useButtonState()
+  const navigate = useNavigate()
+
   const handleChange = (event : React.ChangeEvent<HTMLInputElement>) : void  =>  {
       const {name,value} = event.target;
       //update the state in login form
@@ -27,9 +37,58 @@ export const Login = () => {
         ...prev,
         [name]:value
       }))
-
+     
 
   }
+
+
+  
+useEffect(()=>{
+
+  
+  //login button disable condion check
+  if(Object.values(formData).every(value => value.trim().length > 0)){
+ 
+    
+    setFormFilled(false)
+  }else{
+    setFormFilled(true)
+  }
+  
+  },[formData])
+
+const handleLogin = () =>{
+  //set error to ''
+  setError('')
+
+  const LoginUser = async () =>{
+    
+    
+  const response = await axios.post(rootUrlPath+authRoot+'LoginUser/',{'phoneOrEmailOrUsername':formData.username,'password':formData.password})
+  // No user exist or invalid credentials
+  if(!response.data.userExist){
+      //setError
+      setError(response.data.message)
+  }
+  else {
+
+    customSuccessToast('Login Successfull.')
+    customSuccessToast(response.data.message)
+    //empty the form
+    setFormData({
+      username:'',
+      password:''
+    })
+    console.log(response.data);
+    navigate('/')
+
+    
+  }
+}
+LoginUser()
+}
+
+
   return (
     <>
       <div className="flex   h-screen ">
@@ -60,7 +119,11 @@ export const Login = () => {
                 error={""}
                 placeholder="Password"
               />
-              <Button color="primary" className="mt-3 w-full bg-blue-500">
+
+              {error && <p className="text-red-600 text-sm md:text-base font-bold my-3 p-1"> {error}</p>}
+
+              <Button color="primary" className="mt-3 w-full bg-blue-500 disabled:bg-blue-300 disabled:cursor-not-allowed" 
+              disabled={formFilled} onClick={handleLogin}>
                 <p className="text-base font-medium ">Log in</p>
               </Button>
 

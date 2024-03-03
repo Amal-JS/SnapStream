@@ -7,6 +7,9 @@ from django.http import JsonResponse
 from django.core.mail import send_mail
 from backend.settings import EMAIL_HOST
 from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import RefreshToken
+
+
 
 #check if a username exist in the database
 class CheckUserValues(View):
@@ -90,3 +93,42 @@ class UserAccount(APIView):
             print(e)
             return JsonResponse({'userAccountCreatedSuccessfully':False})
         
+def get_tokens_for_user(user):
+    refresh = RefreshToken.for_user(user)
+
+    return {
+        'refresh': str(refresh),
+        'access': str(refresh.access_token),
+    }   
+
+#Login User
+class LoginUser(APIView):
+    def post(self,request):
+        phone_or_email_or_username = request.data['phoneOrEmailOrUsername']
+        password = request.data['password']
+        user = None
+        token_for_user = None
+        #phone number
+        if len(phone_or_email_or_username) == 10 and phone_or_email_or_username.isdigit():
+            # If the input is a 10-digit number, assume it's a phone number
+            user = CustomUser.objects.filter(phone=phone_or_email_or_username).first()
+        else:
+            # Otherwise, try to find the user by email or username
+            user = CustomUser.objects.filter(email=phone_or_email_or_username).first() \
+                or CustomUser.objects.filter(username=phone_or_email_or_username).first()
+
+        if (user):
+            password_check = user.check_password(password)
+            if (password_check):
+                token_for_user = get_tokens_for_user(user)
+                return JsonResponse({'userExist':True,
+                                     'message':'Have a nice day.',
+                                     'access':token_for_user['access'],
+                                      'refresh':token_for_user['refresh'],
+                                      'user':user.user_id
+                                     })
+            else:
+                return JsonResponse({'userExist':False,
+                                     'message':'Invalid Credentials',
+                                     })
+        return JsonResponse({'userExist':False,'message':"Account doesn't exist.Please create an account"})

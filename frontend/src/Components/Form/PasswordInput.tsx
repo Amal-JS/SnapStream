@@ -22,7 +22,7 @@ export const PasswordInput :React.FC<PasswordInputProps> = ({name,error,handleBl
         setInputFocused(true);
         updateUserDataError && updateUserDataError(name,'')
     }
-    {console.log(inputFocused),'password input'}
+
     useEffect(()=>{setInputError(error)},[error])
     return (
         <div>

@@ -3,7 +3,7 @@ import { IoClose } from 'react-icons/io5';
 import { SiIfixit } from "react-icons/si";
 import { useWindowSize } from './hooks/useWindowSize';
 import { FaCheckCircle } from 'react-icons/fa';
-
+import { Image } from '@nextui-org/react';
 
 export const Toast=()=> {
 
@@ -33,9 +33,10 @@ export const Toast=()=> {
     toast((t) => (
       <div className='bg-[#2E844A]  flex justify-center  items-center pl-1 pr-3 py-2  '  >
         <div className='flex py-1 md:w-72 justify-start px-8 items-center '>
-        <FaCheckCircle className='text-white text-2xl ' />
+        {!message.includes('Login') && <FaCheckCircle className='text-white text-2xl ' />}
 
-            <p className='text-base  ml-3 text-white' >{message}</p>
+            {!message.includes('Login') ? <p className='text-base  ml-3 text-white' >{message}</p> 
+            : <div className='flex ml-2 justify-center items-center'> <Image width={30} src={'https://uxwing.com/wp-content/themes/uxwing/download/emoji-emoticon/smile-icon.png'}/><p className='text-base  ml-3 text-white ' >{message}</p> </div>}
         </div>
        
         <IoClose onClick={() => toast.dismiss(t.id)} className='text-white text-2xl hover:cursor-pointer'/>
