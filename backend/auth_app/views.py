@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 import json
 from django.middleware.csrf import get_token
 from django.views import View
@@ -107,26 +108,32 @@ class LoginUser(APIView):
         phone_or_email_or_username = request.data['phoneOrEmailOrUsername']
         password = request.data['password']
         user = None
+
         token_for_user = None
         #phone number
         if len(phone_or_email_or_username) == 10 and phone_or_email_or_username.isdigit():
             # If the input is a 10-digit number, assume it's a phone number
             user = CustomUser.objects.filter(phone=phone_or_email_or_username).first()
+            print(user)
         else:
             # Otherwise, try to find the user by email or username
             user = CustomUser.objects.filter(email=phone_or_email_or_username).first() \
                 or CustomUser.objects.filter(username=phone_or_email_or_username).first()
-
+            print(user)
         if (user):
+            #blocked user
+            if(not user.is_active) :
+                return JsonResponse({'userExist':False,
+                                     'message':'Account not active',
+                                     })
             password_check = user.check_password(password)
             if (password_check):
                 token_for_user = get_tokens_for_user(user)
-                return JsonResponse({'userExist':True,
-                                     'message':'Have a nice day.',
-                                     'access':token_for_user['access'],
-                                      'refresh':token_for_user['refresh'],
-                                      'user':user.user_id
-                                     })
+                # Set HTTP-only cookies for access token and refresh token
+                response = JsonResponse({'userExist': True, 'message': 'Have a nice day.', 'user': user.user_id})
+                response.set_cookie(key='access_token', value=token_for_user['access'], httponly=True, secure=True, expires=datetime.now() + timedelta(minutes=5), samesite='Lax')
+                response.set_cookie(key='refresh_token', value=token_for_user['refresh'], httponly=True, secure=True, expires=datetime.now() + timedelta(days=1), samesite='Lax')
+                return response
             else:
                 return JsonResponse({'userExist':False,
                                      'message':'Invalid Credentials',

@@ -344,7 +344,7 @@ const filled = Object.values(fieldsCharCount).every((value) => value >1)
             <div className="border-2 border-gray-300 p-5 text-center  bg-white h-full w-full mt-3 flex justify-center">
               <div className="flex">
                 <p>Have an account?</p>
-                <p className="cursor-pointer text-blue-500 font-medium text-base pl-1">
+                <p className="cursor-pointer text-blue-500 font-medium text-base pl-1" onClick={()=>navigate('/login/')}>
                   Log in
                 </p>
               </div>

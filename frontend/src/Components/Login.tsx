@@ -11,7 +11,7 @@ import { useButtonState } from "../hooks/useButtonState";
 import axios from "axios";
 import { authRoot, rootUrlPath } from "../utils/url";
 import { customSuccessToast } from "../Toast";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 interface LoginFormData {
   username:string,
@@ -79,8 +79,8 @@ const handleLogin = () =>{
       username:'',
       password:''
     })
-    console.log(response.data);
-    navigate('/')
+    console.log(response);
+    // navigate('/')
 
     
   }
@@ -150,7 +150,7 @@ LoginUser()
             <div className="border-2 border-gray-300 p-5 text-center  bg-white h-full w-full md:w-1/2 mt-3 flex justify-center">
               <div className="block lg:flex">
                 <p className="text-xs  md:text-sm">Don't have an account?</p>
-                <p className="cursor-pointer text-blue-500 font-medium text-base pl-1">
+                <p className="cursor-pointer text-blue-500 font-medium text-base pl-1" onClick={()=>navigate('/signup/')}>
                   SignUp
                 </p>
               </div>
