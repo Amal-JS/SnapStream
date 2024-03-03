@@ -1,11 +1,35 @@
 import { Image } from "@nextui-org/react";
 import SampleLoginGif from '../assets/login_sample_gif.gif';
-import { Input, Button } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 import { FcGoogle } from "react-icons/fc";
 import '../App.css';
+import { TextInput } from "./Form/TextInput";
+import { FaRegUser } from "react-icons/fa";
+import { useState } from "react";
+import { PasswordInput } from "./Form/PasswordInput";
 
-
+interface LoginFormData {
+  username:string,
+  password:string
+}
 export const Login = () => {
+
+
+  const [formData,setFormData] = useState<LoginFormData>({
+                                                          username:'',
+                                                          password:''
+                                                        })
+
+  const handleChange = (event : React.ChangeEvent<HTMLInputElement>) : void  =>  {
+      const {name,value} = event.target;
+      //update the state in login form
+      setFormData(prev => ({
+        ...prev,
+        [name]:value
+      }))
+
+
+  }
   return (
     <>
       <div className="flex   h-screen ">
@@ -22,26 +46,20 @@ export const Login = () => {
           <form className=" p-5  md:mt-12 ">
 
             <div className="bg-white border-2 border-gray-300 p-6 w-full md:w-1/2  md:justify-start md:p-5  text-center lg:w-300">
-            <h2 className='pacifico-regular text-3xl md:text-4xl mt-3 '>SnapStream</h2>
-              <Input
-                type="text"
-                label="Username"
-                variant="bordered"
-                defaultValue="sahoo@jhanthanne"
-                isInvalid={false}
-                errorMessage=""
-                className="s-full mb-5 mt-8"
+            <h2 className='pacifico-regular text-3xl md:text-4xl mt-3 mb-8'>SnapStream</h2>
+              <TextInput 
+              Icon={FaRegUser}
+              name="username"
+              error={""}
+              handleChange={handleChange}
+              placeholder="Username"
               />
-              <Input
-                type="password"
-                label="Password"
-                variant="bordered"
-                defaultValue="********"
-                isInvalid={false}
-                errorMessage=""
-                className="w-full"
+              <PasswordInput
+                handleChange={handleChange}
+                name={"password"}
+                error={""}
+                placeholder="Password"
               />
-
               <Button color="primary" className="mt-3 w-full bg-blue-500">
                 <p className="text-base font-medium ">Log in</p>
               </Button>

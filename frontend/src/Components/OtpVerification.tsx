@@ -340,19 +340,29 @@ const handleOtpMatch = ()=> {
               </div>
 
               <div>
-              {!timeRunning ?
+              {/* {!timeRunning ?
                
                 ((!timeRunning &&  Number(Object.values(otp).join('')) != otpInLocalStorage &&
                 Object.values(otp).every(value => value === '')) ?
                 <p className="text-base font-medium text-red-600 mt-3">Otp Doesn't match</p>      
-                :
-                <p className="text-base font-medium text-red-600 mt-3">Otp Expired</p>
+                : remainingTime == 0 ? <p className="text-base font-medium text-red-600 mt-3">Otp Expired</p>
+                : <p className="text-base font-medium text-red-600 mt-3">Otp Expired</p>
+                
                 )
                
                 :
                 <p className="my-5 p-2 text-2xl font-medium">{formatTime(remainingTime)}</p>
-                }
+                } */}
+{!timeRunning ?
+              remainingTime == 0 ?  <p className="text-base font-medium text-red-600 mt-3">Otp Expired</p> :
 
+              Number(Object.values(otp).join('')) !== otpInLocalStorage ?
+              <p className="text-base font-medium text-red-600 mt-3">Otp Doesn't match</p> 
+              :
+              <p className="text-base font-medium text-green-400-600 mt-3">Otp Correct</p> 
+               :
+               <p className="my-5 p-2 text-2xl font-medium">{formatTime(remainingTime)}</p>
+               }
                 
                 {!timeRunning && 
                 <Button className="bg-blue-500 mt-3 w-full " onClick={handleResendOtp}>

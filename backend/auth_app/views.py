@@ -43,7 +43,7 @@ class SendOtp(View):
         data = json.loads(request.body)
         otp = data.get('otp')
         email_or_phone_value = data.get('value')
-        print(data,'  otp')
+        
         #sending email
         if len(email_or_phone_value) > 10:
             send_mail(
@@ -53,7 +53,7 @@ class SendOtp(View):
                         [email_or_phone_value],
                         fail_silently=False,
                     )
-            print('otp send successfully')
+     
             return JsonResponse({'otpSendingFailed': False})
         
         return JsonResponse({'otpSendingFailed': True})
@@ -66,17 +66,17 @@ class UserAccount(APIView):
             password = request.data['password']
             full_name = request.data['fullName']
             email_or_phone = request.data['phoneOrEmail']
-            print(request.data)
+    
             #checking if user provided phone number or email
             if len(email_or_phone) > 10:
-                print('email')
+              
                 new_user = CustomUser(username=username,
                                     password=password,
                                     full_name=full_name,
                                     email= email_or_phone
                                     )
             else:
-                print('phone')
+              
 
                 new_user = CustomUser(username=username,
                                     password=password,
@@ -84,8 +84,7 @@ class UserAccount(APIView):
                                     phone= email_or_phone
                                     )
             new_user.save()
-            
-            print('created')
+         
             return JsonResponse({'userAccountCreatedSuccessfully':True})
         except Exception as e:
             print(e)

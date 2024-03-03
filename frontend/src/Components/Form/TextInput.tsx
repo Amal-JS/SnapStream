@@ -7,13 +7,13 @@ interface PasswordInputProps  {
     type?:string,  //optional value either text or email
     name:string,
     error:string,
-    handleBlur:(event:React.FocusEvent<HTMLInputElement>)=> void, //when passing event handling
+    handleBlur?:(event:React.FocusEvent<HTMLInputElement>)=> void , //when passing event handling
                                                                     // function need to pass the event
                     
-    handleChange:(event:React.ChangeEvent<HTMLInputElement>)=> void,                                                //also 
+    handleChange?:(event:React.ChangeEvent<HTMLInputElement>)=> void,                                                //also 
     placeholder:string,
     Icon:React.ElementType                                          //Icon type to pass as props,
-    updateUserDataError:(field:string,value:string)=>void
+    updateUserDataError?:(field:string,value:string)=>void 
 }
 
 
@@ -29,7 +29,7 @@ export const TextInput :React.FC<PasswordInputProps> = ({type,name,error,handleB
     //focus function handles the emptying of state
     const handleFocus = ()=>{
         setInputFocused(true);
-        updateUserDataError(name,'')
+        updateUserDataError && updateUserDataError(name,'')
     }
 
     //whenever the error change the value or input error is updated
@@ -48,13 +48,13 @@ export const TextInput :React.FC<PasswordInputProps> = ({type,name,error,handleB
                   onFocus={handleFocus}
                   onBlur={(event)=>{
                     setInputFocused(false)
-                    handleBlur(event)
+                    { handleBlur && handleBlur(event)}
                   }}
                   placeholder={placeholder}
-                  onChange={(event)=>{handleChange(event)}}
+                  onChange={(event)=>{handleChange && handleChange(event)}}
                   />
 
-                <Icon className={`text-2xl text-default-400 pl-2 hover:cursor-pointer  absolute right-6  top-4  ${ inputFocused ? 'text-blue-600' : inputError &&  'text-red-500'}`}  />
+                <Icon className={`text-2xl  hover:cursor-pointer  absolute right-6  top-4  ${inputFocused ? 'text-blue-600 ' : inputError ?  'text-red-500' : 'text-default-400'}`}   />
                
               </div>
               { inputError && <p className="text-red-600  text-sm sm:text-base">{error}</p>}

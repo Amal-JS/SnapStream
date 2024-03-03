@@ -1,7 +1,7 @@
 import { Button } from "@nextui-org/react";
 import { FaGoogle } from "react-icons/fa";
 import "../App.css";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { PasswordInput } from "./Form/PasswordInput";
 import { FaUser } from "react-icons/fa";
 import { FaMobileScreenButton } from "react-icons/fa6";
@@ -255,7 +255,7 @@ const filled = Object.values(fieldsCharCount).every((value) => value >1)
           customSuccessToast(`Otp has successfully sent to ${userData.phoneOrEmail}`)
           //just wait for one second then navigate to verify otp
           setTimeout(()=>{
-            // navigate("/otpverify/");
+            navigate("/otpverify/");
           },1000)
          }
     };
