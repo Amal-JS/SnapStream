@@ -75,8 +75,14 @@ const handleUpdatePassword = async () => {
 
     if(response.data.passwordUpdated){
       customSuccessToast('Password updated successfully.')
-      customSuccessToast('Login to continue.')
-      navigate('/login/')
+      
+      if(dataInLocalStorage?.passwordUpdateFromProfile){
+          navigate('/userprofile/')
+      }else{
+        customSuccessToast('Login to continue.')
+        navigate('/login/')
+      }
+      
       
     }else{
       customErrorToast('Some issue occured.Please try again.')

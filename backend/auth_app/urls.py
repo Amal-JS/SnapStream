@@ -1,5 +1,5 @@
 from django.urls import path
-from . views import CheckUserValues,SendOtp,GetCSRFToken,UserAccount,LoginUser,ForgotPassword
+from . views import CheckUserValues,SendOtp,GetCSRFToken,UserAccount,LoginUser,ForgotPassword,UserData
 
 
 urlpatterns = [
@@ -8,5 +8,6 @@ urlpatterns = [
     path('get_csrf_token/',GetCSRFToken.as_view()),
     path('createNewUserAccount/',UserAccount.as_view()),
     path('LoginUser/',LoginUser.as_view()),
-    path('ForgotPassword/',ForgotPassword.as_view())
+    path('ForgotPassword/',ForgotPassword.as_view()),
+    path('userData/',UserData.as_view())
 ]

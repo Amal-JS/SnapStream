@@ -400,7 +400,7 @@ const handleOtpMatch = ()=> {
                 </Button>}
 
               </div>
-              <Button className="mt-3 w-full bg-blue-500 disabled:bg-blue-400 disabled:cursor-crosshair"  disabled={formFilled} onClick={handleOtpMatch}>
+              <Button className="mt-3 w-full bg-blue-500 disabled:bg-blue-400 disabled:cursor-not-allowed"  disabled={formFilled} onClick={handleOtpMatch}>
                 <p className="text-base font-medium text-white" >Check otp</p>
               </Button>
             </div>

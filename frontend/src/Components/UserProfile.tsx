@@ -82,7 +82,7 @@ const Profile = () => {
         </ModalTitle>
       </CustomModal>
      }
-      <div className="w-full p-2  bg-black md:pl-72 mb-5">
+      <div className="w-full  p-2  bg-black md:pl-72 mb-5">
         {/* profile first secion */}
         <div className=" border-b-gray-500 border-b-2  mt-6">
           {/* profile pic , user profile info */}

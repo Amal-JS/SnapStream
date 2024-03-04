@@ -31,6 +31,9 @@ export const Login = () => {
   const navigate = useNavigate()
 
   const handleChange = (event : React.ChangeEvent<HTMLInputElement>) : void  =>  {
+    //set error to ''
+    setError('')
+    
       const {name,value} = event.target;
       //update the state in login form
       setFormData(prev => ({

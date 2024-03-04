@@ -4,11 +4,8 @@ import { authRoot, rootUrlPath } from "./url";
 
 //function generates a four digit otp and return it
 export const generateOtp = () => {
-    let otp = "";
-    for (let i = 0; i < 6; i++) {
-      otp += Math.floor(Math.random() * 10);
-    }
-    return Number(otp.slice(0,4));
+  let otp = Math.floor(1000 + Math.random() * 9000);
+  return otp;
   };
 
 

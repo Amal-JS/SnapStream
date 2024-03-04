@@ -9,7 +9,7 @@ interface PasswordInputProps  {
     error:string,
     handleBlur?:(event:React.FocusEvent<HTMLInputElement>)=> void , //when passing event handling
                                                                     // function need to pass the event
-                    
+                
     handleChange?:(event:React.ChangeEvent<HTMLInputElement>)=> void,                                                //also 
     placeholder:string,
     Icon:React.ElementType                                          //Icon type to pass as props,
@@ -52,6 +52,7 @@ export const TextInput :React.FC<PasswordInputProps> = ({type,name,error,handleB
                   }}
                   placeholder={placeholder}
                   onChange={(event)=>{handleChange && handleChange(event)}}
+                  
                   />
 
                 <Icon className={`text-2xl  hover:cursor-pointer  absolute right-6  top-4  ${inputFocused ? 'text-blue-600 ' : inputError ?  'text-red-500' : 'text-default-400'}`}   />

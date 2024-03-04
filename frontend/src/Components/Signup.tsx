@@ -13,6 +13,7 @@ import { authRoot, rootUrlPath } from "../utils/url";
 import { useNavigate } from "react-router-dom";
 import { generateOtp, sendOtp } from "../utils/sendOtp";
 import { useButtonState } from "../hooks/useButtonState";
+import { checkFieldValueAlreadyUsed } from "../utils/user";
 
 interface UserData {
   userName: string;
@@ -79,14 +80,7 @@ export const Signup = () => {
     return value.length > 5 ? true : false;
   };
 
-  const checkFieldValueAlreadyUsed = async (field: string, value: string) => {
-    const response = await axios.get(
-      rootUrlPath +
-        authRoot +
-        `check_value_exist/?field=${field}&value=${value}`
-    );
-    return response.data.valueExist;
-  };
+  
 
   const validateUsername  = async (value: string, field: string) :Promise<boolean> => {
     if (!CheckMininumLengthOfValue(value)) {

@@ -193,3 +193,15 @@ class ForgotPassword(APIView):
             
 
         return JsonResponse({'passwordUpdated':False})
+    
+class UserData(APIView):
+    def post(self,request):
+        #change to user_id
+        id = request.data['user_id']
+        user = CustomUser.objects.get(id=id)
+        return JsonResponse(
+            {'userData':
+             {
+            'username':user.username,
+            'phone':'' if not user.phone else user.phone,
+            'email':'' if not user.email else user.email}})
