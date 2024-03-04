@@ -80,7 +80,7 @@ const handleLogin = () =>{
       password:''
     })
     console.log(response);
-    // navigate('/')
+    navigate('/')
 
     
   }
@@ -141,7 +141,7 @@ LoginUser()
               </div>
 
               <div className="flex justify-center p-2 items-center mt-2 cursor-pointer mb-4">
-                <p className="ml-2 text-base  text-gray-600">
+                <p className="ml-2 text-base  text-gray-600 hover:cursor-pointer" onClick={()=>navigate('/forgotpassword/')}>
                   Forgot password?{" "}
                 </p>
               </div>

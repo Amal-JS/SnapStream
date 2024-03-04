@@ -29,7 +29,7 @@ function App() {
     <Route path='/userprofile/:id' element={<UserProfile />} />
     <Route path='/viewstories/:id' element={<UserStories />}/>
     <Route path='/edituserprofile/:id' element={<UserEdit />}/>
-
+    <Route path='/forgotpassword/' element={<ForgotPassword/>}/>
 
     <Route path='*' element={<PageNotFound />}/>
 

@@ -23,6 +23,12 @@ interface LocalOtpData {
   phoneOrEmail:string
 }
 
+interface OtpinLocal {
+  otp:number,
+  process?:string,
+  phoneOrEmail?:string
+}
+
 export const OtpVerification = () => {
   const [otp, setOtp] = useState<OtpType>({
     firstDigit: "",
@@ -43,7 +49,11 @@ export const OtpVerification = () => {
   //timer 
   const [timeRunning,setTimeRunning] = useState<boolean>(true)
   const [remainingTime,setRemainingTime] = useState<number>(120)
-  const [otpInLocalStorage,setOtpInLocalStorage] = useState<number>(0)
+  const [otpInLocalStorage,setOtpInLocalStorage] = useState<OtpinLocal>({
+                                                                          otp:0,
+                                                                          phoneOrEmail:'',
+                                                                          process:''
+                                                                        })
 
   //button disable enable hook
  const {formFilled,setFormFilled} = useButtonState()
@@ -95,7 +105,7 @@ const handleOtp = ()=>{
 
   //set the otp in local storage to a state
   if (parsedOtp && parsedOtp.otp){
-    setOtpInLocalStorage(parsedOtp.otp)
+    setOtpInLocalStorage(parsedOtp)
   }
 
 }
@@ -250,38 +260,42 @@ const handleResendOtp = () =>{
       
     const otpData = JSON.parse(otpInLocalStorage)
     
-    if (otpData.phoneOrEmail && otpData.process == 'newAccountCreation'){
+    // if (otpData.phoneOrEmail && otpData.process == 'newAccountCreation'){
       
         const newOtp = generateOtp()
         //may need to update the local storage of otp 
         const newOtpValueInLocalStorage = {...otpData,['otp']:newOtp}
 
         //update the local state otp
-        setOtpInLocalStorage(newOtp)
+        setOtpInLocalStorage(prev => ({
+          ...prev,
+          'otp':newOtp
+        }))
         sendOtp(newOtp,otpData.phoneOrEmail)
 
         setRemainingTime(120); // Reset timer to initial value
         // will set the timer to run
         setTimeRunning(true)
-    }else{
-      //user profile password update , process userProfilePasswordUpdate
+    // }else{
+    //   //user profile password update , process userProfilePasswordUpdate
 
-    }
+    // }
   }
 
   
 }
-console.log('local otp :',otpInLocalStorage)
+console.log('local otp :',otpInLocalStorage.otp)
 const handleOtpMatch = ()=> {
 
     const otpValue = Number(Object.values(otp).join(''))
-    if (otpInLocalStorage == otpValue){
+    if (otpInLocalStorage.otp == otpValue){
+      
       
       const createUserAccountInDb = async ()=>{
 
         const userDataExistInLocalStorage = localStorage.getItem('newUserData')
         if (userDataExistInLocalStorage){
-          console.log(otpInLocalStorage,' ',otpValue)
+          console.log(otpInLocalStorage.otp,' ',otpValue)
           const response = await axios.post(rootUrlPath+authRoot+'createNewUserAccount/',
           JSON.parse(userDataExistInLocalStorage)
           )
@@ -295,13 +309,29 @@ const handleOtpMatch = ()=> {
             customErrorToast('Some error occured please try again.')
             navigate('/signup/')
           }
-          localStorage.removeItem('otp')
+          
           localStorage.removeItem('newUserData')
         }
-        
       }
-      //all verification is done and account can be created
-      createUserAccountInDb()
+      console.log(otpInLocalStorage);
+        
+      if(otpInLocalStorage && otpInLocalStorage.process == 'newAccountCreation'){
+        console.log('create account call');
+        
+        //all verification is done and account can be created
+        createUserAccountInDb()
+      }
+      else if (otpInLocalStorage.process == 'passwordUpdate'){   
+
+        console.log('password update block in otp verification');
+        
+            //password update redirect
+            const newOtp = generateOtp()
+            localStorage.setItem('verify',JSON.stringify({'verify':newOtp,'phoneOrEmail':otpInLocalStorage.phoneOrEmail}))
+            navigate(`/password/update/${newOtp}`)
+      }
+      //clear otp data from local
+      localStorage.removeItem('otp')
       setTimeRunning(false)
       
     }else{
@@ -356,7 +386,7 @@ const handleOtpMatch = ()=> {
 {!timeRunning ?
               remainingTime == 0 ?  <p className="text-base font-medium text-red-600 mt-3">Otp Expired</p> :
 
-              Number(Object.values(otp).join('')) !== otpInLocalStorage ?
+              Number(Object.values(otp).join('')) !== otpInLocalStorage.otp ?
               <p className="text-base font-medium text-red-600 mt-3">Otp Doesn't match</p> 
               :
               <p className="text-base font-medium text-green-400-600 mt-3">Otp Correct</p> 

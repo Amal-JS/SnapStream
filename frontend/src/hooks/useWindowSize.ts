@@ -12,7 +12,7 @@ export const useWindowSize = () => {
           width: window.innerWidth,
           height: window.innerHeight,
         });
-        console.log('screen size : ',window.innerHeight,' ',window.innerWidth)
+        // console.log('screen size : ',window.innerHeight,' ',window.innerWidth)
       };
   
       window.addEventListener("resize", handleResize);

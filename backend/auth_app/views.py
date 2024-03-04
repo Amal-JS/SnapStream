@@ -9,6 +9,8 @@ from django.core.mail import send_mail
 from backend.settings import EMAIL_HOST
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
+#hash password
+from django.contrib.auth.hashers import make_password
 
 
 
@@ -47,7 +49,7 @@ class SendOtp(View):
         data = json.loads(request.body)
         otp = data.get('otp')
         email_or_phone_value = data.get('value')
-        
+        process = data.get('process')
         #sending email
         if len(email_or_phone_value) > 10:
             send_mail(
@@ -139,3 +141,55 @@ class LoginUser(APIView):
                                      'message':'Invalid Credentials',
                                      })
         return JsonResponse({'userExist':False,'message':"Account doesn't exist.Please create an account"})
+    
+class ForgotPassword(APIView):
+    def get(self,request):
+        usernameOrPhoneOrEmail = request.GET.get('usernameOrPhoneOrEmail',None)
+  
+        if (usernameOrPhoneOrEmail):
+            #phone number
+            if len(usernameOrPhoneOrEmail) == 10 and usernameOrPhoneOrEmail.isdigit():
+                # If the input is a 10-digit number, assume it's a phone number
+                user = CustomUser.objects.filter(phone=usernameOrPhoneOrEmail).first()
+                print(user,'one')
+            else:
+                # Otherwise, try to find the user by email or username
+                user = CustomUser.objects.filter(email=usernameOrPhoneOrEmail).first() \
+                        or CustomUser.objects.filter(username=usernameOrPhoneOrEmail).first()
+                print(user,' two')
+            if (user):
+                #blocked user
+                if(not user.is_active) :
+                    return JsonResponse({'userExist':False,
+                                        'message':'Account not active',
+                                        })
+                else:
+                    phoneOrEmail = user.email if user.email else user.phone
+                    return JsonResponse({'userExist':True,
+                                        'message':f"Otp has successfully send to {phoneOrEmail}",
+                                        'phoneOrEmail' :phoneOrEmail,
+                                  
+                                        })
+ 
+        return JsonResponse({'userExist':False})
+    
+    
+    def post(self,request):
+        new_paswword = request.data['password']
+        phone_or_email = request.data['phoneOrEmail']
+        if(new_paswword and phone_or_email):
+            #phone number
+            if len(phone_or_email) == 10 and phone_or_email.isdigit():
+                # If the input is a 10-digit number, assume it's a phone number
+                user = CustomUser.objects.filter(phone=phone_or_email).first()
+                
+            else:
+                # Otherwise, try to find the user by email or username
+                user = CustomUser.objects.filter(email=phone_or_email).first()
+            #hash and store the password
+            user.password = make_password(new_paswword)
+            user.save()
+            return JsonResponse({'passwordUpdated':True})
+            
+
+        return JsonResponse({'passwordUpdated':False})

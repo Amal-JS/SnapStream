@@ -2,10 +2,64 @@
 import { Input, Button } from "@nextui-org/react";
 import { CiLock } from "react-icons/ci";
 import '../App.css';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { TextInput } from "./Form/TextInput";
+import { FaRegUser } from "react-icons/fa6";
+import { useButtonState } from "../hooks/useButtonState";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { authRoot, rootUrlPath } from "../utils/url";
+import { customSuccessToast } from "../Toast";
+import { generateOtp, sendOtp } from "../utils/sendOtp";
 
 
 export const ForgotPassword = () => {
+  const {formFilled,setFormFilled} = useButtonState()
+  const [formData,setFormData] = useState<string>('')
+  const [error,setError] = useState<string>('')
+  const navigate = useNavigate()
+
+  useEffect(()=>{
+
+    if(formData.length > 5){
+      setFormFilled(false)
+    }else{
+      setFormFilled(true)
+    }
+  },[formData])
+
+
+  const handleInputChange = (event:React.ChangeEvent<HTMLInputElement>)=>{
+    const {value} = event.target;
+    setFormData(value);
+
+    error && setError('')
+  }
+
+  const handleCheckUserExist = ()=>{
+      const CheckUserExist = async ()=> {
+          const response  = await axios.get(rootUrlPath+authRoot+`ForgotPassword/?usernameOrPhoneOrEmail=${formData}`)
+          if (await response.data.userExist){
+              customSuccessToast(response.data.message)
+              const otp = generateOtp()
+                //saving to local storage
+                localStorage.setItem(
+                  "otp",
+                  JSON.stringify({ otp: otp, process: "passwordUpdate" ,phoneOrEmail:response.data.phoneOrEmail})
+                );
+              //send otp to user
+              sendOtp(otp,response.data.phoneOrEmail)
+              //redirect to otp page
+              navigate('/otpverify/')
+        
+
+          }else{
+            setError("No account found.Please try again.")
+          }
+        }
+      CheckUserExist()
+  }
+
   return (
     <>
       <div className="h-screen">
@@ -21,26 +75,20 @@ export const ForgotPassword = () => {
            <CiLock className="text-black text-8xl font-black text-center"/>
            </div>
             <h2 className="my-2 text-black text-xl font-medium">Trouble logging in?</h2>
-            <h2 className="text-gray-400 mt-3 text-base">Enter your email, phone, or username and we'll send you a link to get back into your account.</h2>
+            <h2 className="text-gray-400 mt-3 text-base mb-5">Enter your email, phone, or username and we'll send you a link to get back into your account.</h2>
+           <TextInput 
+           Icon={FaRegUser}
+           error={''}
+           name="usernameOrPhoneOrEmail"
+           placeholder="Username , Phone or Email"
+           handleChange={handleInputChange}
+           
+           />
+              {error && <p className="text-sm md:text-base text-red-600 my-2">{error}</p> }
 
-
-
-              
-
-
-            <Input
-                type="text"
-                label="Username , Phone  or Email"
-                variant="bordered"
-                defaultValue=""
-                isInvalid={false}
-                errorMessage=""
-                className="w-full mb-2 mt-9"
-              />
-              
-
-              <Button color="primary" className="mt-3 w-full bg-blue-500">
-                <p className="text-base font-medium ">Get Account</p>
+              <Button color="primary" className="mt-3 w-full bg-blue-500 disabled:bg-blue-400 disabled:cursor-not-allowed"
+              disabled={formFilled} onClick={handleCheckUserExist}>
+                <p className="text-base font-medium ">Search Account</p>
               </Button>
 
             
