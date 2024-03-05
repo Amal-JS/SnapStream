@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 import json
 from django.middleware.csrf import get_token
+from django.shortcuts import get_object_or_404
 from django.views import View
 from . models import CustomUser
 from django.http import JsonResponse
@@ -19,11 +20,17 @@ class CheckUserValues(View):
     def get(self,request,*args,**kwargs):
         field = request.GET.get('field')
         value = request.GET.get('value')
-     
+        user_id = request.GET.get('user_id')
+        user = None
+        if(int(user_id) != 0):
+            user = get_object_or_404(CustomUser,pk=user_id)
+            
         value_exist = False
+
         if field == 'username':
             
             value_exist = CustomUser.objects.filter(username=value).exists()
+            
            
         elif field == 'email':
             value_exist = CustomUser.objects.filter(email=value).exists()
@@ -31,6 +38,11 @@ class CheckUserValues(View):
         else:
             value_exist = CustomUser.objects.filter(phone=value).exists()
         
+        if value_exist and user:
+                print(user.user_id ,'  ',CustomUser.objects.get(username=value).user_id)
+                if user.user_id == CustomUser.objects.get(username=value).user_id:
+                    value_exist = False
+        print('value Exist',value_exist)
         return JsonResponse({'valueExist':value_exist})
     
 #generate csrf token for post request
@@ -205,3 +217,31 @@ class UserData(APIView):
             'username':user.username,
             'phone':'' if not user.phone else user.phone,
             'email':'' if not user.email else user.email}})
+    def patch(self,request):
+        user_id = request.data['user_id']
+        profile_picture = request.data.get('profilePicture',None)
+        
+        # etrieve user using get_object_or_404
+        user = get_object_or_404(CustomUser, pk=user_id)
+
+        # Update fields based on provided data
+        updated_fields = {}
+        if 'username' in request.data:
+            updated_fields['username'] = request.data['username']
+        if 'email' in request.data:
+            updated_fields['email'] = request.data['email']
+        if 'phone' in request.data:
+            updated_fields['phone'] = request.data['phone']
+
+        if profile_picture:
+            # Handle profile picture update logic 
+            updated_fields['profile_picture'] = profile_picture 
+
+        if updated_fields:
+            for field, value in updated_fields.items():
+                setattr(user, field, value)
+            user.save()
+
+            return JsonResponse({'profileDetailsUpdated': True})
+        
+        return JsonResponse({'profileDetailsUpdated':False})

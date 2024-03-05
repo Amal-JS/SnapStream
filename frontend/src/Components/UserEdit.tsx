@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react';
 import { authRoot, rootUrlPath } from '../utils/url';
 import axios from 'axios';
 import { CheckMininumLengthOfValue, checkFieldValueAlreadyUsed } from '../utils/user';
-import { customErrorToast } from '../Toast';
+import { customErrorToast, customSuccessToast } from '../Toast';
 import { generateOtp, sendOtp } from '../utils/sendOtp';
 import { useNavigate } from 'react-router-dom';
 
@@ -52,7 +52,7 @@ interface UserProfileFormError {
       const navigate = useNavigate()
   const canValueBeUsed = async (field:keyof UserProfileData ,value:string)=>{
 
-    let valueExist = checkFieldValueAlreadyUsed(field,value)
+    let valueExist = checkFieldValueAlreadyUsed(field,value,user_id)
     if (await valueExist){
         if(value == userProfileInitialData[field]){
           return false;
@@ -73,6 +73,7 @@ interface UserProfileFormError {
   }
   const valueAlreadyUsed = canValueBeUsed(field,value) 
   if(await valueAlreadyUsed){
+    console.log('value taken')
     setUserProfileFormError(prev => ({...prev,[field]:`${field} already taken.`}))
   } 
         return valueAlreadyUsed   
@@ -219,11 +220,22 @@ console.log('not accepted',userProfileData[field], userProfileInitialData[field]
 
     }
   }
-
+      
       console.log('last step',changedUserData);
 
-  
+  const udpdateUserData = async () =>{
+    const response = await axios.patch(rootUrlPath+authRoot+'userData/',changedUserData)
+    if(await response.data.userProfileUpdated){
+      customErrorToast('Updated failed.Try after some time')
+    }else{
       
+      customSuccessToast('Updated successfully.')
+      navigate('/edituserprofile/fadfsdfsd')
+    }
+  
+  }
+
+  udpdateUserData()
   }
   const handleUpdatePassword = () =>{
 
