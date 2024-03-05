@@ -10,15 +10,16 @@ import { useButtonState } from '../hooks/useButtonState';
 import { useEffect, useState } from 'react';
 import { authRoot, rootUrlPath } from '../utils/url';
 import axios from 'axios';
-import { checkFieldValueAlreadyUsed } from '../utils/user';
+import { CheckMininumLengthOfValue, checkFieldValueAlreadyUsed } from '../utils/user';
 import { customErrorToast } from '../Toast';
 import { generateOtp, sendOtp } from '../utils/sendOtp';
 import { useNavigate } from 'react-router-dom';
 
 interface UserProfileData {
-  username:string,
+
+  username:string ,
   email:string,
-  phone:string
+  phone:string 
 }
 interface UserProfileFormError {
   username:string,
@@ -30,7 +31,7 @@ interface UserProfileFormError {
 
       const {formFilled,setFormFilled} = useButtonState()
       //after redux delete this
-      const id = 3;
+      const user_id = 3;
 
       const [userProfileData,setUserProfileData] = useState<UserProfileData>({
         username:'',
@@ -43,7 +44,7 @@ interface UserProfileFormError {
         email:'',
         phone:''
       });
-      const [userProfileFormError,setUserProfileFormError] = useState<UserProfileData>({
+      const [userProfileFormError,setUserProfileFormError] = useState<UserProfileFormError>({
         username:'',
         email:'',
         phone:''
@@ -63,7 +64,13 @@ interface UserProfileFormError {
     }
   }
   const usernameAcceptable = async  (field:keyof UserProfileData ,value:string)=> {
-
+    if(value.trim().length < 1){
+      return false
+    }
+  const valueLengthAcceptable = CheckMininumLengthOfValue(value)
+  if (!valueLengthAcceptable){
+    setUserProfileFormError(prev => ({...prev,[field]:'Minimum length of charecters is 6.'}))
+  }
   const valueAlreadyUsed = canValueBeUsed(field,value) 
   if(await valueAlreadyUsed){
     setUserProfileFormError(prev => ({...prev,[field]:`${field} already taken.`}))
@@ -71,6 +78,18 @@ interface UserProfileFormError {
         return valueAlreadyUsed   
   }
   const phoneNumberAcceptable = async (field:keyof UserProfileData,value:string)=> {
+    if(value.trim().length < 1){
+      return false
+    }
+    const valueLengthAcceptable = CheckMininumLengthOfValue(value)
+  if (!valueLengthAcceptable){
+    setUserProfileFormError(prev => ({...prev,[field]:'Minimum length of charecters is 6.'}))
+    return true;
+  }
+  if (isNaN(Number(value)) || value.length < 10 || value.length > 10){
+    setUserProfileFormError(prev => ({...prev,[field]:'Give a proper phone number.'}))
+    return true;
+  }
     const valueAlreadyUsed = canValueBeUsed(field,value)
     if(await valueAlreadyUsed){
       setUserProfileFormError(prev => ({...prev,[field]:`${field} already taken.`}))
@@ -78,6 +97,24 @@ interface UserProfileFormError {
         return valueAlreadyUsed 
   }
   const emailAcceptable =  async (field:keyof UserProfileData,value:string)=> {
+    if(value.trim().length < 1){
+      return false
+    }
+    const valueLengthAcceptable = CheckMininumLengthOfValue(value)
+  if (!valueLengthAcceptable){
+    setUserProfileFormError(prev => ({...prev,[field]:'Minimum length of charecters is 6.'}))
+  }
+
+  const validEmail  = (email:string)=> {
+
+    // Regular expression for email validation
+    var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+}
+    if(!validEmail(value)){
+      setUserProfileFormError(prev => ({...prev,[field]:'Give a valid email'}))
+      return true;
+    }
     const valueAlreadyUsed = canValueBeUsed(field,value) 
     if(await valueAlreadyUsed){
       setUserProfileFormError(prev => ({...prev,[field]:`${field} already taken.`}))
@@ -90,6 +127,7 @@ interface UserProfileFormError {
     const {name,value} = event.target;
     let valueExist = false;
     if (name == 'username'){
+   
       valueExist = await usernameAcceptable(name,value)
     }
     else if (name == 'phone') {
@@ -106,21 +144,85 @@ interface UserProfileFormError {
       [name]:value
     }))
   }
+  
   const handleChange =(event:React.ChangeEvent<HTMLInputElement>) =>{
       const {name,value} = event.target;
+
+    if (value === ''){
+      if(userProfileInitialData[name as keyof UserProfileData] != '' && value == ''){
+        setUserProfileData(prev => ({
+          ...prev,
+          [name]:userProfileInitialData[name as keyof UserProfileData]
+        }))
+      }
+    }
     //set field error to ''
     setUserProfileFormError(prev => ({...prev , [name]:''}))
       setUserProfileData(prev => ({
         ...prev,
         [name]:value
       }))
+     
       
   }
   const handleUpdateUserData = async () =>{
-      if(Object.values(userProfileFormError).some(value => value.length > 1)){
-        customErrorToast('Give acceptable values.')
-        return ;
+      if(Object.values(userProfileFormError).some(value=> value != '' )){
+        customErrorToast('Give acceptable values.') 
+       
+        
+        return
       }
+
+      // if(Object.values(userProfileData).every(value=> value.length < 5)){
+       
+      //   return
+      // }
+
+      // if(Object.values(userProfileFormError).some(value => value.length > 1)){
+      //   customErrorToast('Give acceptable values.')
+      //   return ;
+      // }
+   
+
+//   //inititially there was email and phone or there was email or phone
+//   if(userProfileInitialData['phone'] != '' && userProfileInitialData['email'] != '') {
+//  //so when updating we need either a phone or email or both the values
+//  if(userProfileData['phone'] == '' && userProfileData['email'] == ''){
+//   customErrorToast('Either email or phone number required.')
+//   return;
+// }
+//   }
+//   if(userProfileInitialData['phone'] != '' || userProfileInitialData['email'] != ''){
+//  //so when updating we need either a phone or email or both the values
+//  if(userProfileData['phone'] == '' && userProfileData['email'] == ''){
+//   customErrorToast('Either email or phone number required.')
+//   return;
+// }
+//  }
+
+     // Only update the values changed by the user
+     let changedUserData: { [key: string]: string | number | undefined} = { user_id: user_id };
+  const fields: (keyof UserProfileData)[] = ['username', 'email', 'phone'];
+
+  for (const field of fields) {
+    // Check if the field is dif  ferent
+    if (userProfileData[field] != userProfileInitialData[field] ) {
+      // If different, add it to changedUserData
+      const value = userProfileData[field];
+      if(!(value.length > 6)){
+          return
+      }
+      changedUserData[field] = value;
+      console.log('accepted',userProfileData[field], userProfileInitialData[field]);
+    }else{
+console.log('not accepted',userProfileData[field], userProfileInitialData[field]);
+
+    }
+  }
+
+      console.log('last step',changedUserData);
+
+  
       
   }
   const handleUpdatePassword = () =>{
@@ -139,7 +241,7 @@ interface UserProfileFormError {
 
   useEffect(()=>{
 async function fetchUserData() {
-    const response = await axios.post(rootUrlPath+authRoot+'userData/',{user_id:id})
+    const response = await axios.post(rootUrlPath+authRoot+'userData/',{user_id:user_id})
     if (response.data.userData){
       setUserProfileData(response.data.userData)
       setUserProfileInitialData(response.data.userData)
@@ -151,14 +253,21 @@ fetchUserData()
 
 //button disabled enabled
 useEffect(()=>{
-  console.log('user profile data :',userProfileData);
-  
-  if ((Object.values(userProfileData) !== Object.values(userProfileInitialData) &&
-    Object.values(userProfileData).every(value => value.trim().length > 4))){
+
+  //compare values in an array , this works
+  //but this won't work ['',''] !== ['',''] => compares if the array is in same memory
+  const initalValues = Object.values(userProfileInitialData);
+  if (Object.values(userProfileData).some((value,index) => value != initalValues[index])) 
+    {
+
     setFormFilled(false)
   }else{
     setFormFilled(true)
   }
+  if(Object.values(userProfileData).every(value => value == '')){
+    setFormFilled(true)
+    }
+
 },[userProfileData])
   return (
     <>

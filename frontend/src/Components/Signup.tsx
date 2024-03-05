@@ -13,7 +13,7 @@ import { authRoot, rootUrlPath } from "../utils/url";
 import { useNavigate } from "react-router-dom";
 import { generateOtp, sendOtp } from "../utils/sendOtp";
 import { useButtonState } from "../hooks/useButtonState";
-import { checkFieldValueAlreadyUsed } from "../utils/user";
+import { CheckMininumLengthOfValue, checkFieldValueAlreadyUsed } from "../utils/user";
 
 interface UserData {
   userName: string;
@@ -76,11 +76,6 @@ export const Signup = () => {
     }));
   };
 
-  const CheckMininumLengthOfValue = (value: string): boolean => {
-    return value.length > 5 ? true : false;
-  };
-
-  
 
   const validateUsername  = async (value: string, field: string) :Promise<boolean> => {
     if (!CheckMininumLengthOfValue(value)) {

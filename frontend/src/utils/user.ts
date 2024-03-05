@@ -9,3 +9,11 @@ export const checkFieldValueAlreadyUsed = async (field: string, value: string) =
     );
     return response.data.valueExist;
   };
+
+
+
+  export const CheckMininumLengthOfValue = (value: string): boolean => {
+    return value.length > 5 ? true : false;
+  };
+
+  

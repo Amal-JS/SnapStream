@@ -11,7 +11,7 @@ import { useButtonState } from "../hooks/useButtonState";
 import axios from "axios";
 import { authRoot, rootUrlPath } from "../utils/url";
 import { customSuccessToast } from "../Toast";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 interface LoginFormData {
   username:string,
