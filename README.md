@@ -1,3 +1,3 @@
 Hey folks, 
-      I am crateing an Instagram clone in this project 
+      I am creating an Instagram clone in this project 
       
