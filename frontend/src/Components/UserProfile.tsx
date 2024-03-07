@@ -15,11 +15,14 @@ import { BsClipboard2Heart } from "react-icons/bs";
 import { useModal } from "../hooks/useModal";
 import { CustomModal } from "./Modal/Modal";
 import { ModalTitle } from "./Modal/ModalTitle";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ModalBody } from "./Modal/ModalBody";
 import { ModalFooter } from "./Modal/ModalFooter";
 import { ImageUpload } from "./ImageCrop/ImageUpload";
 import 'react-image-crop/dist/ReactCrop.css'
+import axios from "axios";
+import { authRoot, rootUrlPath } from "../utils/url";
+import { customErrorToast, customSuccessToast } from "../Toast";
 
 interface modalContentType {
       isDismissable : boolean | true,
@@ -34,6 +37,9 @@ const Profile = () => {
   const [activeTab, setActiveTab] = useState("profile");
   const { isModalOpened, handleModalToggle } = useModal();
   const [modalContent,setModalContent] = useState <modalContentType> ()
+  const user_id = 3;
+
+  const navigate = useNavigate()
 
   const showUserFollowers = () => {
     console.log("all follower");
@@ -83,7 +89,21 @@ const Profile = () => {
   const handleProfilePictureUpdated =(imgStr:string)=>{
     //close the modal
     handleModalToggle()
-    alert(imgStr)
+
+    
+    const sendProfilePictureToDb = async () =>{
+          const response = await axios.patch(rootUrlPath+authRoot+'userData/',{'user_id':user_id,'profilePicture':imgStr})
+         
+          
+          if(await response.data.profilePictureUpdated){
+              customSuccessToast('Profile picture updated')
+              navigate('/userprofile/')
+          }else{
+            customErrorToast('Sorry profile picture upload failed.')
+            customErrorToast('Try again after some time.')
+          }
+    }
+    sendProfilePictureToDb()
   }
   //upload profile picture 
   const handleUploadProfilePicture = ()=>{

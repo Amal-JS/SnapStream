@@ -1,8 +1,16 @@
+import base64
 from datetime import datetime, timedelta
+from io import BytesIO
+from PIL import Image
 import json
+import os
+import uuid
 from django.middleware.csrf import get_token
 from django.shortcuts import get_object_or_404
 from django.views import View
+from django.core.files.base import ContentFile
+from django.core.files.storage import default_storage
+from backend  import settings
 from . models import CustomUser
 from django.http import JsonResponse
 #for sending email
@@ -199,7 +207,42 @@ class ForgotPassword(APIView):
             
 
         return JsonResponse({'passwordUpdated':False})
-    
+
+#function to save the cropped user profile picture
+def save_base64_image(profile_picture_str,user):
+                # Separate the base64 prefix from the data and remove whitespace
+                imgdata = profile_picture_str.split(',')[1].strip()
+
+                # Check if the base64 string length is a multiple of 4 and add a '=' character if not
+                if len(imgdata) % 4 != 0:
+                    imgdata += '=' * (4 - len(imgdata) % 4)
+
+                # Decode the base64 string
+                try:
+                    imgbytes = base64.b64decode(imgdata)
+                    # Convert bytes to image using PIL
+                    image = Image.open(BytesIO(imgbytes))
+
+                    # Generate a unique filename and filepath
+                    filename = f'{uuid.uuid4()}.png'
+                     # Generate the relative filepath
+                    filepath = os.path.join('user_profile_pictures', filename)
+                    file_path = os.path.join(settings.MEDIA_ROOT,'user_profile_pictures',filename)
+                   
+                    # Save the image to the file system
+                    with open(file_path, 'wb') as f:
+                        f.write(imgbytes)
+                    image.save(file_path)
+                    user.profile_picture = filepath
+                    user.save()
+                    
+
+                    return {'profilePictureUpdated': True}
+                except Exception as e:
+                    print(e)
+                    return {'profilePictureUpdated': False}  
+                  
+#update and get user data   
 class UserData(APIView):
     def post(self,request):
         #change to user_id
@@ -211,9 +254,10 @@ class UserData(APIView):
             'username':user.username,
             'phone':'' if not user.phone else user.phone,
             'email':'' if not user.email else user.email}})
+    
     def patch(self,request):
         user_id = request.data['user_id']
-        profile_picture = request.data.get('profilePicture',None)
+        profile_picture_str = request.data.get('profilePicture',None)
         
         # etrieve user using get_object_or_404
         user = get_object_or_404(CustomUser, pk=user_id)
@@ -226,11 +270,12 @@ class UserData(APIView):
             updated_fields['email'] = request.data['email']
         if 'phone' in request.data:
             updated_fields['phone'] = request.data['phone']
-
-        if profile_picture:
-            # Handle profile picture update logic 
-            updated_fields['profile_picture'] = profile_picture 
-
+        
+        #if profile picture exist
+        if profile_picture_str:
+            response = save_base64_image(profile_picture_str,user)
+            return JsonResponse(response)
+        
         if updated_fields:
             for field, value in updated_fields.items():
                 setattr(user, field, value)
