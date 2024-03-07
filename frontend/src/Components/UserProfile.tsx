@@ -1,7 +1,7 @@
 import { IoAddCircleOutline } from "react-icons/io5";
 import { SideNav } from "./SideNav";
 import { Button, Image } from "@nextui-org/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   MdOutlineCalendarViewMonth,
   MdOutlineVideoLibrary,
@@ -32,14 +32,49 @@ interface modalContentType {
       content ?: JSX.Element
 
 }
+interface UserData {
+  username:string,
+  profilePicture:string,
+  userId:number,
+  email?:string,
+  phone?:string,
+  
+}
 
 const Profile = () => {
   const [activeTab, setActiveTab] = useState("profile");
   const { isModalOpened, handleModalToggle } = useModal();
   const [modalContent,setModalContent] = useState <modalContentType> ()
   const user_id = 3;
-
+  const [userData,setUserData] = useState<UserData>({
+    username:'',
+    profilePicture:'',
+    userId:0,
+    
+    
+  })
+  const [profilePictureUpdated, setProfilePictureUpdated] = useState(false);
   const navigate = useNavigate()
+
+  useEffect(()=>{
+    console.log('use Effect call');
+    
+    async function fetchUserData() {
+        const response = await axios.post(rootUrlPath+authRoot+'userData/',{user_id:user_id})
+        console.log(response.data.userData);
+        
+        if (response.data.userData){
+          setUserData(response.data.userData)
+
+        }
+
+    }
+    
+    fetchUserData()
+      },[])
+
+
+
 
   const showUserFollowers = () => {
     console.log("all follower");
@@ -96,8 +131,10 @@ const Profile = () => {
          
           
           if(await response.data.profilePictureUpdated){
+            navigate('/userprofile/')
+            setProfilePictureUpdated(true)
               customSuccessToast('Profile picture updated')
-              navigate('/userprofile/')
+              
           }else{
             customErrorToast('Sorry profile picture upload failed.')
             customErrorToast('Try again after some time.')
@@ -105,6 +142,14 @@ const Profile = () => {
     }
     sendProfilePictureToDb()
   }
+
+    // Reload the component when profilePictureUpdated state changes
+    useEffect(() => {
+      navigate('/userprofile/')
+    }, [profilePictureUpdated]);
+
+    
+
   //upload profile picture 
   const handleUploadProfilePicture = ()=>{
 
@@ -148,18 +193,21 @@ handleModalToggle();
         <div className=" border-b-gray-500 border-b-2  mt-6">
           {/* profile pic , user profile info */}
           <div className="">
-            <div className="flex justify-between md:justify-normal pl-3 pr-3 mb-5">
-              <div className="flex justify-center mt-4">
-                <Image
-                  className="w-16 text-center md:w-64 sm:mb-3 md:mb-2 hover:cursor-pointer"
-                  style={{ borderRadius: "50%" }}
-                  alt="profile picture"
-                  onClick={handleUploadProfilePicture}
-                  src="https://img.freepik.com/premium-vector/user-profile-icon-flat-style-member-avatar-vector-illustration-isolated-background-human-permission-sign-business-concept_157943-15752.jpg?size=338&ext=jpg&ga=GA1.1.1700460183.1708473600&semt=ais"
-                />
-                
+            <div className="flex justify-start  md:justify-between  md:pl-3 pr-3 mb-5">
+              <div className="pl-4 mb-4 w-4/12  mt-4">
+     
+                 <img className="w-24 h-24 text-center md:w-64 md:h-64 sm:mb-3 md:mb-2 hover:cursor-pointer" 
+                 style={{ borderRadius: "50%" }}
+                 alt="profile picture"
+                onClick={handleUploadProfilePicture}
+                 src={userData.profilePicture ?
+                 `http://localhost:8000/media/${userData.profilePicture}`
+                  : "https://img.freepik.com/premium-vector/user-profile-icon-flat-style-member-avatar-vector-illustration-isolated-background-human-permission-sign-business-concept_157943-15752.jpg?size=338&ext=jpg&ga=GA1.1.1700460183.1708473600&semt=ais"
+              }
+                  />
+              
               </div>
-              <div className="block  mb-5  md:pl-28  pl-2">
+              <div className="block w-8/12 mb-5 mt-6 md:mt-0 md:pl-28  pl-2">
                 <h2 className="font-medium text-xl md:text-2xl text-white mr-4 pl-4 md:pl-0 md:pb-5 md:mt-10 hover:cursor-pointer">
                   amal.adamzz
                 </h2>

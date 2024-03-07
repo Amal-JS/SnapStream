@@ -248,12 +248,16 @@ class UserData(APIView):
         #change to user_id
         id = request.data['user_id']
         user = CustomUser.objects.get(id=id)
+        
         return JsonResponse(
             {'userData':
              {
             'username':user.username,
+            'userId':user.user_id,
             'phone':'' if not user.phone else user.phone,
-            'email':'' if not user.email else user.email}})
+            'email':'' if not user.email else user.email,
+            'profilePicture':str(user.profile_picture)
+            } })
     
     def patch(self,request):
         user_id = request.data['user_id']
