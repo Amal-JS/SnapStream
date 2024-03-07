@@ -11,7 +11,7 @@ interface ModalProps {
     }
 
 
-export const CustomModal : React.FC<ModalProps>= ({modalToggle,children,isDismissable}) => {
+export const CustomModal : React.FC<ModalProps>= ({modalToggle,children,isDismissable = true}) => {
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
   console.log('modal page',isDismissable)
 

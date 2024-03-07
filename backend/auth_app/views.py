@@ -20,29 +20,23 @@ class CheckUserValues(View):
     def get(self,request,*args,**kwargs):
         field = request.GET.get('field')
         value = request.GET.get('value')
+        #only when call is made from userEdit component
         user_id = request.GET.get('user_id')
         user = None
         if(int(user_id) != 0):
             user = get_object_or_404(CustomUser,pk=user_id)
-            
         value_exist = False
-
         if field == 'username':
-            
             value_exist = CustomUser.objects.filter(username=value).exists()
-            
-           
         elif field == 'email':
             value_exist = CustomUser.objects.filter(email=value).exists()
-            
         else:
             value_exist = CustomUser.objects.filter(phone=value).exists()
-        
+        #if value already used and the current user has that username then no problem
         if value_exist and user:
-                print(user.user_id ,'  ',CustomUser.objects.get(username=value).user_id)
                 if user.user_id == CustomUser.objects.get(username=value).user_id:
                     value_exist = False
-        print('value Exist',value_exist)
+ 
         return JsonResponse({'valueExist':value_exist})
     
 #generate csrf token for post request

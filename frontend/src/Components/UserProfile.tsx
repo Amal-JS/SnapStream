@@ -16,12 +16,17 @@ import { useModal } from "../hooks/useModal";
 import { CustomModal } from "./Modal/Modal";
 import { ModalTitle } from "./Modal/ModalTitle";
 import { Link } from "react-router-dom";
+import { ModalBody } from "./Modal/ModalBody";
+import { ModalFooter } from "./Modal/ModalFooter";
+import { ImageUpload } from "./ImageCrop/ImageUpload";
+import 'react-image-crop/dist/ReactCrop.css'
 
 interface modalContentType {
       isDismissable : boolean | true,
       modalToggle:boolean | false,
       title:string,
       handleModalToggle:() => void,
+      content ?: JSX.Element
 
 }
 
@@ -71,7 +76,40 @@ const Profile = () => {
 
   const handleTabClick = (tabId: string) => {
     setActiveTab(tabId);
+    
   };
+
+  //croped image string value function 
+  const handleProfilePictureUpdated =(imgStr:string)=>{
+    //close the modal
+    handleModalToggle()
+    alert(imgStr)
+  }
+  //upload profile picture 
+  const handleUploadProfilePicture = ()=>{
+
+    const modalContent = () =>{
+      return (
+        <>       
+        <ImageUpload handleProfilePictureUpdated={handleProfilePictureUpdated}/>
+        </>) }
+
+        if(modalContent){
+          setModalContent(prev => (
+            {
+              isDismissable : true,
+              modalToggle:isModalOpened,
+              title:'Upload profile picture ',
+              handleModalToggle:handleModalToggle,
+              content:modalContent()
+          
+              }
+          ))
+        }
+
+handleModalToggle();
+  }
+
   return (
     <>
      {
@@ -80,6 +118,9 @@ const Profile = () => {
         <ModalTitle title={modalContent.title} handleModalToggle={modalContent.handleModalToggle}  isDismissable={modalContent.isDismissable}>
           
         </ModalTitle>
+        <ModalBody>
+        {modalContent && modalContent.content}
+        </ModalBody>
       </CustomModal>
      }
       <div className="w-full  p-2  bg-black md:pl-72 mb-5">
@@ -90,11 +131,13 @@ const Profile = () => {
             <div className="flex justify-between md:justify-normal pl-3 pr-3 mb-5">
               <div className="flex justify-center mt-4">
                 <Image
-                  className="w-16 text-center md:w-64 sm:mb-3 md:mb-2"
+                  className="w-16 text-center md:w-64 sm:mb-3 md:mb-2 hover:cursor-pointer"
                   style={{ borderRadius: "50%" }}
                   alt="profile picture"
+                  onClick={handleUploadProfilePicture}
                   src="https://img.freepik.com/premium-vector/user-profile-icon-flat-style-member-avatar-vector-illustration-isolated-background-human-permission-sign-business-concept_157943-15752.jpg?size=338&ext=jpg&ga=GA1.1.1700460183.1708473600&semt=ais"
                 />
+                
               </div>
               <div className="block  mb-5  md:pl-28  pl-2">
                 <h2 className="font-medium text-xl md:text-2xl text-white mr-4 pl-4 md:pl-0 md:pb-5 md:mt-10 hover:cursor-pointer">
@@ -267,10 +310,17 @@ const Profile = () => {
                 </div>
 
                 <Image
+                data-tooltip-target="tooltip-default"
+                data-tooltip-trigger="hover" 
                   className="w-full   z-20  bg-opacity-100"
                   alt="profile picture"
                   src={sampleImage}
+                 
                 />
+                <div id="tooltip-default" role="tooltip" className="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-blue-300 rounded-lg shadow-sm opacity-0 tooltip ">
+    Tooltip content
+    <div className="tooltip-arrow" data-popper-arrow></div>
+</div>
               </div>
 
               <div className="bg-red-600 text-white relative h-32 md:h-96 hover:cursor-pointer ">
