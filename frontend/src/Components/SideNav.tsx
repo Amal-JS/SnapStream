@@ -43,7 +43,7 @@ export const SideNav : React.FC<SideNavProps>= ({children}) => {
         <BiNavigation className="hidden md:block mt-2 text-white  ml-9 md:ml-0   md:text-4xl md:mb-6 hover:cursor-pointer" />
         <FaRegHeart className="hidden md:block mt-2 text-white   ml-9 md:ml-0  md:text-4xl md:mb-6 hover:cursor-pointer" />
         <MdOutlineAddBox className="text-white  mt-2  text-4xl   ml-9 md:ml-0   md:text-4xl md:mb-6 hover:cursor-pointer" />
-        <FaUserCircle className="text-white   mt-2 text-4xl     ml-9 md:ml-3   md:text-4xl md:mb-24 hover:cursor-pointer mr-4" />
+        <Link to='/userprofile/'><FaUserCircle className="text-white   mt-2 text-4xl     ml-9 md:ml-3   md:text-4xl md:mb-24 hover:cursor-pointer mr-4" /></Link>
       </div>
 
       <div className="bg-blue-600  h-screen">{children}</div>
