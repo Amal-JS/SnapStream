@@ -2,7 +2,7 @@
 import { FaRegUser } from 'react-icons/fa';
 import '../App.css';
 import { TextInput } from './Form/TextInput';
-import { SideNav } from './SideNav';
+import { SideNav } from '../pages/user/SideNav';
 import { BsPhone } from 'react-icons/bs';
 import { MdEmail } from 'react-icons/md';
 import { Button } from '@nextui-org/react';

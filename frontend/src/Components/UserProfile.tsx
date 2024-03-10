@@ -1,5 +1,5 @@
 import { IoAddCircleOutline } from "react-icons/io5";
-import { SideNav } from "./SideNav";
+import { SideNav } from '../pages/user/SideNav';
 import { Button, Image } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import {
