@@ -31,3 +31,5 @@ frontend/dist-ssr
 
 venv/
 .env
+
+frontend/src/pages/user/SideNav.tsx
