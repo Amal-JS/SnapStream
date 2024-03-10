@@ -20,7 +20,10 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 #hash password
 from django.contrib.auth.hashers import make_password
-
+#google auth
+from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+from allauth.socialaccount.providers.oauth2.client import OAuth2Client
+from dj_rest_auth.registration.views import SocialLoginView
 
 
 #check if a username exist in the database
@@ -288,3 +291,10 @@ class UserData(APIView):
             return JsonResponse({'profileDetailsUpdated': True})
         
         return JsonResponse({'profileDetailsUpdated':False})
+    
+
+#Google Auth
+class GoogleLogin(SocialLoginView): # if you want to use Authorization Code Grant, use this
+    adapter_class = GoogleOAuth2Adapter
+    callback_url = 'http://localhost:5173/'
+    client_class = OAuth2Client
