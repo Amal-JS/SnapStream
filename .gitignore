@@ -33,3 +33,4 @@ venv/
 .env
 
 frontend/src/pages/user/SideNav.tsx
+frontend/env

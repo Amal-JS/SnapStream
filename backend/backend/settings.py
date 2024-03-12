@@ -37,7 +37,6 @@ INSTALLED_APPS = [
     'rest_framework',
      "corsheaders",
      "rest_framework.authtoken",
-      'dj_rest_auth',
       'allauth',
 
     #custom apps
@@ -160,3 +159,4 @@ EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),}
+

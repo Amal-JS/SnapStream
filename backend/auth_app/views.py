@@ -10,6 +10,7 @@ from django.shortcuts import get_object_or_404
 from django.views import View
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
+import requests
 from backend  import settings
 from . models import CustomUser
 from django.http import JsonResponse
@@ -294,7 +295,28 @@ class UserData(APIView):
     
 
 #Google Auth
-class GoogleLogin(SocialLoginView): # if you want to use Authorization Code Grant, use this
-    adapter_class = GoogleOAuth2Adapter
-    callback_url = 'http://localhost:5173/'
-    client_class = OAuth2Client
+class GoogleLogin(APIView):
+    def post(self,request):
+        access_token = request.data['access_token']
+        userinfo_url = 'https://www.googleapis.com/oauth2/v3/userinfo'  
+        headers = {'Authorization': f'Bearer {access_token}'}
+        print(headers)
+        response = requests.get(userinfo_url,headers=headers)
+        print('response',response)
+        if response.status_code == 200:
+            user_info = response.json()
+            #if user exist in db send the access and refresh token
+            user = CustomUser.objects.filter(email=user_info.email).exists()
+            if user:
+                token_for_user = get_tokens_for_user(user)
+                # Set HTTP-only cookies for access token and refresh token
+                response = JsonResponse({'isUserLoggedSuccessfully': True,'user': user.user_id})
+                response.set_cookie(key='access_token', value=token_for_user['access'], httponly=True, secure=True, expires=datetime.now() + timedelta(minutes=5), samesite='Lax')
+                response.set_cookie(key='refresh_token', value=token_for_user['refresh'], httponly=True, secure=True, expires=datetime.now() + timedelta(days=1), samesite='Lax')
+                return response
+            else:
+                #create account for user
+                #pass
+
+                 return response
+        return JsonResponse({'isUserLoggedSuccessfully':False})
