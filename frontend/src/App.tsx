@@ -13,13 +13,28 @@ import { UserHome } from './Components/UserHome.tsx'
 import {store} from '../src/Redux/store.ts'
 import { Provider } from 'react-redux'
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import { useEffect, useState } from 'react'
+import { Button } from '@nextui-org/react'
 
 function App() {
-//   const googleClientId =process.env.REACT_APP_GOOGLE_API_TOKEN? process.env.REACT_APP_GOOGLE_API_TOKEN : '';
-// console.log(googleClientId);
+
+  const [theme,setTheme] = useState<string>('light')
+  useEffect(()=>{
+    if (theme === 'dark'){
+      document.documentElement.classList.add('dark')
+    }else{
+      document.documentElement.classList.remove('dark')
+    }
+  },[theme])
+
+  const handleThemeChange = ()=>{
+    setTheme(prev => theme === 'dark' ? 'light' : 'dark')
+  }
+
 
   return (
   <>
+  <Button className='primary' onClick={handleThemeChange}>Change Theme</Button>
  <Toast />
  <GoogleOAuthProvider clientId={'443025233563-nh99nv2u8u7hj8l8o91bpguja6ni7114.apps.googleusercontent.com'}>
  <Provider store={store}>

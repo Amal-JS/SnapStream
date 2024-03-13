@@ -40,6 +40,7 @@ INSTALLED_APPS = [
       'allauth',
 
     #custom apps
+    
     'auth_app'
 ]
 

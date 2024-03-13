@@ -3,9 +3,9 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 interface authState {
     userLoggedIn:boolean,
-    userName:string | null,
     userId:string | null,
-    isSuperUser:boolean
+    isSuperUser:boolean,
+    darkTheme:boolean
 }
 
 const userIdFromLocalStorage = localStorage.getItem('userId');
@@ -13,7 +13,7 @@ const parsedUserId = userIdFromLocalStorage ? JSON.parse(userIdFromLocalStorage)
 
 const initialState : authState = {
     userLoggedIn : false,
-    userName : '',
+    darkTheme : false,
     userId : parsedUserId,
     isSuperUser:false
 }
@@ -25,7 +25,7 @@ export const authSlice = createSlice({
         userLoggedIn:(state,action : PayloadAction<authState>)=>{
                 state.userLoggedIn = true,
                 state.userId = action.payload.userId,
-                state.userName = action.payload.userName,
+                state.darkTheme = action.payload.darkTheme,
                 state.isSuperUser= action.payload.isSuperUser
             
         },
@@ -33,7 +33,7 @@ export const authSlice = createSlice({
                 state.isSuperUser = false,
                 state.userId = null,
                 state.userLoggedIn = false,
-                state.userName = ''
+                state.darkTheme = false
         }
     }
     

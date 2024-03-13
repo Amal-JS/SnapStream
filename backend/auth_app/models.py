@@ -5,7 +5,7 @@ from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.hashers import make_password,check_password
 
 class CustomUser(AbstractUser):
-    user_id =  models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    user_id =  models.UUIDField(default=uuid.uuid4, editable=False, unique=True,primary_key=True)
     phone = models.CharField(unique=True,null=True,max_length=10)
     bio = models.CharField(null=True,max_length=200)
     profile_picture = models.ImageField(null=True,upload_to='user_profile_pictures/')
@@ -14,6 +14,10 @@ class CustomUser(AbstractUser):
     full_name= models.CharField(null=True,max_length=100)
     is_active = models.BooleanField(default=True)
     account_created_at = models.DateTimeField(auto_now_add=True)
+    is_google_auth = models.BooleanField(default=False)
+    access_token = models.CharField(max_length=500)
+    refresh_token = models.CharField(max_length = 500)
+
 
     def save(self, *args, **kwargs):
         #hashes password only one time

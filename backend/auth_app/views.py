@@ -8,8 +8,7 @@ import uuid
 from django.middleware.csrf import get_token
 from django.shortcuts import get_object_or_404
 from django.views import View
-from django.core.files.base import ContentFile
-from django.core.files.storage import default_storage
+
 import requests
 from backend  import settings
 from . models import CustomUser
@@ -150,7 +149,7 @@ class LoginUser(APIView):
             if (password_check):
                 token_for_user = get_tokens_for_user(user)
                 # Set HTTP-only cookies for access token and refresh token
-                response = JsonResponse({'userExist': True, 'message': 'Have a nice day.', 'user': user.user_id})
+                response = JsonResponse({'userExist': True, 'message': 'Have a nice day.', 'userId': user.user_id,'darkTheme':user.dark_theme})
                 response.set_cookie(key='access_token', value=token_for_user['access'], httponly=True, secure=True, expires=datetime.now() + timedelta(minutes=5), samesite='Lax')
                 response.set_cookie(key='refresh_token', value=token_for_user['refresh'], httponly=True, secure=True, expires=datetime.now() + timedelta(days=1), samesite='Lax')
                 return response
@@ -310,13 +309,8 @@ class GoogleLogin(APIView):
             if user:
                 token_for_user = get_tokens_for_user(user)
                 # Set HTTP-only cookies for access token and refresh token
-                response = JsonResponse({'isUserLoggedSuccessfully': True,'user': user.user_id})
+                response = JsonResponse({'isUserLoggedSuccessfully': True,'userId': user.user_id,'darkTheme':user.dark_theme})
                 response.set_cookie(key='access_token', value=token_for_user['access'], httponly=True, secure=True, expires=datetime.now() + timedelta(minutes=5), samesite='Lax')
                 response.set_cookie(key='refresh_token', value=token_for_user['refresh'], httponly=True, secure=True, expires=datetime.now() + timedelta(days=1), samesite='Lax')
                 return response
-            else:
-                #create account for user
-                #pass
-
-                 return response
         return JsonResponse({'isUserLoggedSuccessfully':False})
