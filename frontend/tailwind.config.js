@@ -18,7 +18,7 @@ export default {
               'badge-notification':'#FF3040',
               'secondary-hover':'#F2F2F2',
               'primary-hover':'#1A1A1A',
-              'primary-border':'#121212'
+              'primary-border':'#1F2937'
     }
     },
   },

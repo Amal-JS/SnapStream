@@ -258,9 +258,9 @@ const filled = Object.values(fieldsCharCount).every((value) => value >1)
   return (
     <>
       <div className="h-screen">
-        <div className="bg-white  p-3 flex justify-center items-center">
+        <div className="bg-secondary dark:bg-primary   p-3 flex justify-center items-center">
           <form className=" p-1 ">
-            <div className="bg-white border-2 border-gray-300 p-6  text-center w-full md:w-96">
+            <div className="bg-secondary dark:bg-primary  border-3 border-secondary-border dark:border-primary-border md:p-3  text-center w-full md:w-96">
               <h2 className="pacifico-regular  text-4xl md:text-4xl mt-3 pr-2">
                 SnapStream
               </h2>
@@ -269,7 +269,7 @@ const filled = Object.values(fieldsCharCount).every((value) => value >1)
               </h2>
 
               <div className="flex justify-center p-2 items-center mt-3 cursor-pointer min-w-400">
-                <Button color="primary" className="mt-3 w-full bg-blue-500">
+                <Button color="primary" className="mt-3 w-full bg-blue-700 ">
                   <FaGoogle style={{ width: 20, height: 20 }} />
                   <p className="ml-2 text-base font-medium ">
                     Log in with Google
@@ -322,7 +322,7 @@ const filled = Object.values(fieldsCharCount).every((value) => value >1)
 
               <Button
                 color="primary"
-                className="mt-3 w-full bg-blue-500 disabled:bg-blue-400"
+                className="mt-3 w-full bg-blue-700 disabled:bg-common-blue"
                 disabled={formFilled}
                 onClick={handleSubmit}
               >
@@ -330,7 +330,7 @@ const filled = Object.values(fieldsCharCount).every((value) => value >1)
               </Button>
             </div>
 
-            <div className="border-2 border-gray-300 p-5 text-center  bg-white h-full w-full mt-3 flex justify-center">
+            <div className="border-2 border-secondary-border dark:border-primary-border p-5 text-center  bg-secondary dark:bg-primary  h-full w-full mt-3 flex justify-center">
               <div className="flex">
                 <p>Have an account?</p>
                 <p className="cursor-pointer text-blue-500 font-medium text-base pl-1" onClick={()=>navigate('/login/')}>
