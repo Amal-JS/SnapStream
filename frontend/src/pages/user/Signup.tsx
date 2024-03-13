@@ -1,6 +1,6 @@
 import { Button } from "@nextui-org/react";
 import { FaGoogle } from "react-icons/fa";
-import "../App.css";
+import '../../App.css';
 import { useState } from "react";
 import { PasswordInput } from "../../Components/Form/PasswordInput";
 import { FaUser } from "react-icons/fa";

@@ -1,9 +1,9 @@
 import { Image } from "@nextui-org/react";
-import LoginGifLight from '../assets/login_sample_gif.gif';
-import LoginGifDark from '../assets/logos/loginGifBlack.gif';
+import LoginGifLight from '../../assets/login_sample_gif.gif';
+import LoginGifDark from '../../assets/logos/loginGifBlack.gif';
 import { Button } from "@nextui-org/react";
 import { FcGoogle } from "react-icons/fc";
-import '../App.css';
+import '../../App.css';
 import { TextInput } from "../../Components/Form/TextInput";
 import { FaRegUser } from "react-icons/fa";
 import { useEffect, useRef, useState } from "react";

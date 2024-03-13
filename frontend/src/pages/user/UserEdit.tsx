@@ -1,6 +1,6 @@
 
 import { FaRegUser } from 'react-icons/fa';
-import '../App.css';
+import '../../App.css';
 import { TextInput } from '../../Components/Form/TextInput';
 import { SideNav } from './SideNav';
 import { BsPhone } from 'react-icons/bs';

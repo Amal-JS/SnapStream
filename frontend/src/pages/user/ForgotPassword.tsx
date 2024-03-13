@@ -1,7 +1,7 @@
 
 import { Input, Button } from "@nextui-org/react";
 import { CiLock } from "react-icons/ci";
-import '../App.css';
+import '../../App.css';
 import { Link, useNavigate } from "react-router-dom";
 import { TextInput } from "../../Components/Form/TextInput";
 import { FaRegUser } from "react-icons/fa6";

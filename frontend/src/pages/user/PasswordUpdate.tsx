@@ -1,7 +1,7 @@
 
 import { Input, Button } from "@nextui-org/react";
 import { FaLock, FaUserLock } from "react-icons/fa";
-import '../App.css';
+import '../../App.css';
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PasswordInput } from "../../Components/Form/PasswordInput";
