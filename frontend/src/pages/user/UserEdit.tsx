@@ -1,18 +1,18 @@
 
 import { FaRegUser } from 'react-icons/fa';
 import '../App.css';
-import { TextInput } from './Form/TextInput';
-import { SideNav } from '../pages/user/SideNav';
+import { TextInput } from '../../Components/Form/TextInput';
+import { SideNav } from './SideNav';
 import { BsPhone } from 'react-icons/bs';
 import { MdEmail } from 'react-icons/md';
 import { Button } from '@nextui-org/react';
-import { useButtonState } from '../hooks/useButtonState';
+import { useButtonState } from '../../hooks/useButtonState';
 import { useEffect, useState } from 'react';
-import { authRoot, rootUrlPath } from '../utils/url';
+import { authRoot, rootUrlPath } from '../../utils/url';
 import axios from 'axios';
-import { CheckMininumLengthOfValue, checkFieldValueAlreadyUsed } from '../utils/user';
-import { customErrorToast, customSuccessToast } from '../Toast';
-import { generateOtp, sendOtp } from '../utils/sendOtp';
+import { CheckMininumLengthOfValue, checkFieldValueAlreadyUsed } from '../../utils/user';
+import { customErrorToast, customSuccessToast } from '../../Toast';
+import { generateOtp, sendOtp } from '../../utils/sendOtp';
 import { useNavigate } from 'react-router-dom';
 
 interface UserProfileData {

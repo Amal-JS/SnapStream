@@ -1,4 +1,4 @@
-import { useAppSelector } from "../hooks/redux"
+import { useAppSelector } from "../../hooks/redux"
 
 export const UserHome = ()=> {
     const userLoggedIn = useAppSelector((state)=>{

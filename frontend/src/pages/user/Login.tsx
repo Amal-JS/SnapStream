@@ -4,17 +4,17 @@ import LoginGifDark from '../assets/logos/loginGifBlack.gif';
 import { Button } from "@nextui-org/react";
 import { FcGoogle } from "react-icons/fc";
 import '../App.css';
-import { TextInput } from "./Form/TextInput";
+import { TextInput } from "../../Components/Form/TextInput";
 import { FaRegUser } from "react-icons/fa";
 import { useEffect, useRef, useState } from "react";
-import { PasswordInput } from "./Form/PasswordInput";
-import { useButtonState } from "../hooks/useButtonState";
+import { PasswordInput } from "../../Components/Form/PasswordInput";
+import { useButtonState } from "../../hooks/useButtonState";
 import axios from "axios";
-import { authRoot, rootUrlPath } from "../utils/url";
-import { customErrorToast, customSuccessToast } from "../Toast";
+import { authRoot, rootUrlPath } from "../../utils/url";
+import { customErrorToast, customSuccessToast } from "../../Toast";
 import { useNavigate } from "react-router-dom";
 import { GoogleLogin, useGoogleLogin } from '@react-oauth/google';
-import {  useAppSelector } from "../hooks/redux";
+import {  useAppSelector } from "../../hooks/redux";
 
 
 interface LoginFormData {

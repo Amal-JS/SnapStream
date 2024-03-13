@@ -1,11 +1,11 @@
 import { Button } from "@nextui-org/react";
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useButtonState } from "../hooks/useButtonState";
-import { generateOtp, sendOtp } from "../utils/sendOtp";
-import { authRoot, rootUrlPath } from "../utils/url";
+import { useButtonState } from "../../hooks/useButtonState";
+import { generateOtp, sendOtp } from "../../utils/sendOtp";
+import { authRoot, rootUrlPath } from "../../utils/url";
 import axios from "axios";
-import { customErrorToast, customSuccessToast } from "../Toast";
+import { customErrorToast, customSuccessToast } from "../../Toast";
 
 interface inputRefType {
   [key: string]: React.RefObject<HTMLInputElement>;

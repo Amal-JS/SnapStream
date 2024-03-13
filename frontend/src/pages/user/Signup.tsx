@@ -2,18 +2,18 @@ import { Button } from "@nextui-org/react";
 import { FaGoogle } from "react-icons/fa";
 import "../App.css";
 import { useState } from "react";
-import { PasswordInput } from "./Form/PasswordInput";
+import { PasswordInput } from "../../Components/Form/PasswordInput";
 import { FaUser } from "react-icons/fa";
 import { FaMobileScreenButton } from "react-icons/fa6";
-import { TextInput } from "./Form/TextInput";
+import { TextInput } from "../../Components/Form/TextInput";
 import { PiIdentificationBadgeFill } from "react-icons/pi";
-import { customErrorToast, customSuccessToast } from "../Toast";
+import { customErrorToast, customSuccessToast } from "../../Toast";
 import axios from "axios";
-import { authRoot, rootUrlPath } from "../utils/url";
+import { authRoot, rootUrlPath } from "../../utils/url";
 import { useNavigate } from "react-router-dom";
-import { generateOtp, sendOtp } from "../utils/sendOtp";
-import { useButtonState } from "../hooks/useButtonState";
-import { CheckMininumLengthOfValue, checkFieldValueAlreadyUsed } from "../utils/user";
+import { generateOtp, sendOtp } from "../../utils/sendOtp";
+import { useButtonState } from "../../hooks/useButtonState";
+import { CheckMininumLengthOfValue, checkFieldValueAlreadyUsed } from "../../utils/user";
 
 interface UserData {
   userName: string;

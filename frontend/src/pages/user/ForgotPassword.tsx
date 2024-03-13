@@ -3,14 +3,14 @@ import { Input, Button } from "@nextui-org/react";
 import { CiLock } from "react-icons/ci";
 import '../App.css';
 import { Link, useNavigate } from "react-router-dom";
-import { TextInput } from "./Form/TextInput";
+import { TextInput } from "../../Components/Form/TextInput";
 import { FaRegUser } from "react-icons/fa6";
-import { useButtonState } from "../hooks/useButtonState";
+import { useButtonState } from "../../hooks/useButtonState";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { authRoot, rootUrlPath } from "../utils/url";
-import { customSuccessToast } from "../Toast";
-import { generateOtp, sendOtp } from "../utils/sendOtp";
+import { authRoot, rootUrlPath } from "../../utils/url";
+import { customSuccessToast } from "../../Toast";
+import { generateOtp, sendOtp } from "../../utils/sendOtp";
 
 
 export const ForgotPassword = () => {

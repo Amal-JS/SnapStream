@@ -4,7 +4,7 @@ import { PiVideoFill } from "react-icons/pi";
 import { FaRegComment, FaRegHeart } from "react-icons/fa6";
 import sampleImage from '../assets/logos/logo_type_b_black.png'
 import {  Image } from "@nextui-org/react";
-import { SideNav } from '../pages/user/SideNav';
+import { SideNav } from './SideNav';
 
 
 
