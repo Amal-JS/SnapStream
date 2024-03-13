@@ -29,7 +29,10 @@ export const PasswordInput :React.FC<PasswordInputProps> = ({name,error,handleBl
               <div className="p-2  relative ">
                 <input name={name} 
                 type={isVisible ? 'text' : 'password'} 
-                className={`w-full border-1 border-gray-400 rounded-xl ${inputError && 'border-[3px] border-red-500'}`}  
+                className={`w-full border-1
+                border-secondary-border dark:border-primary-border rounded-xl text-primary 
+                 dark:text-secondary dark:bg-primary 
+                  ${inputError && 'border-[3px] border-red-500'}`}  
                 // onChange={handleChange}
                 onFocus={handleFocus}
                 onBlur={(event)=>{

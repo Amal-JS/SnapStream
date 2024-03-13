@@ -63,7 +63,7 @@ export const ForgotPassword = () => {
   return (
     <>
       <div className="h-screen">
-        <div className="p-4 my-4 border-b-2 border-b-gray-200">
+        <div className="p-4 my-4 border-b-2 border-b-gray-200 ">
         <h2 className='pacifico-regular text-center  text-4xl md:text-4xl  pr-2 md:text-start md:pl-32'>SnapStream</h2>
         </div>
 

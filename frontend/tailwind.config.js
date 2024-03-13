@@ -10,7 +10,17 @@ export default {
   ],
   darkMode:'class',
   theme: {
-    extend: {},
+    extend: {
+      colors:{'primary':'#000000',
+              'secondary':'#F2F2F2',
+              'secondary-border':'#DBDBDB',
+              'common-blue' :'#0092F1',
+              'badge-notification':'#FF3040',
+              'secondary-hover':'#F2F2F2',
+              'primary-hover':'#1A1A1A',
+              'primary-border':'#121212'
+    }
+    },
   },
   plugins: [nextui(),require('flowbite/plugin')],
 }

@@ -43,7 +43,10 @@ export const TextInput :React.FC<PasswordInputProps> = ({type,name,error,handleB
               <div className="p-2  relative ">
                 <input name={name} 
                 type={type ? 'email' : 'text'}
-                 className={`w-full border-1 border-gray-400 rounded-xl ${  inputError && 'border-[3px] border-red-500'}`} 
+                 className={`w-full border-1
+                  border-secondary-border dark:border-primary-border rounded-xl text-primary 
+                 dark:text-secondary dark:bg-primary
+                 ${  inputError && 'border-[3px] border-red-500'}`} 
                 //   onChange={}
                   onFocus={handleFocus}
                   onBlur={(event)=>{

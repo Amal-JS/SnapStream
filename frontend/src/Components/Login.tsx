@@ -1,5 +1,6 @@
 import { Image } from "@nextui-org/react";
-import SampleLoginGif from '../assets/login_sample_gif.gif';
+import LoginGifLight from '../assets/login_sample_gif.gif';
+import LoginGifDark from '../assets/logos/loginGifBlack.gif';
 import { Button } from "@nextui-org/react";
 import { FcGoogle } from "react-icons/fc";
 import '../App.css';
@@ -13,6 +14,7 @@ import { authRoot, rootUrlPath } from "../utils/url";
 import { customErrorToast, customSuccessToast } from "../Toast";
 import { useNavigate } from "react-router-dom";
 import { GoogleLogin, useGoogleLogin } from '@react-oauth/google';
+import {  useAppSelector } from "../hooks/redux";
 
 
 interface LoginFormData {
@@ -31,6 +33,9 @@ export const Login = () => {
   //Login button disable enable
   const {formFilled,setFormFilled} = useButtonState()
   const navigate = useNavigate()
+
+  const themeDark = useAppSelector(state => state.user.darkTheme)
+
   //google login
 
   const login =  useGoogleLogin({
@@ -129,20 +134,20 @@ LoginUser()
   return (
     <>
       <div className="flex   h-screen ">
-        <div className="w-1/2 hidden md:flex bg-white  justify-center  items-center">
+        <div className="w-1/2 hidden md:flex bg-secondary dark:bg-primary  justify-center  items-center">
           <Image
             className="w-3/4 pl-12 object-contain"
             alt="NextUI hero Image"
-            src={SampleLoginGif}
+            src={themeDark ?  LoginGifDark : LoginGifLight}
           />
         </div>
 
 
-        <div className="bg-white h-full w-full md:w-1/2 p-3">
+        <div className="bg-secondary dark:bg-primary h-full w-full md:w-1/2 p-3">
           <form className=" p-5  md:mt-12 ">
 
-            <div className="bg-white border-2 border-gray-300 p-6 w-full md:w-1/2  md:justify-start md:p-5  text-center lg:w-300">
-            <h2 className='pacifico-regular text-3xl md:text-4xl mt-3 mb-8'>SnapStream</h2>
+            <div className="bg-secondary border-2 border-secondary-border  dark:bg-primary dark:border-primary-border  p-6 w-full md:w-1/2  md:justify-start md:p-5  text-center lg:w-300">
+            <h2 className='pacifico-regular text-3xl md:text-4xl mt-3 mb-8 text-primary dark:text-secondary '>SnapStream</h2>
               <TextInput 
               Icon={FaRegUser}
               name="username"
@@ -159,7 +164,7 @@ LoginUser()
 
               {error && <p className="text-red-600 text-sm md:text-base font-bold my-3 p-1"> {error}</p>}
 
-              <Button color="primary" className="mt-3 w-full bg-blue-500 disabled:bg-blue-300 disabled:cursor-not-allowed" 
+              <Button color="primary" className="mt-3 w-full bg-blue-700 disabled:bg-common-blue disabled:cursor-not-allowed" 
               disabled={formFilled} onClick={handleLogin}>
                 <p className="text-base font-medium ">Log in</p>
               </Button>
@@ -186,13 +191,13 @@ LoginUser()
     </div>
 
               <div className="flex justify-center p-2 items-center mt-2 cursor-pointer mb-4">
-                <p className="ml-2 text-base  text-gray-600 hover:cursor-pointer" onClick={()=>navigate('/forgotpassword/')}>
+                <p className="ml-2 text-base  text-primary dark:text-secondary hover:cursor-pointer" onClick={()=>navigate('/forgotpassword/')}>
                   Forgot password?{" "}
                 </p>
               </div>
             </div>
 
-            <div className="border-2 border-gray-300 p-5 text-center  bg-white h-full w-full md:w-1/2 mt-3 flex justify-center">
+            <div className="border-2 bg-secondary dark:bg-primary  border-secondary-border dark:border-primary-border p-5 text-center   h-full w-full md:w-1/2 mt-3 flex justify-center">
               <div className="block lg:flex">
                 <p className="text-xs  md:text-sm">Don't have an account?</p>
                 <p className="cursor-pointer text-blue-500 font-medium text-base pl-1" onClick={()=>navigate('/signup/')}>
