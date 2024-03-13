@@ -13,14 +13,12 @@ import { UserHome } from './Components/UserHome.tsx'
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { useEffect } from 'react'
 import { useAppSelector } from './hooks/redux.ts'
-import { useAppDispatch } from './hooks/redux.ts'
-import { themeToggle } from './Redux/authSlice.ts'
+
 import { ToolTip } from './Components/Tooltip/Tooltip.tsx'
 
 function App() {
 
   const userState = useAppSelector(state => state.user)
-  const dispatch =useAppDispatch()
 
   //theme change logic
   useEffect(()=>{

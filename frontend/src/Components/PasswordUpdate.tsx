@@ -26,14 +26,14 @@ export const PasswordUpdate = () => {
       const [error,setError] = useState<string>('')
 
   //if verify in local allow access else redirect    
-  useEffect(()=>{
-    const verfiyDataInLocalStorage = localStorage.getItem('verify')
-  if(!verfiyDataInLocalStorage){
-      navigate(-1)
-  } 
-  console.log(verfiyDataInLocalStorage);
+  // useEffect(()=>{
+  //   const verfiyDataInLocalStorage = localStorage.getItem('verify')
+  // if(!verfiyDataInLocalStorage){
+  //     navigate(-1)
+  // } 
+  // console.log(verfiyDataInLocalStorage);
   
-  },[])
+  // },[])
 
   //update password disable enable and error showing
   useEffect(()=>{
@@ -95,16 +95,16 @@ const handleUpdatePassword = async () => {
   return (
     <>
       <div className="h-screen">
-        <div className="p-4 my-4 border-b-2 border-b-gray-300">
+        <div className="p-4 my-4 border-b-3 border-secondary-border dark:border-primary-border">
         <h2 className='pacifico-regular text-center  text-4xl md:text-4xl  pr-2 md:text-start md:pl-32'>SnapStream</h2>
         </div>
 
-  <div className="bg-white  p-3 flex justify-center items-center" >
+  <div className="  p-3 flex justify-center items-center" >
           <form className=" p-1 " >
           
-            <div className="bg-white border-2 border-gray-300 p-6  text-center w-full md:w-96">
+            <div className=" border-3 dark:border-4 border-secondary-border dark:border-primary-border  p-6  text-center w-full md:w-96">
            <div className="flex justify-center ">
-           <FaUserLock className="text-black text-8xl font-black text-center"/>
+           <FaUserLock className="dark:text-secondary text-primary text-8xl font-black text-center"/>
            </div>
 
            <PasswordInput
@@ -123,7 +123,7 @@ const handleUpdatePassword = async () => {
             
               {error && <p className="text-sm md:text-base font-bold my-3 text-danger">{error}</p>}
 
-              <Button color="primary" className="mt-3 w-full bg-blue-500 disabled:bg-blue-400 disabled:cursor-not-allowed"
+              <Button color="primary" className="mt-3 w-full bg-btn-enabled disabled:bg-btn-disabled disabled:cursor-not-allowed"
               disabled={formFilled} onClick={handleUpdatePassword}>
                 <p className="text-base font-medium ">Update Password</p>
               </Button>
