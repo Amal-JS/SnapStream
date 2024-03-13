@@ -10,34 +10,50 @@ import { UserEdit } from './Components/UserEdit.tsx'
 import { UserProfile } from './Components/UserProfile.tsx'
 import { UserStories } from './Components/UserStories.tsx'
 import { UserHome } from './Components/UserHome.tsx'
-import {store} from '../src/Redux/store.ts'
-import { Provider } from 'react-redux'
+import { MdSunny } from "react-icons/md";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { Button } from '@nextui-org/react'
+import { useAppSelector } from './hooks/redux.ts'
+import { useAppDispatch } from './hooks/redux.ts'
+import { themeToggle } from './Redux/authSlice.ts'
 
 function App() {
 
-  const [theme,setTheme] = useState<string>('light')
+  const userState = useAppSelector(state => state.user)
+  const dispatch =useAppDispatch()
+
+  //theme change logic
   useEffect(()=>{
-    if (theme === 'dark'){
+    if (userState.darkTheme){
       document.documentElement.classList.add('dark')
     }else{
       document.documentElement.classList.remove('dark')
     }
-  },[theme])
+  },[userState.darkTheme])
 
   const handleThemeChange = ()=>{
-    setTheme(prev => theme === 'dark' ? 'light' : 'dark')
+    dispatch(themeToggle())
   }
 
 
   return (
   <>
-  <Button className='primary' onClick={handleThemeChange}>Change Theme</Button>
+  <div className='absolute top-5 right-10 md:top-10 md:right-5   text-dark dark:text-white '>
+  <div className='relative'>
+  <MdSunny className=' text-4xl md:text-5xl hover:cursor-pointer has-tooltip border-0' data-tooltip-target="tooltip-default"  onClick={handleThemeChange}>Change Theme</MdSunny>
+  <div id="tooltip-default" role="tooltip" className=" tooltip absolute z-10  inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0  dark:bg-white dark:text-gray-900">
+    Change theme
+    <div className="tooltip-arrow" data-popper-arrow></div>
+</div>
+  </div>
+  
+  </div>
+  
+
  <Toast />
  <GoogleOAuthProvider clientId={'443025233563-nh99nv2u8u7hj8l8o91bpguja6ni7114.apps.googleusercontent.com'}>
- <Provider store={store}>
+ 
   <BrowserRouter>
  
   <Routes>
@@ -60,7 +76,7 @@ function App() {
    
   </Routes>
   </BrowserRouter>
-  </Provider>
+
   </GoogleOAuthProvider>
   </>
   )

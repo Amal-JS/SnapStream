@@ -34,11 +34,15 @@ export const authSlice = createSlice({
                 state.userId = null,
                 state.userLoggedIn = false,
                 state.darkTheme = false
+        },
+        themeToggle :(state)=>{
+            return {...state,
+                    darkTheme : state.darkTheme  ? false : true}
         }
     }
     
 })
 
 export default authSlice.reducer
-export const {userLoggedIn,userLoggedOut} = authSlice.actions 
+export const {userLoggedIn,userLoggedOut,themeToggle} = authSlice.actions 
 
