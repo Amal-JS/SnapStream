@@ -63,16 +63,16 @@ export const ForgotPassword = () => {
   return (
     <>
       <div className="h-screen">
-        <div className="p-4 my-4 border-b-2 border-b-gray-200 ">
+        <div className="p-4 my-4 border-b-2 bg-secondary border-secondary-border dark:bg-primary dark:border-primary-border ">
         <h2 className='pacifico-regular text-center  text-4xl md:text-4xl  pr-2 md:text-start md:pl-32'>SnapStream</h2>
         </div>
 
-  <div className="bg-white  p-3 flex justify-center items-center" >
-          <form className=" p-1 " >
+  <div className="bg-secondary dark:bg-primary p-3 flex justify-center items-center" >
+          <form className=" p-1  bg-secondary dark:bg-primary " >
           
-            <div className="bg-white border-2 border-gray-200 p-6  text-center w-full md:w-96">
-           <div className="flex justify-center">
-           <CiLock className="text-black text-8xl font-black text-center"/>
+            <div className=" border-3 bg-secondary border-secondary-border dark:bg-primary dark:border-primary-border  p-6  text-center w-full md:w-96">
+           <div className="flex justify-center bg-secondary dark:bg-primary">
+           <CiLock className="text-primary dark:text-secondary text-8xl font-black text-center"/>
            </div>
             <h2 className="my-2 text-black text-xl font-medium">Trouble logging in?</h2>
             <h2 className="text-gray-400 mt-3 text-base mb-5">Enter your email, phone, or username and we'll send you a link to get back into your account.</h2>
@@ -86,25 +86,25 @@ export const ForgotPassword = () => {
            />
               {error && <p className="text-sm md:text-base text-red-600 my-2">{error}</p> }
 
-              <Button color="primary" className="mt-3 w-full bg-blue-500 disabled:bg-blue-400 disabled:cursor-not-allowed"
+              <Button color="primary" className="mt-3 w-full bg-blue-700 disabled:bg-common-blue disabled:cursor-not-allowed"
               disabled={formFilled} onClick={handleCheckUserExist}>
                 <p className="text-base font-medium ">Search Account</p>
               </Button>
 
             
               <div className="flex justify-center mt-6 min-w-400 mb-4">
-                <div className="w-2/4 border-b-gray-200 border-2 border-t-0 border-l-0 border-r-0 px-2"></div>
-                <p>or</p>
-                <div className="w-2/4  border-b-gray-200 border-2 border-t-0 border-l-0 border-r-0 px-2 "></div>
+                <div className="w-2/4  dark:border-secondary-border  border-primary-border border-2 border-t-0 border-l-0 border-r-0 px-2"></div>
+                <p className="text-primary dark:text-secondary">or</p>
+                <div className="w-2/4   dark:border-secondary-border  border-primary-border border-2 border-t-0 border-l-0 border-r-0 px-2 "></div>
               </div>
 
-              <Link to='/signup' className="text-base text-black font-medium hover:text-gray-500">Create new account</Link>
+              <Link to='/signup' className="text-base text-primary dark:text-secondary font-medium hover:text-gray-500 dark:hover:text-gray-300">Create new account</Link>
               
             </div>
 
-            <div className="border-2 border-gray-200 p-5 text-center  bg-white h-full w-full flex justify-center">
+            <div className="border-2 p-5 text-center  bg-secondary border-secondary-border dark:bg-primary dark:border-primary-border h-full w-full flex justify-center">
               <div className="flex">
-                <Link to='/' className="text-base text-black font-medium hover:text-gray-500">Back to Login</Link>
+                <Link to='/' className="text-base text-primary dark:text-secondary font-medium hover:text-gray-500 dark:hover:text-gray-300">Back to Login</Link>
               </div>
             </div>
           </form>
