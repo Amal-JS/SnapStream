@@ -352,16 +352,16 @@ const handleOtpMatch = ()=> {
     <>
     
       <div className="h-screen">
-        <div className="p-4 my-4 border-b-2 border-b-gray-200">
+        <div className="p-4 my-4 border-2 dark:border-b-4 border-secondary-border dark:border-primary-border">
           <h2 className="pacifico-regular text-center  text-4xl md:text-4xl  pr-2 md:text-start md:pl-32">
             <Link to={"/login"}>SnapStream</Link>
           </h2>
         </div>
 
-        <div className="bg-white  p-3 flex justify-center  items-center ">
+        <div className="bg-secondary dark:bg-primary   p-3 flex justify-center  items-center ">
           <form className=" p-1 ">
-            <div className="bg-white border-2 border-gray-300 p-6  text-center w-full md:w-96">
-              <h2 className="my-6 text-black text-xl font-medium md:text-2xl">
+            <div className=" border-2 dark:border-4 border-secondary-border dark:border-primary-border   p-6  text-center w-full md:w-96">
+              <h2 className="my-6 dark:text-secondary text-primary text-xl font-medium md:text-2xl">
                 Enter Otp
               </h2>
 
@@ -395,12 +395,12 @@ const handleOtpMatch = ()=> {
                }
                 
                 {!timeRunning && 
-                <Button className="bg-blue-500 mt-3 w-full " onClick={handleResendOtp}>
+                <Button className="bg-btn-enabled mt-3 w-full " onClick={handleResendOtp}>
                   <p className="text-base font-medium text-white">Resend otp</p>
                 </Button>}
 
               </div>
-              <Button className="mt-3 w-full bg-blue-500 disabled:bg-blue-400 disabled:cursor-not-allowed"  disabled={formFilled} onClick={handleOtpMatch}>
+              <Button className="mt-3 w-full bg-btn-enabled disabled:bg-btn-disabled disabled:cursor-not-allowed"  disabled={formFilled} onClick={handleOtpMatch}>
                 <p className="text-base font-medium text-white" >Check otp</p>
               </Button>
             </div>
