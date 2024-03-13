@@ -36,7 +36,7 @@ export const PageNotFound = () => {
 
           <h2 className=" mt-7 text-base md:text-xl text-primary dark:text-secondary ">
             The link you followed may be broken, or the page may have been
-            removed. Go back to ConnectCam.
+            removed. Go back to SnapStream.
           </h2>
         </div>
       </div>

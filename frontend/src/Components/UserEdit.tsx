@@ -285,12 +285,12 @@ useEffect(()=>{
 },[userProfileData])
   return (
     <>
-      <div className="w-full p-10 md:w-screen bg-black md:pl-52 mb-5 ">
-  <h2 className='text-white text-xl md:text-2xl' >Edit Profile</h2>
+      <div className="w-full p-10 md:w-screen bg-secondary dark:bg-primary md:pl-52 mb-5 ">
+  <h2 className='text-primary dark:text-secondary text-xl md:text-2xl' >Edit Profile</h2>
   <form >
     <div className='w-full md:w-6/12 my-8 p-3'>
       <div className=' mx-2 my-3  w-full'>
-        <p className='text-white text-sm md:text-xl w-3/12 mx-2'> Username </p>
+        <p className='text-primary dark:text-secondary text-sm md:text-xl w-3/12 mx-2'> Username </p>
       <TextInput
       name='username'
       Icon={FaRegUser}
@@ -301,7 +301,7 @@ useEffect(()=>{
       />
       </div>
       <div className=' mx-2 my-3 items-center w-full'>
-        <p className='text-white text-sm md:text-xl w-3/12 mx-2'> Phone </p>
+        <p className='text-primary dark:text-secondary text-sm md:text-xl w-3/12 mx-2'> Phone </p>
             <TextInput
       name='phone'
       Icon={BsPhone}
@@ -313,7 +313,7 @@ useEffect(()=>{
       </div>
             
       <div className=' mx-2 my-3 items-center w-full'>
-        <p className='text-white text-sm md:text-xl w-3/12 mx-2'> Email </p>
+        <p className='text-primary dark:text-secondary text-sm md:text-xl w-3/12 mx-2'> Email </p>
             <TextInput
       name='email'
       type='email'
@@ -329,14 +329,14 @@ useEffect(()=>{
 
 
 
-  <Button className=" w-full bg-blue-500 disabled:bg-blue-400 disabled:cursor-not-allowed md:w-2/4"  disabled={formFilled} onClick={handleUpdateUserData}>
-                <p className="text-base font-medium text-white" >Update Changes</p>
+  <Button className=" w-full bg-btn-enabled disabled:bg-btn-disabled disabled:cursor-not-allowed md:w-2/4"  disabled={formFilled} onClick={handleUpdateUserData}>
+                <p className="text-base font-medium text-secondary " >Update Changes</p>
               </Button>
 
 
               <div className='w-full my-5'>
   <Button className=" w-full bg-green-600 md:w-1/4"   onClick={handleUpdatePassword}>
-                <p className="text-base font-medium text-white" >Update Password</p>
+                <p className="text-base font-medium text-secondary " >Update Password</p>
               </Button>
   </div>
   
