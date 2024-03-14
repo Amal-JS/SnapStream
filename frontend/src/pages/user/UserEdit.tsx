@@ -14,6 +14,8 @@ import { CheckMininumLengthOfValue, checkFieldValueAlreadyUsed } from '../../uti
 import { customErrorToast, customSuccessToast } from '../../Toast';
 import { generateOtp, sendOtp } from '../../utils/sendOtp';
 import { useNavigate } from 'react-router-dom';
+import { DateInput } from '../../Components/Form/DateInput';
+import { TextArea } from '../../Components/Form/TextArea';
 
 interface UserProfileData {
 
@@ -123,7 +125,7 @@ interface UserProfileFormError {
         return valueAlreadyUsed 
   }
 
-  const handleBlur = async (event:React.FocusEvent<HTMLInputElement>) =>{
+  const handleBlur = async (event:React.FocusEvent<HTMLInputElement> | React.FocusEvent<HTMLTextAreaElement>) =>{
 
     const {name,value} = event.target;
     let valueExist = false;
@@ -146,7 +148,7 @@ interface UserProfileFormError {
     }))
   }
   
-  const handleChange =(event:React.ChangeEvent<HTMLInputElement>) =>{
+  const handleChange =(event:React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) =>{
       const {name,value} = event.target;
 
     if (value === ''){
@@ -295,7 +297,7 @@ useEffect(()=>{
       name='username'
       Icon={FaRegUser}
       error={userProfileFormError['username']}
-      placeholder={userProfileInitialData.username}
+      placeholder={userProfileInitialData.username ?userProfileInitialData.username : 'Add your username'}
       handleBlur={handleBlur}
       handleChange={handleChange}
       />
@@ -312,6 +314,7 @@ useEffect(()=>{
       />
       </div>
             
+      
       <div className=' mx-2 my-3 items-center w-full'>
         <p className='text-primary dark:text-secondary text-sm md:text-xl w-3/12 mx-2'> Email </p>
             <TextInput
@@ -324,6 +327,29 @@ useEffect(()=>{
       handleChange={handleChange}
       />
       </div>
+      <div className=' mx-2 my-3 items-center w-full'>
+        <p className='text-primary dark:text-secondary text-sm md:text-xl w-3/12 mx-2'> Birthday </p>
+            
+            <DateInput
+      name='dateOfBirth'
+    
+      error={''}
+      placeholder={userProfileInitialData.email ? userProfileInitialData.email : 'Add your email'}
+      handleBlur={handleBlur}
+      handleChange={handleChange}
+      />
+      </div>
+      
+      <div className=' mx-2 my-9 items-center w-full'>
+        <p className='text-primary dark:text-secondary text-sm md:text-xl w-3/12 mx-2'> Bio </p>
+      <TextArea 
+      name={'bio'}
+placeholder='Say something about you'
+handleBlur={handleBlur}
+      handleChange={handleChange}
+      error=''
+      />
+    </div>
     </div>
   </form>
 
