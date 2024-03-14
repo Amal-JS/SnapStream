@@ -9,7 +9,7 @@ import { Button } from '@nextui-org/react';
 import { useButtonState } from '../../hooks/useButtonState';
 import { useEffect, useState } from 'react';
 import { authRoot, rootUrlPath } from '../../utils/url';
-import axios from 'axios';
+import axios from '../../../src/axios/axiosInstance'
 import { CheckMininumLengthOfValue, checkFieldValueAlreadyUsed } from '../../utils/user';
 import { customErrorToast, customSuccessToast } from '../../Toast';
 import { generateOtp, sendOtp } from '../../utils/sendOtp';
@@ -226,7 +226,7 @@ console.log('not accepted',userProfileData[field], userProfileInitialData[field]
       console.log('last step',changedUserData);
 
   const udpdateUserData = async () =>{
-    const response = await axios.patch(rootUrlPath+authRoot+'userData/',changedUserData)
+    const response = await axios.patch(authRoot+'userData/',changedUserData)
     if(await response.data.userProfileUpdated){
       customErrorToast('Updated failed.Try after some time')
     }else{
@@ -255,7 +255,7 @@ console.log('not accepted',userProfileData[field], userProfileInitialData[field]
 
   useEffect(()=>{
 async function fetchUserData() {
-    const response = await axios.post(rootUrlPath+authRoot+'userData/',{user_id:user_id})
+    const response = await axios.post(authRoot+'userData/',{user_id:user_id})
     if (response.data.userData){
       setUserProfileData(response.data.userData)
       setUserProfileInitialData(response.data.userData)

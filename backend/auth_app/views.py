@@ -250,7 +250,7 @@ class UserData(APIView):
     def post(self,request):
         #change to user_id
         id = request.data['user_id']
-        user = CustomUser.objects.get(id=id)
+        user = CustomUser.objects.get(user_id=id)
         
         return JsonResponse(
             {'userData':
