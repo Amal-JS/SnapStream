@@ -1,5 +1,6 @@
 from django.urls import include, path
-from . views import CheckUserValues, GoogleLogin,SendOtp,GetCSRFToken,UserAccount,LoginUser,ForgotPassword,UserData
+from . views import CheckUserValues, GoogleLogin,SendOtp,GetCSRFToken,UserAccount, \
+                    LoginUser,ForgotPassword,UserData,LoggedUserData,GoogleCreateAccount
 
 
 urlpatterns = [
@@ -10,7 +11,7 @@ urlpatterns = [
     path('LoginUser/',LoginUser.as_view()),
     path('ForgotPassword/',ForgotPassword.as_view()),
     path('userData/',UserData.as_view()),
-     path('dj-rest-auth/', include('dj_rest_auth.urls')),
-    path('dj-rest-auth/google/', GoogleLogin.as_view(), name='google_login'),
-    path('googleLogin/',GoogleLogin.as_view())
+    path('googleLogin/',GoogleLogin.as_view()),
+    path('createAccountGoogle/',GoogleCreateAccount.as_view()),
+    path('getLoggedUserData/',LoggedUserData.as_view())
 ]

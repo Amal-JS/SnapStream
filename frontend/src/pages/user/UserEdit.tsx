@@ -16,6 +16,7 @@ import { generateOtp, sendOtp } from '../../utils/sendOtp';
 import { useNavigate } from 'react-router-dom';
 import { DateInput } from '../../Components/Form/DateInput';
 import { TextArea } from '../../Components/Form/TextArea';
+import { useAppSelector } from '../../hooks/redux';
 
 interface UserProfileData {
 
@@ -33,7 +34,7 @@ interface UserProfileFormError {
 
       const {formFilled,setFormFilled} = useButtonState()
       //after redux delete this
-      const user_id = 3;
+      const userId = useAppSelector(state => state.user.userId) ? useAppSelector(state => state.user.userId) :'';
 
       const [userProfileData,setUserProfileData] = useState<UserProfileData>({
         username:'',
@@ -54,16 +55,20 @@ interface UserProfileFormError {
       const navigate = useNavigate()
   const canValueBeUsed = async (field:keyof UserProfileData ,value:string)=>{
 
-    let valueExist = checkFieldValueAlreadyUsed(field,value,user_id)
-    if (await valueExist){
-        if(value == userProfileInitialData[field]){
-          return false;
-        }else{
-          return true;
-        }
-    }else{
-      return false;
+    if (userId){
+      let valueExist = checkFieldValueAlreadyUsed(field,value,userId)
+      if (await valueExist){
+          if(value == userProfileInitialData[field]){
+            return false;
+          }else{
+            return true;
+          }
+      }else{
+        return false;
+      }
     }
+    return false
+   
   }
   const usernameAcceptable = async  (field:keyof UserProfileData ,value:string)=> {
     if(value.trim().length < 1){
@@ -204,7 +209,7 @@ interface UserProfileFormError {
 //  }
 
      // Only update the values changed by the user
-     let changedUserData: { [key: string]: string | number | undefined} = { user_id: user_id };
+     let changedUserData: { [key: string]: string | number | undefined} = { userId: userId ?userId : '' };
   const fields: (keyof UserProfileData)[] = ['username', 'email', 'phone'];
 
   for (const field of fields) {
@@ -255,7 +260,7 @@ console.log('not accepted',userProfileData[field], userProfileInitialData[field]
 
   useEffect(()=>{
 async function fetchUserData() {
-    const response = await axios.post(authRoot+'userData/',{user_id:user_id})
+    const response = await axios.post(authRoot+'userData/',{userId:userId})
     if (response.data.userData){
       setUserProfileData(response.data.userData)
       setUserProfileInitialData(response.data.userData)

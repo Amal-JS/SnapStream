@@ -8,7 +8,7 @@ import { PasswordInput } from "../../Components/Form/PasswordInput";
 import { useButtonState } from "../../hooks/useButtonState";
 import { customErrorToast, customSuccessToast } from "../../Toast";
 import { authRoot, rootUrlPath } from "../../utils/url";
-import axios from "axios";
+import axiosInstance from "../../axios/axiosInstance";
 
 
 interface PasswordForm {
@@ -70,7 +70,7 @@ const handleUpdatePassword = async () => {
   const verifyDataInLocalStorage= localStorage.getItem('verify')
   const dataInLocalStorage = verifyDataInLocalStorage && JSON.parse(verifyDataInLocalStorage)
   if(dataInLocalStorage.phoneOrEmail){
-    const response = await axios.post(rootUrlPath+authRoot+'ForgotPassword/',
+    const response = await axiosInstance.post(rootUrlPath+authRoot+'ForgotPassword/',
     {password:passwordForm.password1,'phoneOrEmail':dataInLocalStorage.phoneOrEmail})
 
     if(response.data.passwordUpdated){

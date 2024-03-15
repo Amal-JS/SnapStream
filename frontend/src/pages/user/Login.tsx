@@ -9,12 +9,13 @@ import { FaRegUser } from "react-icons/fa";
 import { useEffect, useRef, useState } from "react";
 import { PasswordInput } from "../../Components/Form/PasswordInput";
 import { useButtonState } from "../../hooks/useButtonState";
-import axios from "axios";
+import axiosInstance from "../../axios/axiosInstance";
 import { authRoot, rootUrlPath } from "../../utils/url";
 import { customErrorToast, customSuccessToast } from "../../Toast";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { GoogleLogin, useGoogleLogin } from '@react-oauth/google';
-import {  useAppSelector } from "../../hooks/redux";
+import {  useAppDispatch, useAppSelector } from "../../hooks/redux";
+import { userLoggedIn } from "../../Redux/authSlice";
 
 
 interface LoginFormData {
@@ -33,6 +34,14 @@ export const Login = () => {
   //Login button disable enable
   const {formFilled,setFormFilled} = useButtonState()
   const navigate = useNavigate()
+  
+  //user state
+  const userLoggedInToApp = useAppSelector(state => state.user.userLoggedIn)
+  if(userLoggedInToApp){
+    return <Navigate to='/'></Navigate>
+  }
+  //set state
+  const dispatch = useAppDispatch()
 
   const themeDark = useAppSelector(state => state.user.darkTheme)
 
@@ -46,19 +55,31 @@ export const Login = () => {
         console.log(token);
         
         try {
-        const response = await axios.post(rootUrlPath+authRoot+'googleLogin/',{'access_token':token.access_token})
+        const response = await axiosInstance.post(authRoot+'googleLogin/',{'access_token':token.access_token})
               if(response.data.isUserLoggedSuccessfully){
                 //set user state
+                dispatch(userLoggedIn({
+                  userLoggedIn:true,
+                  userId:response.data.userId,
+                  isSuperUser:response.data.isSuperUser,
+                  darkTheme:response.data.darkTheme
+                }))
                 console.log(response.data.userData);
+                customSuccessToast('Login Successfull.')
+                navigate('/')
+              }
+              else if(response.data.UserDoesNotExist) {
+                console.log(('else block google login'));
+                
+                customErrorToast("No account exist .Sign Up using google")
+                navigate('/signup/')
                 
               }
-              else {
-                customErrorToast('Google login.Please try again.')
-                customErrorToast('Service not responding.')
-              }
+              console.log(response.data)
         }
         catch{
           customErrorToast('Google login.Please try again.')
+          customErrorToast('Service not responding.')
         }
       }
       LoginUsingGoogleLogin()
@@ -106,7 +127,7 @@ const handleLogin = () =>{
   const LoginUser = async () =>{
     
     
-  const response = await axios.post(rootUrlPath+authRoot+'LoginUser/',{'phoneOrEmailOrUsername':formData.username,'password':formData.password})
+  const response = await axiosInstance.post(authRoot+'LoginUser/',{'phoneOrEmailOrUsername':formData.username,'password':formData.password})
   // No user exist or invalid credentials
   if(!response.data.userExist){
       //setError
@@ -121,7 +142,14 @@ const handleLogin = () =>{
       username:'',
       password:''
     })
-    console.log(response);
+    //setstate
+    dispatch(userLoggedIn({
+      userLoggedIn:true,
+      userId :response.data.userId,
+      darkTheme:response.data.darkTheme,
+      isSuperUser:response.data.isSuperUser
+    }))
+    
     navigate('/')
 
     

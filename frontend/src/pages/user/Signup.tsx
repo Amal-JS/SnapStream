@@ -8,12 +8,13 @@ import { FaMobileScreenButton } from "react-icons/fa6";
 import { TextInput } from "../../Components/Form/TextInput";
 import { PiIdentificationBadgeFill } from "react-icons/pi";
 import { customErrorToast, customSuccessToast } from "../../Toast";
-import axios from "axios";
-import { authRoot, rootUrlPath } from "../../utils/url";
+import { authRoot } from "../../utils/url";
 import { useNavigate } from "react-router-dom";
 import { generateOtp, sendOtp } from "../../utils/sendOtp";
 import { useButtonState } from "../../hooks/useButtonState";
 import { CheckMininumLengthOfValue, checkFieldValueAlreadyUsed } from "../../utils/user";
+import { useGoogleLogin } from "@react-oauth/google";
+import axiosInstance from "../../axios/axiosInstance";
 
 interface UserData {
   userName: string;
@@ -252,6 +253,33 @@ const filled = Object.values(fieldsCharCount).every((value) => value >1)
     handleUserSignUp();
   };
 
+const handleUserCreateAccountGoogle = useGoogleLogin({
+    onSuccess:token=>{
+      console.log('google signup ',token);
+      const signUpUserUsingGoogle = async ()=>{
+        const response = await axiosInstance.post(authRoot+'createAccountGoogle/',{'access_token':token.access_token})
+      if(response.data?.userAlreadyExist){
+        customErrorToast('Account already exist.Log in to continue')
+        navigate('/login/')
+      }else if(response.data.createdUserAccount){
+        customSuccessToast('Account created successfully.Log in to continue')
+        navigate('/login/')
+      }else{
+        customErrorToast('Some error  occcured.')
+        customErrorToast('Please try again after some time.')
+        console.log('Google user account creation error in signup ');
+        
+      }
+      }
+      signUpUserUsingGoogle()
+    },
+    onError:error=>{
+     
+      console.log(error)
+    }
+  })
+    
+  
 
 
 
@@ -269,7 +297,7 @@ const filled = Object.values(fieldsCharCount).every((value) => value >1)
               </h2>
 
               <div className="flex justify-center p-2 items-center mt-3 cursor-pointer min-w-400">
-                <Button color="primary" className="mt-3 w-full bg-blue-700 ">
+                <Button color="primary" className="mt-3 w-full bg-blue-700 " onClick={() =>handleUserCreateAccountGoogle()}>
                   <FaGoogle style={{ width: 20, height: 20 }} />
                   <p className="ml-2 text-base font-medium ">
                     Log in with Google

@@ -33,7 +33,7 @@ const axiosInstance = axios.create({
 
 
 axiosInstance.interceptors.request.use((request)=>{
-    console.log('request',request)
+
     return request
 })
 

@@ -5,7 +5,8 @@ from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.hashers import make_password,check_password
 
 class CustomUser(AbstractUser):
-    user_id =  models.UUIDField(default=uuid.uuid4, editable=False, unique=True,primary_key=True)
+    
+    user_id =  models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     phone = models.CharField(unique=True,null=True,max_length=10)
     bio = models.CharField(null=True,max_length=200)
     profile_picture = models.ImageField(null=True,upload_to='user_profile_pictures/')

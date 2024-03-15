@@ -24,7 +24,7 @@ from django.contrib.auth.hashers import make_password
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from dj_rest_auth.registration.views import SocialLoginView
-
+from rest_framework import status
 
 #check if a username exist in the database
 class CheckUserValues(View):
@@ -34,21 +34,25 @@ class CheckUserValues(View):
         #only when call is made from userEdit component
         user_id = request.GET.get('user_id')
         user = None
-        if(int(user_id) != 0):
-            user = get_object_or_404(CustomUser,pk=user_id)
         value_exist = False
-        if field == 'username':
-            value_exist = CustomUser.objects.filter(username=value).exists()
-        elif field == 'email':
-            value_exist = CustomUser.objects.filter(email=value).exists()
-        else:
-            value_exist = CustomUser.objects.filter(phone=value).exists()
-        #if value already used and the current user has that username then no problem
-        if value_exist and user:
-                if user.user_id == CustomUser.objects.get(username=value).user_id:
-                    value_exist = False
- 
-        return JsonResponse({'valueExist':value_exist})
+        try:
+            if(user_id):
+                user = get_object_or_404(CustomUser,pk=user_id)
+            
+            if field == 'username':
+                value_exist = CustomUser.objects.filter(username=value).exists()
+            elif field == 'email':
+                value_exist = CustomUser.objects.filter(email=value).exists()
+            else:
+                value_exist = CustomUser.objects.filter(phone=value).exists()
+            #if value already used and the current user has that username then no problem
+            if value_exist and user:
+                    if user.user_id == CustomUser.objects.get(username=value).user_id:
+                        value_exist = False
+            return JsonResponse({'valueExist':value_exist})
+        except:
+            
+            return JsonResponse({'valueExist':value_exist})
     
 #generate csrf token for post request
 class GetCSRFToken(View):
@@ -89,9 +93,9 @@ class UserAccount(APIView):
             password = request.data['password']
             full_name = request.data['fullName']
             email_or_phone = request.data['phoneOrEmail']
-    
+            # password = make_password(password)
             #checking if user provided phone number or email
-            if len(email_or_phone) > 10:
+            if len(email_or_phone) > 10 and username and full_name:
               
                 new_user = CustomUser(username=username,
                                     password=password,
@@ -112,10 +116,9 @@ class UserAccount(APIView):
         except Exception as e:
             print(e)
             return JsonResponse({'userAccountCreatedSuccessfully':False})
-        
+  
 def get_tokens_for_user(user):
     refresh = RefreshToken.for_user(user)
-
     return {
         'refresh': str(refresh),
         'access': str(refresh.access_token),
@@ -133,23 +136,28 @@ class LoginUser(APIView):
         if len(phone_or_email_or_username) == 10 and phone_or_email_or_username.isdigit():
             # If the input is a 10-digit number, assume it's a phone number
             user = CustomUser.objects.filter(phone=phone_or_email_or_username).first()
-            print(user)
+            
         else:
             # Otherwise, try to find the user by email or username
             user = CustomUser.objects.filter(email=phone_or_email_or_username).first() \
                 or CustomUser.objects.filter(username=phone_or_email_or_username).first()
-            print(user)
+        print(user)
         if (user):
             #blocked user
             if(not user.is_active) :
                 return JsonResponse({'userExist':False,
                                      'message':'Account not active',
                                      })
+            
             password_check = user.check_password(password)
+            print(password_check)
             if (password_check):
-                token_for_user = get_tokens_for_user(user)
+                try:
+                    token_for_user = get_tokens_for_user(user)
+                except Exception as e: 
+                    print(e)
                 # Set HTTP-only cookies for access token and refresh token
-                response = JsonResponse({'userExist': True, 'message': 'Have a nice day.', 'userId': user.user_id,'darkTheme':user.dark_theme})
+                response = JsonResponse({'userExist': True, 'message': 'Have a nice day.', 'userId': user.user_id,'darkTheme':user.dark_theme,'isSuperUser':user.is_superuser})
                 response.set_cookie(key='access_token', value=token_for_user['access'], httponly=True, secure=True, expires=datetime.now() + timedelta(minutes=5), samesite='Lax')
                 response.set_cookie(key='refresh_token', value=token_for_user['refresh'], httponly=True, secure=True, expires=datetime.now() + timedelta(days=1), samesite='Lax')
                 return response
@@ -267,8 +275,13 @@ class UserData(APIView):
         profile_picture_str = request.data.get('profilePicture',None)
         
         # etrieve user using get_object_or_404
-        user = get_object_or_404(CustomUser, pk=user_id)
-
+        user = None
+        try:
+            user = CustomUser.objects.get(user_id= user_id)
+        except:
+            
+            return JsonResponse({'profileDetailsUpdated':False})
+    
         # Update fields based on provided data
         updated_fields = {}
         if 'username' in request.data:
@@ -277,40 +290,90 @@ class UserData(APIView):
             updated_fields['email'] = request.data['email']
         if 'phone' in request.data:
             updated_fields['phone'] = request.data['phone']
+        if 'darkTheme' in request.data:
+            updated_fields['dark_theme'] = request.data['darkTheme']
+        if 'bio' in request.data:
+            updated_fields['bio'] = request.data['bio']
+        if 'dob' in request.data:
+            updated_fields['dob'] = request.data['dob']
         
         #if profile picture exist
         if profile_picture_str:
             response = save_base64_image(profile_picture_str,user)
             return JsonResponse(response)
-        
-        if updated_fields:
+        print('user',user)
+        if updated_fields and user:
             for field, value in updated_fields.items():
                 setattr(user, field, value)
             user.save()
-
             return JsonResponse({'profileDetailsUpdated': True})
+        else:
+            return JsonResponse({'profileDetailsUpdated':False})
+
+            
         
-        return JsonResponse({'profileDetailsUpdated':False})
     
+#function to get user data from user using google login from google
+def getUserDataFromGoogle(access_token):
+            userinfo_url = 'https://www.googleapis.com/oauth2/v3/userinfo'  
+            headers = {'Authorization': f'Bearer {access_token}'}
+            response = requests.get(userinfo_url,headers=headers)
+            return response
+
 
 #Google Auth
 class GoogleLogin(APIView):
     def post(self,request):
         access_token = request.data['access_token']
-        userinfo_url = 'https://www.googleapis.com/oauth2/v3/userinfo'  
-        headers = {'Authorization': f'Bearer {access_token}'}
-        print(headers)
-        response = requests.get(userinfo_url,headers=headers)
-        print('response',response)
+        response = getUserDataFromGoogle(access_token=access_token)
         if response.status_code == 200:
             user_info = response.json()
             #if user exist in db send the access and refresh token
-            user = CustomUser.objects.filter(email=user_info.email).exists()
-            if user:
+            user_exist = CustomUser.objects.filter(email=user_info['email']).exists()
+            if user_exist:
+                user = CustomUser.objects.get(email=user_info['email'])
                 token_for_user = get_tokens_for_user(user)
                 # Set HTTP-only cookies for access token and refresh token
-                response = JsonResponse({'isUserLoggedSuccessfully': True,'userId': user.user_id,'darkTheme':user.dark_theme})
+                response = JsonResponse({'isUserLoggedSuccessfully': True,'userId': user.user_id,'darkTheme':user.dark_theme,'isSuperUser':user.is_superuser})
                 response.set_cookie(key='access_token', value=token_for_user['access'], httponly=True, secure=True, expires=datetime.now() + timedelta(minutes=5), samesite='Lax')
                 response.set_cookie(key='refresh_token', value=token_for_user['refresh'], httponly=True, secure=True, expires=datetime.now() + timedelta(days=1), samesite='Lax')
                 return response
+            else:
+                print('call comes here')
+                return JsonResponse({'UserDoesNotExist':True})
+         
         return JsonResponse({'isUserLoggedSuccessfully':False})
+    
+#GoogleCreateAccount
+class GoogleCreateAccount(APIView):
+    def post(self,request):
+        access_token = request.data['access_token']
+        response = getUserDataFromGoogle(access_token)
+        if response.status_code == 200:
+            #convert to json
+            user_info = response.json()
+            #check if user exist with this email
+            print(user_info)
+            user_exist = CustomUser.objects.filter(email = user_info['email']).exists()
+            if user_exist:
+
+                return JsonResponse({'userAlreadyExist':False})
+            else:
+                new_user = CustomUser(
+                                        username=user_info['name'],
+                                        email=user_info['email'],
+                                        is_google_auth=True
+                                        )
+                new_user.save()
+                return JsonResponse({'createdUserAccount':True})
+        
+        return JsonResponse({'createdUserAccount':False})
+
+#for updating state of user in Authenticated Route
+class LoggedUserData(APIView):
+    def post(self,request):
+        user = request.user  # This will give you the user associated with the token
+        if user.is_authenticated:
+            # User is authenticated, you can now access user attributes
+            return JsonResponse({'userId': user.userId, 'darkTheme': user.dark_theme,'isSuperUser':user.is_superuser})
+        return JsonResponse({'userDoesNotExist':True},status=status.HTTP_401_UNAUTHORIZED)

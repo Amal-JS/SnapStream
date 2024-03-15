@@ -100,7 +100,9 @@ const handleOtp = ()=>{
   
   //if no otp exist then user doesn't need to access this page
   if( !parsedOtp){
-      navigate(-1)
+    console.log('otp in local :',parsedOtp);
+    
+      // navigate(-1)
   }
 
   //set the otp in local storage to a state

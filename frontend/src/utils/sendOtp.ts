@@ -29,7 +29,7 @@ const  getCsrfToken = async () =>{
     const response = await axios.post(
       rootUrlPath + authRoot + 'sendEmail/',
       { otp: otp, value: phoneOrEmail },
-      { headers: { 'X-CSRFToken': csrfToken } }
+   
     );
 
     return response.data.otpSendingFailed; // Corrected typo
