@@ -72,6 +72,7 @@ import axiosInstance from "../../axios/axiosInstance";
 import { customErrorToast } from "../../Toast";
 import { userLoggedIn } from "../../Redux/authSlice";
 import { authRoot } from "../../utils/url";
+import { Login } from "../user/Login";
 
 export const AuthenticatedRoute = () => {
     const dispatch = useAppDispatch();
@@ -80,9 +81,7 @@ export const AuthenticatedRoute = () => {
     const isUserAdmin = useAppSelector(state => state.user.isSuperUser);
     const userLoggedInApp = useAppSelector(state => state.user.userLoggedIn)
     
-    if(userLoggedInApp){
-        return <Outlet/>
-    }
+    
 
     useEffect(() => {
         const getUserDataForState = async () => {
@@ -99,12 +98,18 @@ export const AuthenticatedRoute = () => {
                         isSuperUser: response.data.isSuperUser,
                         darkTheme: response.data.darkTheme
                     }));
+                    //go to home page
+                    navigate('/')
                 }
             } catch (error) {
                 console.error("Error fetching user data:", error);
             }
         };
 console.log('authenticated route');
+        //start
+        if(userLoggedInApp){
+            return 
+        }
 
         // Check if auth token exists and fetch user data
         if (authTokenExistInLocal) {
@@ -121,5 +126,5 @@ console.log('authenticated route');
         }
     }, [isUserAdmin]);
 
-    return <Outlet />;
+    return userLoggedInApp ? <Outlet/> : <Login/>;
 };
