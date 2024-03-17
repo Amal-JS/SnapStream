@@ -19,7 +19,8 @@ export const CustomModal : React.FC<ModalProps>= ({modalToggle,children,isDismis
   return (
     <>
       
-      <Modal isOpen={modalToggle} onOpenChange={onOpenChange} isDismissable={isDismissable} hideCloseButton={true} className="" placement={'center'}>
+      <Modal isOpen={modalToggle} onOpenChange={onOpenChange} isDismissable={isDismissable} hideCloseButton={true} 
+      className="bg-secondary dark:bg-primary dark:border-2 dark:border-secondary-border " placement={'center'}>
         <ModalContent>
    
               {children}
