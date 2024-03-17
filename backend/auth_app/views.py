@@ -141,7 +141,7 @@ class LoginUser(APIView):
             # Otherwise, try to find the user by email or username
             user = CustomUser.objects.filter(email=phone_or_email_or_username).first() \
                 or CustomUser.objects.filter(username=phone_or_email_or_username).first()
-        print(user)
+        
         if (user):
             #blocked user
             if(not user.is_active) :
@@ -150,16 +150,24 @@ class LoginUser(APIView):
                                      })
             
             password_check = user.check_password(password)
-            print(password_check)
+            
             if (password_check):
                 try:
                     token_for_user = get_tokens_for_user(user)
                 except Exception as e: 
                     print(e)
                 # Set HTTP-only cookies for access token and refresh token
-                response = JsonResponse({'userExist': True, 'message': 'Have a nice day.', 'userId': user.user_id,'darkTheme':user.dark_theme,'isSuperUser':user.is_superuser})
+                response = JsonResponse({'userExist':True,
+                                        'isUserLoggedSuccessfully': True,
+                                         'userId': user.user_id,
+                                         'darkTheme':user.dark_theme,
+                                         'isSuperUser':user.is_superuser,
+                                         'profilePictureUrl':str(user.profile_picture) if user.profile_picture else ''
+                                         })
                 response.set_cookie(key='access_token', value=token_for_user['access'], httponly=True, secure=True, expires=datetime.now() + timedelta(minutes=5), samesite='Lax')
                 response.set_cookie(key='refresh_token', value=token_for_user['refresh'], httponly=True, secure=True, expires=datetime.now() + timedelta(days=1), samesite='Lax')
+                print('user login')
+                print(response)
                 return response
             else:
                 return JsonResponse({'userExist':False,
@@ -335,7 +343,12 @@ class GoogleLogin(APIView):
                 user = CustomUser.objects.get(email=user_info['email'])
                 token_for_user = get_tokens_for_user(user)
                 # Set HTTP-only cookies for access token and refresh token
-                response = JsonResponse({'isUserLoggedSuccessfully': True,'userId': user.user_id,'darkTheme':user.dark_theme,'isSuperUser':user.is_superuser})
+                response = JsonResponse({'isUserLoggedSuccessfully': True,
+                                         'userId': user.user_id,
+                                         'darkTheme':user.dark_theme,
+                                         'isSuperUser':user.is_superuser,
+                                         'profilePictureUrl':str(user.profile_picture) if user.profile_picture else ''
+                                         })
                 response.set_cookie(key='access_token', value=token_for_user['access'], httponly=True, secure=True, expires=datetime.now() + timedelta(minutes=5), samesite='Lax')
                 response.set_cookie(key='refresh_token', value=token_for_user['refresh'], httponly=True, secure=True, expires=datetime.now() + timedelta(days=1), samesite='Lax')
                 return response

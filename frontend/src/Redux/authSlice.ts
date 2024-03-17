@@ -8,9 +8,12 @@ interface authState {
     userLoggedIn:boolean,
     userId:string | null,
     isSuperUser:boolean,
-    darkTheme:boolean
+    darkTheme:boolean,
+    profilePictureUrl?:string
 }
-
+interface profilePicture {
+    profilePictureUrl :string
+}
 const userIdFromLocalStorage = localStorage.getItem('userId');
 const parsedUserId = userIdFromLocalStorage ? JSON.parse(userIdFromLocalStorage) : null;
 
@@ -18,7 +21,8 @@ const initialState : authState = {
     userLoggedIn : false,
     darkTheme : false,
     userId : parsedUserId,
-    isSuperUser:false
+    isSuperUser:false,
+    profilePictureUrl:''
 }
 
 export const authSlice = createSlice({
@@ -26,16 +30,17 @@ export const authSlice = createSlice({
     initialState,
     reducers:{
         userLoggedIn:(state,action : PayloadAction<authState>)=>{
-                state.userLoggedIn = true,
-                state.userId = action.payload.userId,
-                state.darkTheme = action.payload.darkTheme,
+                state.userLoggedIn = true;
+                state.userId = action.payload.userId;
+                state.darkTheme = action.payload.darkTheme;
                 state.isSuperUser= action.payload.isSuperUser
+                state.profilePictureUrl = action.payload?.profilePictureUrl
             
         },
         userLoggedOut:(state)=>{
-                state.isSuperUser = false,
-                state.userId = null,
-                state.userLoggedIn = false,
+                state.isSuperUser = false;
+                state.userId = null;
+                state.userLoggedIn = false;
                 state.darkTheme = false
         },
         themeToggle :(state)=>{
@@ -54,11 +59,17 @@ export const authSlice = createSlice({
             }
             return {...state,
                     darkTheme : state.darkTheme  ? false : true}
-        }
+        },
+        userProfilePictureUpdated : (state,action : PayloadAction<profilePicture>)=>{
+            return {
+                ...state,
+                profilePictureUrl:action.payload.profilePictureUrl
+            }
+        },
     }
     
 })
 
 export default authSlice.reducer
-export const {userLoggedIn,userLoggedOut,themeToggle} = authSlice.actions 
+export const {userLoggedIn,userLoggedOut,themeToggle,userProfilePictureUpdated} = authSlice.actions 
 

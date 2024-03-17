@@ -62,7 +62,8 @@ export const Login = () => {
                   userLoggedIn:true,
                   userId:response.data.userId,
                   isSuperUser:response.data.isSuperUser,
-                  darkTheme:response.data.darkTheme
+                  darkTheme:response.data.darkTheme,
+                  profilePictureUrl:response.data?.profilePictureUrl
                 }))
                 console.log(response.data.userData);
                 customSuccessToast('Login Successfull.')
@@ -129,14 +130,17 @@ const handleLogin = () =>{
     
   const response = await axiosInstance.post(authRoot+'LoginUser/',{'phoneOrEmailOrUsername':formData.username,'password':formData.password})
   // No user exist or invalid credentials
-  if(!response.data.userExist){
+
+  
+  if(!response.data?.userExist){
       //setError
       setError(response.data.message)
+      
   }
-  else {
-
+  else if(response.data?.userId){
+    console.log('response comes');
     customSuccessToast('Login Successfull.')
-    customSuccessToast(response.data.message)
+    customSuccessToast('Have a nice day.')
     //empty the form
     setFormData({
       username:'',
@@ -147,7 +151,8 @@ const handleLogin = () =>{
       userLoggedIn:true,
       userId :response.data.userId,
       darkTheme:response.data.darkTheme,
-      isSuperUser:response.data.isSuperUser
+      isSuperUser:response.data.isSuperUser,
+      profilePictureUrl:response.data?.profilePictureUrl
     }))
     
     navigate('/')
