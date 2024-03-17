@@ -146,8 +146,10 @@ interface UserProfileFormError {
     }
     else if (name == 'phone') {
       valueExist = await phoneNumberAcceptable(name,value)
-    }else  {
+    }else if(name == 'email') {
       valueExist = await emailAcceptable('email',value)
+      console.log('called email check');
+      
     }
 
     if(valueExist){
@@ -176,8 +178,7 @@ interface UserProfileFormError {
         ...prev,
         [name]:value
       }))
-     
-      console.log(userProfileData)
+  
   }
   const handleUpdateUserData = async () =>{
       if(Object.values(userProfileFormError).some(value=> value != '' )){
@@ -187,32 +188,6 @@ interface UserProfileFormError {
         return
       }
 
-      // if(Object.values(userProfileData).every(value=> value.length < 5)){
-       
-      //   return
-      // }
-
-      // if(Object.values(userProfileFormError).some(value => value.length > 1)){
-      //   customErrorToast('Give acceptable values.')
-      //   return ;
-      // }
-   
-
-//   //inititially there was email and phone or there was email or phone
-//   if(userProfileInitialData['phone'] != '' && userProfileInitialData['email'] != '') {
-//  //so when updating we need either a phone or email or both the values
-//  if(userProfileData['phone'] == '' && userProfileData['email'] == ''){
-//   customErrorToast('Either email or phone number required.')
-//   return;
-// }
-//   }
-//   if(userProfileInitialData['phone'] != '' || userProfileInitialData['email'] != ''){
-//  //so when updating we need either a phone or email or both the values
-//  if(userProfileData['phone'] == '' && userProfileData['email'] == ''){
-//   customErrorToast('Either email or phone number required.')
-//   return;
-// }
-//  }
 
      // Only update the values changed by the user
      let changedUserData: { [key: string]: string | number | undefined} = { user_id: userId ?userId : '' };
@@ -222,14 +197,16 @@ interface UserProfileFormError {
     // Check if the field is dif  ferent
     if (userProfileData[field] != userProfileInitialData[field] ) {
       // If different, add it to changedUserData
+      console.log('userProfileData[field] != userProfileInitialData[field]  ',userProfileData[field], userProfileInitialData[field] );
+      
       const value = userProfileData[field];
       if(!(value.length > 6)){
           return
       }
       changedUserData[field] = value;
-      console.log('accepted',userProfileData[field], userProfileInitialData[field]);
+   
     }else{
-console.log('not accepted',userProfileData[field], userProfileInitialData[field]);
+console.log('not accepted ',userProfileData[field], userProfileInitialData[field]);
 
     }
   }
@@ -240,7 +217,7 @@ console.log('not accepted',userProfileData[field], userProfileInitialData[field]
   if(userProfileData.dob != ''){
     changedUserData  = {...changedUserData,dob:userProfileData.dob}
   }
-      console.log('last step',changedUserData);
+   
 
   const udpdateUserData = async () =>{
     const response = await axios.patch(authRoot+'userData/',changedUserData)
