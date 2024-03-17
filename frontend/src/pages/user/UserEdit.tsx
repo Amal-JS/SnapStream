@@ -334,7 +334,7 @@ useEffect(()=>{
       />
       </div>
       
-      <div className=' mx-2 my-9 items-center w-full'>
+      <div className=' mx-2 mt-9  mb-3 items-center w-full'>
         <p className='text-primary dark:text-secondary text-sm md:text-xl w-3/12 mx-2'> Bio </p>
       <TextArea 
       name={'bio'}

@@ -30,7 +30,7 @@ useEffect(()=>{
 
     return (
         <>
-        <textarea id="message" rows={4} name={name} 
+        <textarea id="message" rows={2} name={name} 
        
         placeholder={placeholder}
         className={`w-full border-1 block p-2.5
