@@ -11,7 +11,7 @@ import { SideNav } from "./SideNav";
         
     }
     return (
-        <div className="p-3">
+        <div className="p-3 md:pl-56">
             <h1 className="text-8xl text-black dark:bg-black dark:text-white">Home</h1>
         </div>
     )

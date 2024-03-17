@@ -35,3 +35,5 @@ venv/
 frontend/src/pages/user/SideNav.tsx
 frontend/env
 frontend/src/pages/user/UserProfile.tsx
+frontend/src/pages/user/MenuModal.tsx
+frontend/src/pages/user/UserPhoneHeader.tsx

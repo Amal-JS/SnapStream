@@ -35,7 +35,7 @@ function App() {
 
   return (
   <>
- <ToolTip/>
+ {/* <ToolTip/> */}
  <Toast />
  <GoogleOAuthProvider clientId={'443025233563-nh99nv2u8u7hj8l8o91bpguja6ni7114.apps.googleusercontent.com'}>
  
