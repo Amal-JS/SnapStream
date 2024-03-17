@@ -306,6 +306,7 @@ class UserData(APIView):
             for field, value in updated_fields.items():
                 setattr(user, field, value)
             user.save()
+            print('user :',user,' updated fields :',updated_fields,' after updation :',user.dark_theme)
             return JsonResponse({'profileDetailsUpdated': True})
         else:
             return JsonResponse({'profileDetailsUpdated':False})

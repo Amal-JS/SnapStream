@@ -56,6 +56,6 @@ class TokenVerificationMiddleware:
         else:
             print('Authorization Header not present')
         response = self.get_response(request)
-        print('response ,',response)
+       
 
         return response

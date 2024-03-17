@@ -42,7 +42,7 @@ export const authSlice = createSlice({
             // if user logged in and user switched the theme update on db
             if(state.userId){
                     const udpateUserThemePreference = async ()=>{
-                        const response = await axiosInstance.patch(authRoot+'userData/',{'user_id':state.userId,'darkTheme':state.darkTheme})
+                        const response = await axiosInstance.patch(authRoot+'userData/',{'user_id':state.userId,'darkTheme':!state.darkTheme})
                         if(response.data.profileDetailsUpdated){
                             customSuccessToast('Theme preference updated')
                         }else{
