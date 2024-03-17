@@ -1,6 +1,6 @@
 from django.urls import include, path
 from . views import CheckUserValues, GoogleLogin,SendOtp,GetCSRFToken,UserAccount, \
-                    LoginUser,ForgotPassword,UserData,LoggedUserData,GoogleCreateAccount
+                    LoginUser,ForgotPassword,UserData,LoggedUserData,GoogleCreateAccount, UserProfileData
 
 
 urlpatterns = [
@@ -13,5 +13,6 @@ urlpatterns = [
     path('userData/',UserData.as_view()),
     path('googleLogin/',GoogleLogin.as_view()),
     path('createAccountGoogle/',GoogleCreateAccount.as_view()),
-    path('getLoggedUserData/',LoggedUserData.as_view())
+    path('getLoggedUserData/',LoggedUserData.as_view()),
+    path('getUserProfileData/',UserProfileData.as_view())
 ]

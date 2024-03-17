@@ -275,7 +275,8 @@ class UserData(APIView):
             'userId':user.user_id,
             'phone':'' if not user.phone else user.phone,
             'email':'' if not user.email else user.email,
-            'profilePicture':str(user.profile_picture)
+            'profilePicture':str(user.profile_picture),
+
             } })
     
     def patch(self,request):
@@ -391,3 +392,28 @@ class LoggedUserData(APIView):
             # User is authenticated, you can now access user attributes
             return JsonResponse({'userId': user.userId, 'darkTheme': user.dark_theme,'isSuperUser':user.is_superuser})
         return JsonResponse({'userDoesNotExist':True},status=status.HTTP_401_UNAUTHORIZED)
+    
+
+
+    #for getting user data in user profile
+class UserProfileData(APIView):
+    # def post(self,request):
+    #     user = request.user  # This will give you the user associated with the token
+    #     if user.is_authenticated:
+    #         # User is authenticated, you can now access user attributes
+    #         return JsonResponse({'userId': user.userId, 'darkTheme': user.dark_theme,'isSuperUser':user.is_superuser})
+    #     return JsonResponse({'userDoesNotExist':True},status=status.HTTP_401_UNAUTHORIZED)
+    def post(self,request):
+        #change to user_id
+        id = request.data['user_id']
+        user = CustomUser.objects.get(user_id=id)
+        
+        return JsonResponse(
+            {'userData':
+             {
+            'username':user.username,
+            'bio':user.bio,
+            'fullName':user.full_name,
+            'profilePicture':str(user.profile_picture) if user.profile_picture else ''
+
+            } })
