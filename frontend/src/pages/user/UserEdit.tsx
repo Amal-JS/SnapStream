@@ -22,7 +22,9 @@ interface UserProfileData {
 
   username:string ,
   email:string,
-  phone:string 
+  phone:string,
+  bio:string,
+  dob:string 
 }
 interface UserProfileFormError {
   username:string,
@@ -39,13 +41,17 @@ interface UserProfileFormError {
       const [userProfileData,setUserProfileData] = useState<UserProfileData>({
         username:'',
         email:'',
-        phone:''
+        phone:'',
+        bio:'',
+        dob:''
       });
       //state only set on initial render
       const [userProfileInitialData,setUserProfileInitialData] = useState<UserProfileData>({
         username:'',
         email:'',
-        phone:''
+        phone:'',
+        bio:'',
+        dob:''
       });
       const [userProfileFormError,setUserProfileFormError] = useState<UserProfileFormError>({
         username:'',
@@ -155,7 +161,7 @@ interface UserProfileFormError {
   
   const handleChange =(event:React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) =>{
       const {name,value} = event.target;
-
+  
     if (value === ''){
       if(userProfileInitialData[name as keyof UserProfileData] != '' && value == ''){
         setUserProfileData(prev => ({
@@ -171,7 +177,7 @@ interface UserProfileFormError {
         [name]:value
       }))
      
-      
+      console.log(userProfileData)
   }
   const handleUpdateUserData = async () =>{
       if(Object.values(userProfileFormError).some(value=> value != '' )){
@@ -209,7 +215,7 @@ interface UserProfileFormError {
 //  }
 
      // Only update the values changed by the user
-     let changedUserData: { [key: string]: string | number | undefined} = { userId: userId ?userId : '' };
+     let changedUserData: { [key: string]: string | number | undefined} = { user_id: userId ?userId : '' };
   const fields: (keyof UserProfileData)[] = ['username', 'email', 'phone'];
 
   for (const field of fields) {
@@ -228,6 +234,12 @@ console.log('not accepted',userProfileData[field], userProfileInitialData[field]
     }
   }
       
+  if(userProfileData.bio != ''){
+    changedUserData = {...changedUserData,bio:userProfileData.bio}
+  }
+  if(userProfileData.dob != ''){
+    changedUserData  = {...changedUserData,dob:userProfileData.dob}
+  }
       console.log('last step',changedUserData);
 
   const udpdateUserData = async () =>{
@@ -260,7 +272,7 @@ console.log('not accepted',userProfileData[field], userProfileInitialData[field]
 
   useEffect(()=>{
 async function fetchUserData() {
-    const response = await axios.post(authRoot+'userData/',{userId:userId})
+    const response = await axios.post(authRoot+'userData/',{user_id:userId})
     if (response.data.userData){
       setUserProfileData(response.data.userData)
       setUserProfileInitialData(response.data.userData)
@@ -336,7 +348,7 @@ useEffect(()=>{
         <p className='text-primary dark:text-secondary text-sm md:text-xl w-3/12 mx-2'> Birthday </p>
             
             <DateInput
-      name='dateOfBirth'
+      name='dob'
     
       error={''}
       placeholder={userProfileInitialData.email ? userProfileInitialData.email : 'Add your email'}

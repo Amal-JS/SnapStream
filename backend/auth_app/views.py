@@ -276,7 +276,8 @@ class UserData(APIView):
             'phone':'' if not user.phone else user.phone,
             'email':'' if not user.email else user.email,
             'profilePicture':str(user.profile_picture),
-
+            'dob':user.dob if user.dob else '',
+            'bio':user.bio if user.bio else ''
             } })
     
     def patch(self,request):
@@ -290,7 +291,7 @@ class UserData(APIView):
         except:
             
             return JsonResponse({'profileDetailsUpdated':False})
-    
+        print(request.data)
         # Update fields based on provided data
         updated_fields = {}
         if 'username' in request.data:
@@ -317,7 +318,9 @@ class UserData(APIView):
             user.save()
             print('user :',user,' updated fields :',updated_fields,' after updation :',user.dark_theme)
             return JsonResponse({'profileDetailsUpdated': True})
+        
         else:
+            print('not update')
             return JsonResponse({'profileDetailsUpdated':False})
 
             

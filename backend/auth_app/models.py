@@ -10,7 +10,7 @@ class CustomUser(AbstractUser):
     phone = models.CharField(unique=True,null=True,max_length=10)
     bio = models.CharField(null=True,max_length=200)
     profile_picture = models.ImageField(null=True,upload_to='user_profile_pictures/')
-    birth_date = models.DateField(null=True)
+    dob = models.DateField(null=True)
     dark_theme = models.BooleanField(default=False)
     full_name= models.CharField(null=True,max_length=100)
     is_active = models.BooleanField(default=True)
