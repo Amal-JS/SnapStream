@@ -164,10 +164,11 @@ class LoginUser(APIView):
                                          'isSuperUser':user.is_superuser,
                                          'profilePictureUrl':str(user.profile_picture) if user.profile_picture else ''
                                          })
+                
                 response.set_cookie(key='access_token', value=token_for_user['access'], httponly=True, secure=True, expires=datetime.now() + timedelta(minutes=5), samesite='Lax')
                 response.set_cookie(key='refresh_token', value=token_for_user['refresh'], httponly=True, secure=True, expires=datetime.now() + timedelta(days=1), samesite='Lax')
-                print('user login')
-                print(response)
+                response['access_token'] = token_for_user['access']
+                response['refresh_token'] = token_for_user['refresh']
                 return response
             else:
                 return JsonResponse({'userExist':False,
@@ -353,8 +354,11 @@ class GoogleLogin(APIView):
                                          'isSuperUser':user.is_superuser,
                                          'profilePictureUrl':str(user.profile_picture) if user.profile_picture else ''
                                          })
-                response.set_cookie(key='access_token', value=token_for_user['access'], httponly=True, secure=True, expires=datetime.now() + timedelta(minutes=5), samesite='Lax')
-                response.set_cookie(key='refresh_token', value=token_for_user['refresh'], httponly=True, secure=True, expires=datetime.now() + timedelta(days=1), samesite='Lax')
+                # response.set_cookie(key='access_token', value=token_for_user['access'], httponly=True, secure=True, expires=datetime.now() + timedelta(minutes=5), samesite='Lax')
+                # response.set_cookie(key='refresh_token', value=token_for_user['refresh'], httponly=True, secure=True, expires=datetime.now() + timedelta(days=1), samesite='Lax')
+                response['Cache-Control'] = 'no-cache'
+                response['access_token'] = token_for_user['access']
+                response['refresh_token'] = token_for_user['refresh']
                 return response
             else:
                 print('call comes here')

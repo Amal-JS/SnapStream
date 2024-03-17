@@ -1,5 +1,6 @@
 import { useAppSelector } from "../../hooks/redux"
 import { SideNav } from "./SideNav";
+import { UserHomeStatus } from "./UserHomeStatus";
 
  const UserHomeComponent = ()=> {
     const userLoggedIn = useAppSelector((state)=>state.user.userLoggedIn)
@@ -11,8 +12,8 @@ import { SideNav } from "./SideNav";
         
     }
     return (
-        <div className="p-3 md:pl-56">
-            <h1 className="text-8xl text-black dark:bg-black dark:text-white">Home</h1>
+        <div className=" md:pl-40 md:mt-3">
+            <UserHomeStatus />
         </div>
     )
 }
