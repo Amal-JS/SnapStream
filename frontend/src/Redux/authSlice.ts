@@ -42,6 +42,7 @@ export const authSlice = createSlice({
                 state.userId = null;
                 state.userLoggedIn = false;
                 state.darkTheme = false
+                state.profilePictureUrl = ''
         },
         themeToggle :(state)=>{
             // if user logged in and user switched the theme update on db

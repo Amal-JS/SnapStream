@@ -32,6 +32,15 @@ export const CustomModal : React.FC<ModalProps>= ({modalToggle,children,isDismis
 }
 
 
+export interface modalContentType {
+  isDismissable : boolean | true,
+  modalToggle:boolean | false,
+  title:string,
+  handleModalToggle:() => void,
+  content ?: JSX.Element
+
+}
+
 
 
 
