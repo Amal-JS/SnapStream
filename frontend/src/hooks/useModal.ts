@@ -5,7 +5,7 @@ export const useModal = (initialState : boolean = false) => {
 
     const handleModalToggle = () => {
         setModalToggle((prev) => !prev)
-        console.log('modal state :',isModalOpened);
+       
         
     }
     return {isModalOpened,handleModalToggle}
