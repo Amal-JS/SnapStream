@@ -51,8 +51,8 @@ MIDDLEWARE = [
      "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
     # 'django.middleware.csrf.CsrfViewMiddleware',
-    'auth_app.TokenVerifyMiddleware.TokenVerificationMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'auth_app.TokenVerifyMiddleware.TokenVerificationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -75,7 +75,12 @@ CORS_ALLOW_HEADERS = [
     'Authorization',
     'Content-Type',
     'Refresh-token',  # Add Refresh_token to the list of allowed headers
-    # Add other allowed headers if needed
+    'Access-Token',
+    'access_token',
+    'refresh_token',
+    'Refresh_token',
+    'Access_token',
+    'Cookie'
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -137,8 +142,8 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=300),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=25),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 
 }
 

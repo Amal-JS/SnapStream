@@ -58,7 +58,7 @@ axiosInstance.interceptors.response.use((response) => {
     console.log('response :',response);
     
     //new access token
-    if(response.headers['Access_token']){
+    if(response.headers['Access_token'] || response.headers['access_token']){
         //delete the existing one from the localstorage update with new one
         console.log('response contains access');
         
@@ -72,7 +72,7 @@ axiosInstance.interceptors.response.use((response) => {
         localStorage.setItem('auth_token',newAuthToken)
         console.log('new auth token :',newAuthToken);
         
-    }else if (response.headers['Refresh_token']){  //intial time user logs in getting and storing refresh token
+    }else if (response.headers['Refresh_token'] || response.headers['refresh_token']){  //intial time user logs in getting and storing refresh token
         console.log('old refresh auth token :',localStorage.getItem('auth_token'));
         //remove the old one
         localStorage.removeItem('auth_token')
@@ -91,6 +91,9 @@ axiosInstance.interceptors.response.use((response) => {
 
 
     return response
+}, (error) => {
+    // Handle error responses
+    return Promise.reject(error);
 })
 
 export default axiosInstance;

@@ -166,9 +166,7 @@ class LoginUser(APIView):
                                          })
                 
                 response.set_cookie(key='access_token', value=token_for_user['access'], httponly=True, secure=True, expires=datetime.now() + timedelta(minutes=5), samesite='Lax')
-                response.set_cookie(key='refresh_token', value=token_for_user['refresh'], httponly=True, secure=True, expires=datetime.now() + timedelta(days=1), samesite='Lax')
-                response['access_token'] = token_for_user['access']
-                response['refresh_token'] = token_for_user['refresh']
+                response.set_cookie(key='refresh_token', value=token_for_user['refresh'], httponly=True, secure=True, expires=datetime.now() + timedelta(days=1), samesite='Lax')              
                 return response
             else:
                 return JsonResponse({'userExist':False,
