@@ -19,7 +19,7 @@ const parsedUserId = userIdFromLocalStorage ? JSON.parse(userIdFromLocalStorage)
 
 const initialState : authState = {
     userLoggedIn : false,
-    darkTheme : false,
+    darkTheme : true,
     userId : parsedUserId,
     isSuperUser:false,
     profilePictureUrl:''
