@@ -38,7 +38,7 @@ axiosInstance.interceptors.request.use((request)=>{
 })
 
 axiosInstance.interceptors.response.use((response) => {
-    console.log('headers', response.headers);
+   
 
     // Check if Access_token header exists and log its value
     if (response.headers['access_token']) {
@@ -55,7 +55,7 @@ axiosInstance.interceptors.response.use((response) => {
 });
 
 axiosInstance.interceptors.response.use((response) => {
-    console.log('response :',response);
+   
     
     //new access token
     if(response.headers['Access_token'] || response.headers['access_token']){

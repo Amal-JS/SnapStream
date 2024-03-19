@@ -63,7 +63,10 @@ interface UserProfileFormError {
 
     if (userId){
       let valueExist = checkFieldValueAlreadyUsed(field,value,userId)
+      
+      
       if (await valueExist){
+        console.log( valueExist,' ',field);
           if(value == userProfileInitialData[field]){
             return false;
           }else{
@@ -77,6 +80,8 @@ interface UserProfileFormError {
    
   }
   const usernameAcceptable = async  (field:keyof UserProfileData ,value:string)=> {
+    
+    
     if(value.trim().length < 1){
       return false
     }

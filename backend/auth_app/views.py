@@ -37,7 +37,7 @@ class CheckUserValues(View):
         value_exist = False
         try:
             if(user_id):
-                user = get_object_or_404(CustomUser,pk=user_id)
+                user = CustomUser.objects.get(user_id = user_id)
             
             if field == 'username':
                 value_exist = CustomUser.objects.filter(username=value).exists()
@@ -49,9 +49,10 @@ class CheckUserValues(View):
             if value_exist and user:
                     if user.user_id == CustomUser.objects.get(username=value).user_id:
                         value_exist = False
+           
             return JsonResponse({'valueExist':value_exist})
-        except:
-            
+        except Exception as e:
+            print(e)
             return JsonResponse({'valueExist':value_exist})
     
 #generate csrf token for post request
