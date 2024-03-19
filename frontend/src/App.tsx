@@ -17,6 +17,8 @@ import { useAppSelector } from './hooks/redux.ts'
 import { ToolTip } from './Components/Tooltip/Tooltip.tsx'
 import { AuthenticatedRoute } from './pages/auth/AuthenticatedRoute.tsx'
 
+
+
 function App() {
 
   const userState = useAppSelector(state => state.user)
@@ -30,6 +32,7 @@ function App() {
     }
   },[userState.darkTheme])
 
+console.log('env value ',import.meta.env);
 
 
 
@@ -37,7 +40,7 @@ function App() {
   <>
  {/* <ToolTip/> */}
  <Toast />
- <GoogleOAuthProvider clientId={'443025233563-nh99nv2u8u7hj8l8o91bpguja6ni7114.apps.googleusercontent.com'}>
+ <GoogleOAuthProvider clientId={import.meta.env.VITE_REACT_APP_GOOGLE_API_TOKEN}>
  
   <BrowserRouter>
  
