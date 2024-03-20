@@ -1,13 +1,13 @@
 import { Button, ModalBody } from "@nextui-org/react"
-import { CustomModal } from "../../Components/Modal/Modal"
-import { ModalTitle } from "../../Components/Modal/ModalTitle"
+import { CustomModal } from "../../../Components/Modal/Modal"
+import { ModalTitle } from "../../../Components/Modal/ModalTitle"
 import { useEffect, useState } from "react"
-import { useAppSelector } from "../../hooks/redux"
-import { TextInput } from "../../Components/Form/TextInput"
+import { useAppSelector } from "../../../hooks/redux"
+import { TextInput } from "../../../Components/Form/TextInput"
 import { PiNotePencilDuotone } from "react-icons/pi"
-import axiosInstance from "../../axios/axiosInstance"
-import { statusRoot } from "../../utils/url"
-import { customErrorToast, customSuccessToast } from "../../Toast"
+import axiosInstance from "../../../axios/axiosInstance"
+import { statusRoot } from "../../../utils/url"
+import { customErrorToast, customSuccessToast } from "../../../Toast"
 
 interface CreateStatePorps {
     isModalOpened:boolean,

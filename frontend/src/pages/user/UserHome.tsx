@@ -1,6 +1,6 @@
 import { useAppSelector } from "../../hooks/redux"
 import { SideNav } from "./SideNav";
-import { UserHomeStatus } from "./UserHomeStatus";
+import { UserHomeStatus } from "./status/UserHomeStatus";
 
  const UserHomeComponent = ()=> {
     const userLoggedIn = useAppSelector((state)=>state.user.userLoggedIn)

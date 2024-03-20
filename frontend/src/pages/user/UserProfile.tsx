@@ -24,7 +24,7 @@ import { authRoot, rootUrlPath } from "../../utils/url";
 import { customErrorToast, customSuccessToast } from "../../Toast";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { userProfilePictureUpdated } from "../../Redux/authSlice";
-import { Status } from "./Status";
+import { Status } from "./status/Status";
 
 
 interface UserData {
