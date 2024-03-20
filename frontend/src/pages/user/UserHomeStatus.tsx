@@ -4,6 +4,10 @@ import { Status } from "./Status"
 import { CreateStatus } from "./CreateStatus"
 import { useModal } from "../../hooks/useModal"
 
+interface StatusType {
+    description :string,
+    
+}
 export const UserHomeStatus = () =>{
     const loggedUserProfilePicture = useAppSelector(state => state.user.profilePictureUrl)
     const {isModalOpened,handleModalToggle} = useModal()

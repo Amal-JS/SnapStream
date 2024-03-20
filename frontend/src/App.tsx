@@ -32,8 +32,6 @@ function App() {
     }
   },[userState.darkTheme])
 
-console.log('env value ',import.meta.env);
-
 
 
   return (
