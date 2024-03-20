@@ -5,6 +5,9 @@ import { useEffect, useState } from "react"
 import { useAppSelector } from "../../hooks/redux"
 import { TextInput } from "../../Components/Form/TextInput"
 import { PiNotePencilDuotone } from "react-icons/pi"
+import axiosInstance from "../../axios/axiosInstance"
+import { statusRoot } from "../../utils/url"
+import { customErrorToast, customSuccessToast } from "../../Toast"
 
 interface CreateStatePorps {
     isModalOpened:boolean,
@@ -17,45 +20,65 @@ interface StatusForm {
 }
 export const CreateStatus :React.FC<CreateStatePorps>= ({isModalOpened,handleModalToggle})=>{
  
-    const userId = useAppSelector(state => state.user.userId)
-    const handleCreateStatus = ()=>{
-
-    }
-    const [formFilled,setFormFilled] = useState<boolean>(true)
-    const [formData,setFormData] = useState<StatusForm>({
+  const [formFilled,setFormFilled] = useState<boolean>(true)
+    const [statusFormData,setStatusFormData] = useState<StatusForm>({
       description:'',
       media:null
     })
 
+    const userId = useAppSelector(state => state.user.userId)
+    const handleCreateStatus = ()=>{
+        const createStatus = async ()=>{
+          const formData = new FormData();
+          if(userId){
+            formData.append('user_id', userId);
+            formData.append('description', statusFormData.description);
+            if(statusFormData.media)
+            formData.append('media', statusFormData.media);
+            
+          }
+          
+          const response = await axiosInstance.post(statusRoot + 'userStatus/', formData);
+         
+          
+          if(response.data.statusCreationSuccess){
+          
+            customSuccessToast('Status created successfully.')
+            console.log(response.data);
+            
+          }
+          else{
+            customErrorToast('Some error occured on status creation.')
+            customErrorToast('Please try again.')
+           
+          }
+          handleModalToggle()
+        }
 
-    const handleChange = (event:React.ChangeEvent<HTMLInputElement>)=>{
-      
-      const {name,value} = event.target
-      if(name == 'media' && event.target.files){
-        setFormData(prev => ({
-          ...prev,
-          [name]:event.target.files ? event.target.files[0] : null
-        }))
-      }
-      setFormData(prev => ({
-        ...prev,
-        [name]:value ? value : ''
-      }))
-
-   
+        createStatus()
     }
     
+    const handleChange = (event:React.ChangeEvent<HTMLInputElement>) => {
+      const { name, value, files } = event.target;
+  
+      setStatusFormData((prev) => ({
+          ...prev,
+          [name]: name === 'media' ? files && files[0] : value,
+      }));
+     
+      
+  };
   
     
   useEffect(()=>{
        //button enable disable
-       if (formData['description'] == '' &&  formData['media'] == null){
+       if (statusFormData['description'] == '' &&  statusFormData['media'] == null){
         setFormFilled(true)
-        console.log('enters in change');
+       
       }else{
         setFormFilled(false)
       }
-    },[formData])
+    },[statusFormData])
 
     return(
         <CustomModal isDismissable={true} modalToggle={isModalOpened}>
