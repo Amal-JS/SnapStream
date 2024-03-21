@@ -31,13 +31,14 @@ class UserStatus(APIView):
             try:
                 # Save the status with media
                 status = Status.objects.create(user=user, description=description, media=media)
+                print(status.media,status.description)
                 # get the active statues
                 response = get_user_active_statues(user)
-                return JsonResponse({'status': [response.data], 'statusCreationSuccess': True})
+                return JsonResponse({'statuses': [response], 'statusCreationSuccess': True})
             except ValidationError as e:
                 print(e)
                 return JsonResponse({'error': str(e)}, status=400)
         except Exception as e:
             print(e)
             response = get_user_active_statues(user)
-            return JsonResponse({'statusCreationSuccess': False,'status':response.data}, status=500)
+            return JsonResponse({'statusCreationSuccess': False,'statuses':response}, status=500)

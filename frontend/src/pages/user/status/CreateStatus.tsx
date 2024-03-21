@@ -9,16 +9,27 @@ import axiosInstance from "../../../axios/axiosInstance"
 import { statusRoot } from "../../../utils/url"
 import { customErrorToast, customSuccessToast } from "../../../Toast"
 
+interface UserStatus {
+  id:string,
+  description:string,
+  media:string
+}
+
+
 interface CreateStatePorps {
     isModalOpened:boolean,
-    handleModalToggle:()=>void
+    handleModalToggle:()=>void,
+    handleUserActiveStatuses?:(statuses :UserStatus[] | [] )=>void
 }
 
 interface StatusForm {
   description:string,
   media:File | null
 }
-export const CreateStatus :React.FC<CreateStatePorps>= ({isModalOpened,handleModalToggle})=>{
+
+
+
+export const CreateStatus :React.FC<CreateStatePorps>= ({isModalOpened,handleModalToggle,handleUserActiveStatuses})=>{
  
   const [formFilled,setFormFilled] = useState<boolean>(true)
     const [statusFormData,setStatusFormData] = useState<StatusForm>({
@@ -44,7 +55,7 @@ export const CreateStatus :React.FC<CreateStatePorps>= ({isModalOpened,handleMod
           if(response.data.statusCreationSuccess){
           
             customSuccessToast('Status created successfully.')
-            console.log(response.data);
+            handleUserActiveStatuses && handleUserActiveStatuses(response.data.statuses[0])
             
           }
           else{
