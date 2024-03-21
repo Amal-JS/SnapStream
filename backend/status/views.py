@@ -30,8 +30,9 @@ class UserStatus(APIView):
             media = request.FILES.get('media')
             try:
                 # Save the status with media
-                status = Status.objects.create(user=user, description=description, media=media)
-                print(status.media,status.description)
+                if description or media :
+                    status = Status.objects.create(user=user, description=description, media=media)
+                    print(status.media,status.description)
                 # get the active statues
                 response = get_user_active_statues(user)
                 return JsonResponse({'statuses': [response], 'statusCreationSuccess': True})
@@ -42,3 +43,7 @@ class UserStatus(APIView):
             print(e)
             response = get_user_active_statues(user)
             return JsonResponse({'statusCreationSuccess': False,'statuses':response}, status=500)
+
+    def delete(self,request):
+          print(request.data)
+          return JsonResponse({'StatusDeleted':False})

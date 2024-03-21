@@ -6,7 +6,7 @@ import { useModal } from "../../../hooks/useModal"
 import { OpenStatus } from "./OpenStatus"
 import axiosInstance from "../../../axios/axiosInstance"
 import { statusRoot } from "../../../utils/url"
-import { customErrorToast } from "../../../Toast"
+import { customErrorToast, customSuccessToast } from "../../../Toast"
 
 interface UserStatus {
     id:string,
@@ -47,18 +47,15 @@ export const UserHomeStatus = () =>{
         }
     }
     const handleOpenStatus =()=>{
- 
         console.log('handleOpenStatus');
         
         if(userActiveStatuses?.length == 0){
             getUserCurrentActiveStatuses()
-        console.log('fetched user statuses');
-        
+            customSuccessToast('Getting statuses.Try after some time.')
+        }else{
+            setShowUserStatuses(prev => !prev)
         }
-        
-        setShowUserStatuses(prev => !prev)
-        console.log(showUserStatuses,'show user status component');
-        
+       
     }
     return(
         <>
