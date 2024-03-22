@@ -99,11 +99,13 @@ export const OpenStatus :React.FC<OpenStatus> = ({userActiveStatuses,showStatus}
 
     const handleDeleteStatus = async ()=>{
             const response = await axiosInstance.delete(statusRoot+'userStatus/',{'data':{'status_id':userActiveStatuses[currentStatusIndex].id}})
+            
+            
             if(response.data.statusDeleted){
                 customSuccessToast('Deleted the status.')
+                console.log('custom error toast shown');
                 //update user active statuses
                 setModalToggle(false)
-                getUserCurrentActiveStatuses()
             }else{
                 customErrorToast("Status couldn't be deleted ")
             }
@@ -111,7 +113,7 @@ export const OpenStatus :React.FC<OpenStatus> = ({userActiveStatuses,showStatus}
     handleDeleteStatus()
   }
 
-console.log('progress :',progress);
+// console.log('progress :',progress);
 // console.log('userId :',userId,'status author id :',userActiveStatuses[currentStatusIndex].authorId);
 
   
@@ -170,8 +172,4 @@ console.log('progress :',progress);
 
 
 
-
-function getUserCurrentActiveStatuses() {
-    throw new Error("Function not implemented.")
-}
 

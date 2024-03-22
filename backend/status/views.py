@@ -49,14 +49,13 @@ class UserStatus(APIView):
           if status_id:
                 try:
                       print('before count :',Status.objects.all().count())
-                      print(status_id)
                       status = Status.objects.get(id=status_id)
                       status.delete()
                       print('updated count :',Status.objects.all().count())
                       print(status)
-                      return JsonResponse({'StatusDeleted':True})
+                      return JsonResponse({'statusDeleted':True})
                 except Exception as e:
-                      print(e)
-                      return JsonResponse({'StatusDeleted':False})
-
-          return JsonResponse({'StatusDeleted':False})
+                      
+                      return JsonResponse({'statusDeleted':False})
+          
+          return JsonResponse({'statusDeleted':False})

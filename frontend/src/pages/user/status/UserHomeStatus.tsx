@@ -34,8 +34,8 @@ export const UserHomeStatus = () =>{
 
     }
 
-    // git user acive status from db
-    const getUserCurrentActiveStatuses = async ()=>{
+    // get user acive status from db
+const getUserCurrentActiveStatuses = async ()=>{
 
         const response = await axiosInstance.post(statusRoot + 'userStatus/',{'user_id':userId})
         if(response.data.statuses){
