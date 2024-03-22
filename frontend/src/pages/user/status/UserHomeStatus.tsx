@@ -40,6 +40,9 @@ export const UserHomeStatus = () =>{
         const response = await axiosInstance.post(statusRoot + 'userStatus/',{'user_id':userId})
         if(response.data.statuses){
             setUserActiveStatuses(response.data.statuses[0])
+            if(response.data.statuses[0].length == 0){
+                customErrorToast('No active status for user')
+            }
         }
         else{
             customErrorToast("Status can't be accessed now")
@@ -47,9 +50,10 @@ export const UserHomeStatus = () =>{
     }
     //toggle to show status
     const handleOpenStatus =()=>{
+        getUserCurrentActiveStatuses()
+         
         if(userActiveStatuses?.length == 0){
-            getUserCurrentActiveStatuses()
-            customSuccessToast('Getting statuses.Try after some time.')
+         
         }else{
             setShowUserStatuses(prev => !prev)
         }

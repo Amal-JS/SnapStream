@@ -36,6 +36,7 @@ export const OpenStatus :React.FC<OpenStatus> = ({userActiveStatuses,showStatus}
     //time changes , automaticaaly array element changes
     const [currentStatusIndex, setCurrentStatusIndex] = useState<number>(0);
   
+    const userId = useAppSelector(state => state.user.userId)
     //modal open close
     const handleModalToggle = () => {
         setModalToggle((prev) => !prev)   
@@ -101,6 +102,7 @@ export const OpenStatus :React.FC<OpenStatus> = ({userActiveStatuses,showStatus}
             if(response.data.statusDeleted){
                 customSuccessToast('Deleted the status.')
                 //update user active statuses
+                setModalToggle(false)
                 getUserCurrentActiveStatuses()
             }else{
                 customErrorToast("Status couldn't be deleted ")
@@ -110,6 +112,7 @@ export const OpenStatus :React.FC<OpenStatus> = ({userActiveStatuses,showStatus}
   }
 
 console.log('progress :',progress);
+// console.log('userId :',userId,'status author id :',userActiveStatuses[currentStatusIndex].authorId);
 
   
   
@@ -126,9 +129,12 @@ console.log('progress :',progress);
                         <MdClose className="text-primary dark:text-secondary text-4xl font-extrabold mt-3" onClick={handleModalToggle}/>
                         </div>
 
+                        {userActiveStatuses[currentStatusIndex]?.authorId == userId  && 
                         <div className="flex justify-end">
                         <MdDelete className="text-primary dark:text-secondary text-4xl font-extrabold mt-3" onClick={handleDeleteStatus}/>
                         </div>
+                        }
+                        
                         </div>
                     
                         {
@@ -143,8 +149,8 @@ console.log('progress :',progress);
             </p>
         </div>
     ) : (
-        <div className="h-8/11 bg-secondary dark:bg-primary">
-            <p className="text-primary dark:text-secondary">
+        <div className="h-8/11 bg-secondary dark:bg-primary mt-10 p-4 ">
+            <p className="text-primary dark:text-secondary text-4xl w-full">
                 {userActiveStatuses[currentStatusIndex]?.description}
             </p>
         </div>

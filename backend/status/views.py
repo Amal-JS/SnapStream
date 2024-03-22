@@ -45,5 +45,18 @@ class UserStatus(APIView):
             return JsonResponse({'statusCreationSuccess': False,'statuses':response}, status=500)
 
     def delete(self,request):
-          print(request.data)
+          status_id = request.data['status_id']
+          if status_id:
+                try:
+                      print('before count :',Status.objects.all().count())
+                      print(status_id)
+                      status = Status.objects.get(id=status_id)
+                      status.delete()
+                      print('updated count :',Status.objects.all().count())
+                      print(status)
+                      return JsonResponse({'StatusDeleted':True})
+                except Exception as e:
+                      print(e)
+                      return JsonResponse({'StatusDeleted':False})
+
           return JsonResponse({'StatusDeleted':False})
