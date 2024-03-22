@@ -1,7 +1,8 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework import serializers
 from . models import Status
 
-class StatusSerilizer(ModelSerializer):
+class StatusSerilizer(serializers.ModelSerializer):
+    userId = serializers.PrimaryKeyRelatedField(source='user.user_id', read_only=True)
     class Meta:
         model = Status
-        fields = ['id','description','media']
+        fields = ['id','description','media','userId']

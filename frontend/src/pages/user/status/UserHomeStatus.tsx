@@ -11,7 +11,9 @@ import { customErrorToast, customSuccessToast } from "../../../Toast"
 interface UserStatus {
     id:string,
     description:string,
-    media:string
+    media:string,
+    authorId:string
+    
 }
 
 export const UserHomeStatus = () =>{
@@ -20,24 +22,21 @@ export const UserHomeStatus = () =>{
     const {isModalOpened,handleModalToggle} = useModal()
     const userId = useAppSelector(state => state.user.userId)
 
+    // open modal to create status
     const handleUserCreateStatus = ()=>{
        handleModalToggle()
     }
+    //user active status array 
     const [userActiveStatuses,setUserActiveStatuses] = useState<UserStatus[]>([])
-
+    //update active status array
     const handleUserActiveStatuses =(arrayOfStatuses : UserStatus[] | [])=>{
             setUserActiveStatuses(arrayOfStatuses)
 
     }
 
-
-    useEffect(()=>{
-
-    },[userActiveStatuses])
-
+    // git user acive status from db
     const getUserCurrentActiveStatuses = async ()=>{
 
-        
         const response = await axiosInstance.post(statusRoot + 'userStatus/',{'user_id':userId})
         if(response.data.statuses){
             setUserActiveStatuses(response.data.statuses[0])
@@ -46,9 +45,8 @@ export const UserHomeStatus = () =>{
             customErrorToast("Status can't be accessed now")
         }
     }
+    //toggle to show status
     const handleOpenStatus =()=>{
-        console.log('handleOpenStatus');
-        
         if(userActiveStatuses?.length == 0){
             getUserCurrentActiveStatuses()
             customSuccessToast('Getting statuses.Try after some time.')

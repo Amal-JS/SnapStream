@@ -12,7 +12,9 @@ import { customErrorToast, customSuccessToast } from "../../../Toast"
 interface UserStatus {
   id:string,
   description:string,
-  media:string
+  media:string,
+  authorId:string
+  
 }
 
 

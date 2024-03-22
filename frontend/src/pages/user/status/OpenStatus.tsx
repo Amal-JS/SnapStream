@@ -16,6 +16,7 @@ interface UserStatus {
     id:string,
     description:string,
     media:string,
+    authorId:string
     
 }
 
@@ -28,34 +29,37 @@ export const OpenStatus :React.FC<OpenStatus> = ({userActiveStatuses,showStatus}
 
     const [isModalOpened,setModalToggle] = useState(false)
     const darkThemeEnabled = useAppSelector(state => state.user.darkTheme)
+    //progress bar completed value 100
     const [progress, setProgress] = useState(100);
+    //delay value will be calculated by the length of user active statuses
     const delayValue = Math.floor(100/(userActiveStatuses.length*10))
+    //time changes , automaticaaly array element changes
     const [currentStatusIndex, setCurrentStatusIndex] = useState<number>(0);
   
-    
+    //modal open close
     const handleModalToggle = () => {
-        setModalToggle((prev) => !prev)
-       
-        
+        setModalToggle((prev) => !prev)   
     }
+   //open status
    const handleShowStatus = ()=>{
     if(userActiveStatuses.length == 0){
         console.log('open status component : array empty');
         customErrorToast('No active status ')
     }else{
-        console.log('open status component :  not array empty');
+        console.log('open status component :  array not empty');
         setModalToggle(true)
-        console.log('modal in open status :',isModalOpened);
     }
 
 }
+
     useEffect(()=>{
         handleShowStatus()
     },[showStatus])
 
+    // timer 
     useEffect(() => {
         let timer: NodeJS.Timeout;
-
+//if modal opened and if full time is completed automatically the modal is closed.
         if (isModalOpened) {
             timer = setTimeout(() => {
                 setModalToggle(false);
@@ -64,6 +68,7 @@ export const OpenStatus :React.FC<OpenStatus> = ({userActiveStatuses,showStatus}
         }
 
         return () => clearTimeout(timer);
+
     }, [isModalOpened, userActiveStatuses]);
 
     // console.log('delay value :',delayValue,'array length',userActiveStatuses.length,'acive element',currentStatusIndex,'progress value :',progress);
@@ -71,13 +76,8 @@ export const OpenStatus :React.FC<OpenStatus> = ({userActiveStatuses,showStatus}
     useEffect(() => {
         if (isModalOpened) {
             const interval = setInterval(() => {
-                setProgress((prevProgress) => Math.max(prevProgress - delayValue, 0)); // Decrease progress by 10 every second
-                // if(progress%10 == 0 && progress != 100){
-                //     console.log('comes here updates index');
-                    
-                //     setCurrentStatusIndex((prevIndex) => prevIndex + 1);
-                // }
-              
+                //update the progess value by decreasing delay value in second
+                setProgress((prevProgress) => Math.max(prevProgress - delayValue, 0));
             }, 1000);
 
             return () => clearInterval(interval);
@@ -100,6 +100,8 @@ export const OpenStatus :React.FC<OpenStatus> = ({userActiveStatuses,showStatus}
             const response = await axiosInstance.delete(statusRoot+'userStatus/',{'data':{'status_id':userActiveStatuses[currentStatusIndex].id}})
             if(response.data.statusDeleted){
                 customSuccessToast('Deleted the status.')
+                //update user active statuses
+                getUserCurrentActiveStatuses()
             }else{
                 customErrorToast("Status couldn't be deleted ")
             }
@@ -109,15 +111,6 @@ export const OpenStatus :React.FC<OpenStatus> = ({userActiveStatuses,showStatus}
 
 console.log('progress :',progress);
 
-  const statusElements = ()=>{
-   const value = userActiveStatuses.map(status => {
-        return <h1 key={status.id} className="text-primary dark:text-secondary">{status.description}</h1>
-})
-console.log(userActiveStatuses);
-
-return value
-
-}
   
   
     return(
@@ -171,4 +164,8 @@ return value
 
 
 
+
+function getUserCurrentActiveStatuses() {
+    throw new Error("Function not implemented.")
+}
 
