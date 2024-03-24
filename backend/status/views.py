@@ -21,6 +21,20 @@ def get_user_active_statues(user):
 
 
 class UserStatus(APIView):
+    def get(self,request):
+          try:
+            user_id = request.GET.get('user_id',None)
+            print(user_id)
+            if user_id:
+                user = CustomUser.objects.get(user_id= user_id)
+                if user:
+                    user_statuses = Status.objects.filter(user=user).order_by('-created_at')
+                    serializer = StatusSerilizer(user_statuses,many=True)
+                    return JsonResponse({'userStories':serializer.data})
+          except Exception as e:
+               print('Exception on user get statuses :',e)
+               return JsonResponse({'userStories':[[]]})
+                
     def post(self, request):
         try:
             user_id = request.data.get('user_id')

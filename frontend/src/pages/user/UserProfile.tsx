@@ -224,7 +224,7 @@ handleModalToggle();
                     </h3></Link>
                   </Button>
                   <Button className="bg-gray-600 ml-4 dark">
-                  <Link to='/edituserprofile/ljlaksjf'>
+                  <Link to='/viewstories/'>
                     <h3 className="text-base  font-medium dark:text-secondary text-primary  ">
                       View stories
                     </h3></Link>
@@ -262,31 +262,6 @@ handleModalToggle();
           </div>
           {/* profile second secion */}
           <div className="flex  overflow-x-auto border-b-0 mt-5 dark:text-secondary text-primary  mb-5 no-scrollbar">
-         <Status handleClick={createNewMemory} statusName={'New Memory'}/>
-         <Status handleClick={createNewMemory} statusName={'New Memory'}/>
-         <Status handleClick={createNewMemory} statusName={'New Memory'}/>
-         <Status handleClick={createNewMemory} statusName={'New Memory'}/>
-         <Status handleClick={createNewMemory} statusName={'New Memory'}/>
-         <Status handleClick={createNewMemory} statusName={'New Memory'}/>
-         <Status handleClick={createNewMemory} statusName={'New Memory'}/>
-         <Status handleClick={createNewMemory} statusName={'New Memory'}/>
-         <Status handleClick={createNewMemory} statusName={'New Memory'}/>
-         <Status handleClick={createNewMemory} statusName={'New Memory'}/>
-         <Status handleClick={createNewMemory} statusName={'New Memory'}/>
-         <Status handleClick={createNewMemory} statusName={'New Memory'}/>
-         <Status handleClick={createNewMemory} statusName={'New Memory'}/>
-         <Status handleClick={createNewMemory} statusName={'New Memory'}/>
-         <Status handleClick={createNewMemory} statusName={'New Memory'}/>
-         <Status handleClick={createNewMemory} statusName={'New Memory'}/>
-         <Status handleClick={createNewMemory} statusName={'New Memory'}/>
-         <Status handleClick={createNewMemory} statusName={'New Memory'}/>
-         <Status handleClick={createNewMemory} statusName={'New Memory'}/>
-         <Status handleClick={createNewMemory} statusName={'New Memory'}/>
-         <Status handleClick={createNewMemory} statusName={'New Memory'}/>
-         <Status handleClick={createNewMemory} statusName={'New Memory'}/>
-         <Status handleClick={createNewMemory} statusName={'New Memory'}/>
-         <Status handleClick={createNewMemory} statusName={'New Memory'}/>
-         <Status handleClick={createNewMemory} statusName={'New Memory'}/>
          </div>
         </div>
 

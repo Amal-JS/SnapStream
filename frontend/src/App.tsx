@@ -56,7 +56,7 @@ function App() {
     <Route index  element={<UserHome />} />
     <Route path='/password/reset' element={<ForgotPassword/>}/>
     <Route path='/userprofile/' element={<UserProfile />} />
-    <Route path='/viewstories/:id' element={<UserStories />}/>
+    <Route path='/viewstories/' element={<UserStories />}/>
     <Route path='/edituserprofile/:id' element={<UserEdit />}/>
     </Route>
 
