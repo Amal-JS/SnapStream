@@ -10,17 +10,21 @@ import axiosInstance from "../../axios/axiosInstance";
 import { mediaPath, statusRoot } from "../../utils/url";
 import { customErrorToast } from "../../Toast";
 import { useNavigate } from "react-router-dom";
+import { OpenStatus } from "./status/OpenStatus";
 
-interface UserStatuses {
+interface UserStatus {
   description: string;
   media: string;
 id: string;
+authorId:string
 }
 
 const UserStoriesContent = () => {
   const userId = useAppSelector((state) => state.user.userId);
   const navigate = useNavigate();
-  const [userStories, setUserStories] = useState<UserStatuses[] | []>([]);
+  const [userStories, setUserStories] = useState<UserStatus[] | []>([]);
+  const [showStatus,setShowStatus] = useState<boolean>(false)
+  const [selectedStatus,setSelectedStatus] = useState<UserStatus[] | []>([])
 
   const fetchUserStories = async () => {
     const response = await axiosInstance.get(
@@ -35,10 +39,21 @@ const UserStoriesContent = () => {
       navigate(`userprofile/${userId}`);
     }
   };
+
+
+  const handleStatusClick = (id:string)=>{
+
+    const statusObject = userStories.filter(element=>element.id == id)
+    setSelectedStatus(statusObject)
+    setShowStatus(prev => !prev);
+    
+  }
+
   //first call
   useEffect(() => {
     fetchUserStories();
-  }, []);
+  }, [handleStatusClick]);
+
 
   return (
     <>
@@ -59,7 +74,9 @@ const UserStoriesContent = () => {
           <div className="grid grid-cols-3 gap-3 md:p-8 bg-secondary dark:bg-primary ">
             {userStories.map(story=>{
               if(story.media){
-            return(  <div className="bg-secondary dark:bg-primary text-white relative h-32 md:h-96 hover:cursor-pointer " key={story.id}>
+            return(  <div 
+              onClick={()=>handleStatusClick(story.id)}
+            className="bg-secondary dark:bg-primary text-white relative h-32 md:h-96 hover:cursor-pointer " key={story.id}>
                
                <div className="w-full h-full bg-slate-400 hidden hover:flex justify-center items-center z-30 hover-show-div bg-opacity-75 absolute inset-0 rounded-3xl">
                <p className='font-bold text-primary dark:text-secondary text-center'>{story.description}</p>
@@ -75,7 +92,9 @@ const UserStoriesContent = () => {
               }else{
                 
   
-              return  (<div className="bg-secondary dark:bg-primary text-white relative h-32 md:h-96" key={story.id}>
+              return  (<div
+                onClick={()=>handleStatusClick(story.id)}
+              className="bg-secondary dark:bg-primary text-white relative h-32 md:h-96" key={story.id}>
                 <div className="w-full h-full bg-slate-400 hidden hover:flex justify-center items-center z-30 hover-show-div bg-opacity-75 absolute inset-0 rounded-3xl">
                 <p className='font-bold text-primary dark:text-secondary text-center'>{story.description}</p>
                   </div>
@@ -88,6 +107,9 @@ const UserStoriesContent = () => {
             }) }
           </div>
         )}
+        {showStatus && 
+        <OpenStatus  userActiveStatuses={selectedStatus} showStatus={true}/>
+        }
       </div>
     </>
   );
