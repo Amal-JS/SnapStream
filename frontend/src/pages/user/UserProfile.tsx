@@ -178,6 +178,12 @@ const fetchUserData = async() => {
 
 handleModalToggle();
   }
+const handleOpenMemory = (event:React.MouseEvent<HTMLDivElement>)=>{
+
+}
+const handleCreateMemory = (event:React.MouseEvent<HTMLDivElement|SVGElement>)=>{
+
+}
 
   return (
     <>
@@ -262,6 +268,7 @@ handleModalToggle();
           </div>
           {/* profile second secion */}
           <div className="flex  overflow-x-auto border-b-0 mt-5 dark:text-secondary text-primary  mb-5 no-scrollbar">
+       <Status handleOpenStatus={handleOpenMemory} handleUserCreateStatus={handleCreateMemory}  statusName="Create new memory"/>
          </div>
         </div>
 
