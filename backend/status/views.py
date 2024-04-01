@@ -4,8 +4,9 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from django.db.models import Q
 from auth_app.models import CustomUser
+from status.serilizers import MemoriesSerilizer
 from status.serilizers import StatusSerilizer
-from .models import Status
+from .models import Memories, Status
 from django.core.exceptions import ValidationError
 
 
@@ -73,3 +74,15 @@ class UserStatus(APIView):
                       return JsonResponse({'statusDeleted':False})
           
           return JsonResponse({'statusDeleted':False})
+
+
+class UserMemories(APIView):
+     def post(self,request):
+          serializer = MemoriesSerilizer(data=request.data)
+          if serializer.is_valid():
+              serializer.save()
+              return JsonResponse({'isMemoryCreated':True}) 
+          else :
+               print('memory creation failed')
+               return JsonResponse({'isMemoryCreated':False}) 
+          

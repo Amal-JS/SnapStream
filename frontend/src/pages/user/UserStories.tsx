@@ -7,8 +7,8 @@ import { SideNav } from "./SideNav";
 import { useAppSelector } from "../../hooks/redux";
 import { useEffect, useState } from "react";
 import axiosInstance from "../../axios/axiosInstance";
-import { mediaPath, statusRoot } from "../../utils/url";
-import { customErrorToast } from "../../Toast";
+import { mediaPath, rootUrlPath, statusRoot } from "../../utils/url";
+import { customErrorToast, customSuccessToast } from "../../Toast";
 import { useNavigate } from "react-router-dom";
 import { OpenStatus } from "./status/OpenStatus";
 import { useModal } from "../../hooks/useModal";
@@ -56,7 +56,33 @@ const toggleCreateNewMemory =()=>{
   console.log(selectedStatus)
 handleModalToggle()
 }
-const handleCreateNewMemory = ()=>{
+const handleNewMemoryName = (event:React.ChangeEvent<HTMLInputElement>)=>{
+      const {value} = event.target
+      setNewMemoryName(value)
+      if (newMemoryName.length > 3 ){
+        setformFilled(false)
+      }
+}
+
+const handleCreateNewMemory = async ()=>{
+
+  const formData = new FormData;
+  formData.append('status',selectedStatus[0].id)
+
+  if (!newMemoryName){
+    customErrorToast('Give memory a name')
+    return
+  }
+
+  formData.append('name',newMemoryName)
+ const response  = await axiosInstance.post(rootUrlPath+statusRoot+'userMemory/',formData)
+  if(response.data.isMemoryCreated){
+    customSuccessToast('Memory created successfully.')
+    navigate('/userprofile/')
+  }else{
+    customErrorToast('Please try again after some time.')
+    customErrorToast('Try adding new memory after some time')
+  }
 
 }
 
@@ -133,7 +159,7 @@ const handleOpenStatus =()=>{
         } 
       
              
-        <TextInput error={''} Icon={FaMemory} name="Memory" placeholder="New Memory Name"></TextInput>
+        <TextInput error={''} Icon={FaMemory} name="Memory" placeholder="New Memory Name" handleChange={handleNewMemoryName}></TextInput>
         <CustomButton formFilled={formFilled} handleOnClick={handleCreateNewMemory} label="Create"></CustomButton>
       </ModalBody>
     </CustomModal>
@@ -180,7 +206,7 @@ const handleOpenStatus =()=>{
   
               return  (<div
                 onClick={()=>handleStatusClick(story.id)}
-              className="bg-secondary dark:bg-primary text-white relative h-32 md:h-96" key={story.id}>
+              className="bg-secondary dark:bg-primary text-white relative h-32 md:h-96 hover:cursor-pointer" key={story.id}>
                 <div className="w-full h-full bg-slate-400 hidden hover:flex justify-center items-center z-30 hover-show-div bg-opacity-75 absolute inset-0 rounded-3xl">
                 <p className='font-bold text-primary dark:text-secondary text-center'>{story.description.slice(0,10)}</p>
                   </div>
