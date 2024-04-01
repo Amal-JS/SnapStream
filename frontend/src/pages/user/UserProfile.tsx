@@ -50,7 +50,7 @@ const Profile = () => {
   const [profilePictureUpdated, setProfilePictureUpdated] = useState(false);
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
-
+  const [toggleNewMemoryCreationModal,setToggleNewMeomoryCreationModal] = useState<boolean>(false)
 //update user data in profile
  
 const fetchUserData = async() => {
@@ -182,7 +182,10 @@ const handleOpenMemory = (event:React.MouseEvent<HTMLDivElement>)=>{
 
 }
 const handleCreateMemory = (event:React.MouseEvent<HTMLDivElement|SVGElement>)=>{
-
+  //set a variable in local storage specifying new memory creation , then navigate to user stories select one status and 
+  //create new memory
+  localStorage.setItem('NewMemoryCreation','true')
+  navigate('/viewstories/')
 }
 
   return (

@@ -20,3 +20,8 @@ class StatusSeen(models.Model):
     user_seen = models.BooleanField(default=True)
 
 
+class Memories(models.Model):
+    id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True,primary_key=True)
+    name= models.CharField(max_length=200)
+    created_at = models.DateTimeField(auto_now_add=True)
+    status = models.ForeignKey(Status,on_delete=models.CASCADE)

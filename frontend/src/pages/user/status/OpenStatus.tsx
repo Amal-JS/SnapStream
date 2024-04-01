@@ -128,12 +128,12 @@ export const OpenStatus :React.FC<OpenStatus> = ({userActiveStatuses,showStatus}
                     <div><ProgressBar completed={progress} className="w-full" customLabel="..." height={'5px'}  bgColor={darkThemeEnabled ? '#fff' : '#000'} baseBgColor={darkThemeEnabled ? '#000' : '#fff' }/></div>
                     <div className="">
                         <div className="flex justify-end">
-                        <MdClose className="text-primary dark:text-secondary text-4xl font-extrabold mt-3" onClick={handleModalToggle}/>
+                        <MdClose className="text-primary dark:text-secondary text-4xl font-extrabold mt-3  hover:cursor-pointer" onClick={handleModalToggle}/>
                         </div>
 
                         {userActiveStatuses[currentStatusIndex]?.authorId == userId  && 
                         <div className="flex justify-end">
-                        <MdDelete className="text-primary dark:text-secondary text-4xl font-extrabold mt-3" onClick={handleDeleteStatus}/>
+                        <MdDelete className="text-primary dark:text-secondary text-4xl font-extrabold mt-3 hover:cursor-pointer" onClick={handleDeleteStatus}/>
                         </div>
                         }
                         

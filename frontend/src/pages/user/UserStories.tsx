@@ -2,7 +2,7 @@ import "../../App.css";
 import { PiVideoFill } from "react-icons/pi";
 import { FaRegComment, FaRegHeart } from "react-icons/fa6";
 import sampleImage from "../../assets/logos/logo_type_b_black.png";
-import { Image } from "@nextui-org/react";
+import { Image, ModalBody } from "@nextui-org/react";
 import { SideNav } from "./SideNav";
 import { useAppSelector } from "../../hooks/redux";
 import { useEffect, useState } from "react";
@@ -11,6 +11,10 @@ import { mediaPath, statusRoot } from "../../utils/url";
 import { customErrorToast } from "../../Toast";
 import { useNavigate } from "react-router-dom";
 import { OpenStatus } from "./status/OpenStatus";
+import { useModal } from "../../hooks/useModal";
+import { CustomModal } from "../../Components/Modal/Modal";
+import { ModalTitle } from "../../Components/Modal/ModalTitle";
+import { CustomButton } from "../../Components/Form/Button";
 
 interface UserStatus {
   description: string;
@@ -25,7 +29,9 @@ const UserStoriesContent = () => {
   const [userStories, setUserStories] = useState<UserStatus[] | []>([]);
   const [showStatus,setShowStatus] = useState<boolean>(false)
   const [selectedStatus,setSelectedStatus] = useState<UserStatus[] | []>([])
-
+  const [isNewMemoryCreation,setNewMemoryCreation]= useState<boolean>(false)
+  const {isModalOpened,handleModalToggle} = useModal()
+  const [formFilled,setformFilled] = useState<boolean>(true)
   const fetchUserStories = async () => {
     const response = await axiosInstance.get(
       statusRoot + `userStatus?user_id=${userId}`
@@ -41,26 +47,70 @@ const UserStoriesContent = () => {
   };
 
 
+const toggleCreateNewMemory =()=>{
+handleModalToggle()
+}
+const handleCreateNewMemory = ()=>{
+
+}
+
+//show the selected status in the modal
+const handleOpenStatus =()=>{
+
+  setShowStatus(prev => !prev);
+}
+
+
   const handleStatusClick = (id:string)=>{
 
     const statusObject = userStories.filter(element=>element.id == id)
     setSelectedStatus(statusObject)
-    setShowStatus(prev => !prev);
+
+
+    isNewMemoryCreation
+    ?
+    toggleCreateNewMemory()
+    :
+    handleOpenStatus()
+   
     
   }
 
-  //first call
+  //user viewing component either to view the eariler statuses or create new memory
+  useEffect(()=>{
+    const isUserVistedToCreateNewMemory = localStorage.getItem('NewMemoryCreation')
+    if(isUserVistedToCreateNewMemory){
+      setNewMemoryCreation(true)
+    }
+
+    return ()=>{
+      if(isUserVistedToCreateNewMemory){
+        localStorage.removeItem('NewMemoryCreation')
+      }
+    }
+  },[])
+  //network call
   useEffect(() => {
     fetchUserStories();
-  }, [handleStatusClick]);
+  }, []);
 
 
   return (
     <>
+    <CustomModal isDismissable={true} modalToggle={isModalOpened}  >
+      <ModalTitle handleModalToggle={handleModalToggle} isDismissable={true} title={'Create new memory'}/>
+      <ModalBody >
+      
+
+        <CustomButton formFilled={formFilled} handleOnClick={handleCreateNewMemory} label="Create"></CustomButton>
+      </ModalBody>
+    </CustomModal>
       <div className="w-full p-10 h-screen bg-secondary dark:bg-primary md:pl-52 mb-5 ">
         <div className="border-b-2 border-secondary-border dark:border-primary-border mb-5">
           <h2 className="  text-primary dark:text-secondary mb-5 mt-7 text-4xl md:text-4xl  pr-2">
-            Saved Items
+            {
+              isNewMemoryCreation ? 'Select one status' : 'Saved Items'
+            }
           </h2>
         </div>
 
