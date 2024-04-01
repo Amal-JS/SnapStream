@@ -78,11 +78,13 @@ class UserStatus(APIView):
 
 class UserMemories(APIView):
      def post(self,request):
-          serializer = MemoriesSerilizer(data=request.data)
-          if serializer.is_valid():
-              serializer.save()
+          user= CustomUser.objects.get(user_id = request.data['user'])
+          status = Status.objects.get(id= request.data['status'])
+          try:
+              new_memory = Memories(status=status,user=user,name=request.data['name'])
+              new_memory.save()
               return JsonResponse({'isMemoryCreated':True}) 
-          else :
-               print('memory creation failed')
+          except Exception as e :
+               print('memory creation failed',e)
                return JsonResponse({'isMemoryCreated':False}) 
           

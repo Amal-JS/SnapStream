@@ -11,6 +11,9 @@ from django.views import View
 
 import requests
 from backend  import settings
+from status.serilizers import MemoriesWithStatusSerializer
+from status.models import Memories
+from status.serilizers import MemoriesSerilizer
 from . models import CustomUser
 from django.http import JsonResponse
 #for sending email
@@ -413,13 +416,13 @@ class UserProfileData(APIView):
         #change to user_id
         id = request.data['user_id']
         user = CustomUser.objects.get(user_id=id)
-        
+        memories_of_user = Memories.objects.filter(user=user)
         return JsonResponse(
             {'userData':
              {
             'username':user.username,
             'bio':user.bio,
             'fullName':user.full_name,
-            'profilePicture':str(user.profile_picture) if user.profile_picture else ''
-
+            'profilePicture':str(user.profile_picture) if user.profile_picture else '',
+            'userMemories':MemoriesWithStatusSerializer(memories_of_user,many=True).data
             } })

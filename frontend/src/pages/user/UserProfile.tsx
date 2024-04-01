@@ -27,12 +27,21 @@ import { userProfilePictureUpdated } from "../../Redux/authSlice";
 import { Status } from "./status/Status";
 
 
+interface UserMemory {
+  id:string,
+  media? : string,
+  description? : string,
+  name:string
+}
+
 interface UserData {
   username:string,
   profilePicture:string,
   bio:string,
   fullName:string
+  userMemories?:UserMemory[] | []
 }
+
 
 const Profile = () => {
   const [activeTab, setActiveTab] = useState("profile");
@@ -60,6 +69,8 @@ const fetchUserData = async() => {
     
     if (response.data.userData){
       setUserData(response.data.userData)
+      console.log('memories',response.data.userData.userMemories);
+      
       const profilePictureUrl = response.data.userData.profilePicture
       //update user state
       if(profilePictureUrl){
@@ -272,6 +283,17 @@ const handleCreateMemory = (event:React.MouseEvent<HTMLDivElement|SVGElement>)=>
           {/* profile second secion */}
           <div className="flex  overflow-x-auto border-b-0 mt-5 dark:text-secondary text-primary  mb-5 no-scrollbar">
        <Status handleOpenStatus={handleOpenMemory} handleUserCreateStatus={handleCreateMemory}  statusName="Create new memory"/>
+         {userData.userMemories && 
+         userData.userMemories.map(memory => 
+          {
+            return (
+              <>
+              <p>{memory.name}</p>
+              </>
+            )
+          }
+          )
+         }
          </div>
         </div>
 

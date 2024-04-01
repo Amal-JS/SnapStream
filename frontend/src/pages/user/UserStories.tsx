@@ -68,7 +68,7 @@ const handleCreateNewMemory = async ()=>{
 
   const formData = new FormData;
   formData.append('status',selectedStatus[0].id)
-
+  userId && formData.append('user',userId)
   if (!newMemoryName){
     customErrorToast('Give memory a name')
     return
