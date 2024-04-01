@@ -15,6 +15,9 @@ import { useModal } from "../../hooks/useModal";
 import { CustomModal } from "../../Components/Modal/Modal";
 import { ModalTitle } from "../../Components/Modal/ModalTitle";
 import { CustomButton } from "../../Components/Form/Button";
+import { FaMemory } from "react-icons/fa";
+import { TextInput } from "../../Components/Form/TextInput";
+
 
 interface UserStatus {
   description: string;
@@ -32,6 +35,8 @@ const UserStoriesContent = () => {
   const [isNewMemoryCreation,setNewMemoryCreation]= useState<boolean>(false)
   const {isModalOpened,handleModalToggle} = useModal()
   const [formFilled,setformFilled] = useState<boolean>(true)
+  const [newMemoryName,setNewMemoryName] = useState<string>('')
+
   const fetchUserStories = async () => {
     const response = await axiosInstance.get(
       statusRoot + `userStatus?user_id=${userId}`
@@ -48,6 +53,7 @@ const UserStoriesContent = () => {
 
 
 const toggleCreateNewMemory =()=>{
+  console.log(selectedStatus)
 handleModalToggle()
 }
 const handleCreateNewMemory = ()=>{
@@ -100,8 +106,34 @@ const handleOpenStatus =()=>{
     <CustomModal isDismissable={true} modalToggle={isModalOpened}  >
       <ModalTitle handleModalToggle={handleModalToggle} isDismissable={true} title={'Create new memory'}/>
       <ModalBody >
-      
+        {
+          selectedStatus[0]?.media ?
+            <>
+          <div className="w-full h-full bg-slate-400 hidden hover:flex justify-center items-center z-30 hover-show-div bg-opacity-75 absolute inset-0 rounded-3xl">
+               <p className='font-bold text-primary dark:text-secondary text-center'>{selectedStatus[0].description ? (selectedStatus[0].description.slice(0, 20) + ' lkjlkj '+ selectedStatus[0].description.slice(20)) : 'no description' }</p>
+                 </div>
+ 
+                 <Image
+                   className="w-full z-20 bg-opacity-100"
+                   alt="profile picture"
+                   src={mediaPath+`${selectedStatus[0].media}`}
+                 />
+                 </>
+          : 
+            <>
+               <div className='bg-secondary dark:bg-primary p-3 flex items-center justify-center h-full md:border-2 md:border-secondary-border dark:border-primary-border'>
+               <div>
+                    <p className='font-bold text-primary dark:text-secondary text-center'>{selectedStatus[0]?.description.slice(0,10)}</p>
+                    <p className='font-bold text-primary dark:text-secondary text-center'>{selectedStatus[0]?.description.slice(10,20)}</p>
+                  
+                    </div>
+                  </div>
+            </>
 
+        } 
+      
+             
+        <TextInput error={''} Icon={FaMemory} name="Memory" placeholder="New Memory Name"></TextInput>
         <CustomButton formFilled={formFilled} handleOnClick={handleCreateNewMemory} label="Create"></CustomButton>
       </ModalBody>
     </CustomModal>
@@ -129,7 +161,11 @@ const handleOpenStatus =()=>{
             className="bg-secondary dark:bg-primary text-white relative h-32 md:h-96 hover:cursor-pointer " key={story.id}>
                
                <div className="w-full h-full bg-slate-400 hidden hover:flex justify-center items-center z-30 hover-show-div bg-opacity-75 absolute inset-0 rounded-3xl">
-               <p className='font-bold text-primary dark:text-secondary text-center'>{story.description}</p>
+               <div>
+                    <p className='font-bold text-primary dark:text-secondary text-center'>{story.description.slice(0,10)}</p>
+                    <p className='font-bold text-primary dark:text-secondary text-center'>{story.description.slice(10,20)}</p>
+                  
+                    </div>
                  </div>
  
                  <Image
@@ -146,11 +182,16 @@ const handleOpenStatus =()=>{
                 onClick={()=>handleStatusClick(story.id)}
               className="bg-secondary dark:bg-primary text-white relative h-32 md:h-96" key={story.id}>
                 <div className="w-full h-full bg-slate-400 hidden hover:flex justify-center items-center z-30 hover-show-div bg-opacity-75 absolute inset-0 rounded-3xl">
-                <p className='font-bold text-primary dark:text-secondary text-center'>{story.description}</p>
+                <p className='font-bold text-primary dark:text-secondary text-center'>{story.description.slice(0,10)}</p>
                   </div>
   
                   <div className='bg-secondary dark:bg-primary p-3 flex items-center justify-center h-full md:border-2 md:border-secondary-border dark:border-primary-border'>
-                    <p className='font-bold text-primary dark:text-secondary text-center'>{story.description}</p>
+                    <div>
+                    <p className='font-bold text-primary dark:text-secondary text-center'>{story.description.slice(0,10)}</p>
+                    <p className='font-bold text-primary dark:text-secondary text-center'>{story.description.slice(10,20)}</p>
+                  
+                    </div>
+                    
                   </div>
                 </div>)
               }
