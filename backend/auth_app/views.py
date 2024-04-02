@@ -417,6 +417,7 @@ class UserProfileData(APIView):
         id = request.data['user_id']
         user = CustomUser.objects.get(user_id=id)
         memories_of_user = Memories.objects.filter(user=user)
+        print('memories of user :',memories_of_user)
         return JsonResponse(
             {'userData':
              {

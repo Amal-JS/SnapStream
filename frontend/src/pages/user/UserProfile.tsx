@@ -25,6 +25,7 @@ import { customErrorToast, customSuccessToast } from "../../Toast";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { userProfilePictureUpdated } from "../../Redux/authSlice";
 import { Status } from "./status/Status";
+import { OpenStatus } from "./status/OpenStatus";
 
 
 interface UserMemory {
@@ -199,6 +200,9 @@ const handleCreateMemory = (event:React.MouseEvent<HTMLDivElement|SVGElement>)=>
   navigate('/viewstories/')
 }
 
+const handleOpenStatus = ()=>{
+  
+}
   return (
     <>
      {
@@ -288,7 +292,7 @@ const handleCreateMemory = (event:React.MouseEvent<HTMLDivElement|SVGElement>)=>
           {
             return (
               <>
-              <p>{memory.name}</p>
+              <Status handleOpenStatus={handleOpenStatus} statusName={memory.name} profilePictureUrl={memory.media?.slice(6)}/>
               </>
             )
           }
