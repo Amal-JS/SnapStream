@@ -28,11 +28,12 @@ import { Status } from "./status/Status";
 import { OpenStatus } from "./status/OpenStatus";
 
 
-interface UserMemory {
+interface UserMemoryOrStatus {
   id:string,
   media? : string,
   description? : string,
-  name:string
+  name?:string,
+  authorId:string
 }
 
 interface UserData {
@@ -40,7 +41,7 @@ interface UserData {
   profilePicture:string,
   bio:string,
   fullName:string
-  userMemories?:UserMemory[] | []
+  userMemories?:UserMemoryOrStatus[] | []
 }
 
 
@@ -61,8 +62,9 @@ const Profile = () => {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const [toggleNewMemoryCreationModal,setToggleNewMeomoryCreationModal] = useState<boolean>(false)
+  const [toggleMemory,setToggleMemory] = useState<boolean>(false)
+  const [selectedMemory,setSelectedMemory] = useState<UserMemoryOrStatus[] | []>([])
 //update user data in profile
- 
 const fetchUserData = async() => {
 
     const response = await axiosInstance.post(authRoot+'getUserProfileData/',{user_id:userId})
@@ -200,9 +202,16 @@ const handleCreateMemory = (event:React.MouseEvent<HTMLDivElement|SVGElement>)=>
   navigate('/viewstories/')
 }
 
-const handleOpenStatus = ()=>{
-  
+const handleOpenStatus = (id:string)=>{
+  if(!userData.userMemories) {
+    return 
+  }
+  const clickedMemory = userData.userMemories.filter(memory => memory.id == id)
+  console.log('clicked memory :',clickedMemory,' id: ',id)
+  setSelectedMemory(clickedMemory)
+  setToggleMemory(prev => !prev)
 }
+
   return (
     <>
      {
@@ -292,7 +301,12 @@ const handleOpenStatus = ()=>{
           {
             return (
               <>
-              <Status handleOpenStatus={handleOpenStatus} statusName={memory.name} profilePictureUrl={memory.media?.slice(6)}/>
+                {
+                  memory.name
+                  && 
+                  <Status key={memory.id} handleOpenStatus={() => handleOpenStatus(memory.id)} statusName={memory.name} profilePictureUrl={memory.media?.slice(6)}/>
+                }
+               
               </>
             )
           }
@@ -549,6 +563,10 @@ const handleOpenStatus = ()=>{
 
         {/* posts */}
       </div>
+      {
+        toggleMemory && 
+        <OpenStatus  userActiveStatuses={selectedMemory}  showStatus={toggleMemory}/>
+      }
     </>
   );
 };

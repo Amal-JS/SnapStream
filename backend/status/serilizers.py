@@ -16,7 +16,8 @@ class MemoriesSerilizer(serializers.ModelSerializer):
 class MemoriesWithStatusSerializer(serializers.ModelSerializer):
     description = serializers.CharField(source='status.description', read_only=True)
     media = serializers.ImageField(source='status.media', read_only=True)
+    authorId = serializers.CharField(source='user.user_id',read_only=True)
 
     class Meta:
         model = Memories
-        fields = ['id', 'name', 'description', 'media']
+        fields = ['id', 'name', 'description', 'media','authorId']

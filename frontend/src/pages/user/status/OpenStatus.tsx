@@ -12,16 +12,17 @@ import axiosInstance from "../../../axios/axiosInstance"
 import { statusRoot } from "../../../utils/url"
 
 
-interface UserStatus {
+interface UserMemoryOrStatus {
     id:string,
-    description:string,
-    media:string,
-    authorId:string
+    description?:string,
+    media?:string,
+    authorId:string,
+    name?:string
     
 }
 
 interface OpenStatus {
-    userActiveStatuses: UserStatus[] | [],
+    userActiveStatuses: UserMemoryOrStatus[] | [],
     showStatus:boolean
 }
 
@@ -98,7 +99,7 @@ export const OpenStatus :React.FC<OpenStatus> = ({userActiveStatuses,showStatus}
   const handleDeleteStatus = ()=>{
 
     const handleDeleteStatus = async ()=>{
-            const response = await axiosInstance.delete(statusRoot+'userStatus/',{'data':{'status_id':userActiveStatuses[currentStatusIndex].id}})
+            const response = await axiosInstance.delete(statusRoot+'UserMemoryOrStatus/',{'data':{'status_id':userActiveStatuses[currentStatusIndex].id}})
             
             
             if(response.data.statusDeleted){
