@@ -77,7 +77,7 @@ class UserStatus(APIView):
 
 
 class UserMemories(APIView):
-     def post(self,request):
+    def post(self,request):
           user= CustomUser.objects.get(user_id = request.data['user'])
           status = Status.objects.get(id= request.data['status'])
           try:
@@ -87,4 +87,16 @@ class UserMemories(APIView):
           except Exception as e :
                print('memory creation failed',e)
                return JsonResponse({'isMemoryCreated':False}) 
-          
+    def delete(self,request):
+          memory_id = request.data['memory_id']
+          if memory_id:
+                try:
+                      print('before count :',Memories.objects.all().count())
+                      status = Memories.objects.get(id=memory_id)
+                      status.delete()
+                      print('updated count :',Memories.objects.all().count())
+                      print(status)
+                      return JsonResponse({'memoryDeleted':True})
+                except Exception as e:
+                      
+                      return JsonResponse({'memoryDeleted':False})

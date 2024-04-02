@@ -295,7 +295,7 @@ const handleOpenStatus = (id:string)=>{
           </div>
           {/* profile second secion */}
           <div className="flex  overflow-x-auto border-b-0 mt-5 dark:text-secondary text-primary  mb-5 no-scrollbar">
-       <Status handleOpenStatus={handleOpenMemory} handleUserCreateStatus={handleCreateMemory}  statusName="Create new memory"/>
+       <Status handleOpenStatus={handleOpenMemory} handleUserCreateStatus={handleCreateMemory}  statusName="Create new memory" isShowingMemory={true}/>
          {userData.userMemories && 
          userData.userMemories.map(memory => 
           {
@@ -304,7 +304,12 @@ const handleOpenStatus = (id:string)=>{
                 {
                   memory.name
                   && 
-                  <Status key={memory.id} handleOpenStatus={() => handleOpenStatus(memory.id)} statusName={memory.name} profilePictureUrl={memory.media?.slice(6)}/>
+                  <Status 
+                  key={memory.id} 
+                  handleOpenStatus={() => handleOpenStatus(memory.id)} 
+                  statusName={memory.name} profilePictureUrl={memory.media?.slice(6)}
+                  
+                  />
                 }
                
               </>
@@ -565,7 +570,7 @@ const handleOpenStatus = (id:string)=>{
       </div>
       {
         toggleMemory && 
-        <OpenStatus  userActiveStatuses={selectedMemory}  showStatus={toggleMemory}/>
+        <OpenStatus  userActiveStatuses={selectedMemory}  showStatus={toggleMemory} isOpenedForMemory={true}/>
       }
     </>
   );

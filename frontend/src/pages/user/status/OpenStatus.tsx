@@ -10,6 +10,7 @@ import ProgressBar from "@ramonak/react-progress-bar";
 import { useAppSelector } from "../../../hooks/redux"
 import axiosInstance from "../../../axios/axiosInstance"
 import { statusRoot } from "../../../utils/url"
+import { useNavigate } from "react-router-dom"
 
 
 interface UserMemoryOrStatus {
@@ -23,10 +24,11 @@ interface UserMemoryOrStatus {
 
 interface OpenStatus {
     userActiveStatuses: UserMemoryOrStatus[] | [],
-    showStatus:boolean
+    showStatus:boolean,
+    isOpenedForMemory?:boolean
 }
 
-export const OpenStatus :React.FC<OpenStatus> = ({userActiveStatuses,showStatus})=>{
+export const OpenStatus :React.FC<OpenStatus> = ({userActiveStatuses,showStatus,isOpenedForMemory = false})=>{
 
     const [isModalOpened,setModalToggle] = useState(false)
     const darkThemeEnabled = useAppSelector(state => state.user.darkTheme)
@@ -38,6 +40,7 @@ export const OpenStatus :React.FC<OpenStatus> = ({userActiveStatuses,showStatus}
     const [currentStatusIndex, setCurrentStatusIndex] = useState<number>(0);
   
     const userId = useAppSelector(state => state.user.userId)
+    const navigate = useNavigate()
     //modal open close
     const handleModalToggle = () => {
         setModalToggle((prev) => !prev)   
@@ -96,10 +99,30 @@ export const OpenStatus :React.FC<OpenStatus> = ({userActiveStatuses,showStatus}
         }
     }, [progress, userActiveStatuses]);
 
+    const handleMemoryDeletion = async ()=>{
+        const response = await axiosInstance.delete(statusRoot+'userMemory/',{'data':{'memory_id':userActiveStatuses[currentStatusIndex].id}})
+            
+            
+        if(response.data.memoryDeleted){
+            customSuccessToast('Deleted the memory.')
+            //update user active statuses
+            setModalToggle(false)
+            navigate('/userprofile/')
+
+        }else{
+            customErrorToast("Memory couldn't be deleted ")
+        }
+    }
+
   const handleDeleteStatus = ()=>{
 
     const handleDeleteStatus = async ()=>{
-            const response = await axiosInstance.delete(statusRoot+'UserMemoryOrStatus/',{'data':{'status_id':userActiveStatuses[currentStatusIndex].id}})
+
+            if (isOpenedForMemory){
+                handleMemoryDeletion()
+                return
+            }
+            const response = await axiosInstance.delete(statusRoot+'userStatus/',{'data':{'status_id':userActiveStatuses[currentStatusIndex].id}})
             
             
             if(response.data.statusDeleted){
@@ -152,10 +175,20 @@ export const OpenStatus :React.FC<OpenStatus> = ({userActiveStatuses,showStatus}
             </p>
         </div>
     ) : (
-        <div className="h-8/11 bg-secondary dark:bg-primary mt-10 p-4 ">
+        <div className="h-8/11 bg-secondary dark:bg-primary mt-10 p-4 text-center">
             <p className="text-primary dark:text-secondary text-4xl w-full">
-                {userActiveStatuses[currentStatusIndex]?.description}
+                {userActiveStatuses[currentStatusIndex]?.description?.slice(0,10)}
             </p>
+            <p className="text-primary dark:text-secondary text-4xl w-full">
+                {userActiveStatuses[currentStatusIndex]?.description?.slice(10,20)}
+            </p>
+            <p className="text-primary dark:text-secondary text-4xl w-full">
+                {userActiveStatuses[currentStatusIndex]?.description?.slice(20,30)}
+            </p>
+            <p className="text-primary dark:text-secondary text-4xl w-full">
+                {userActiveStatuses[currentStatusIndex]?.description?.slice(30,40)}
+            </p>
+
         </div>
     )
 }
