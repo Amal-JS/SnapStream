@@ -184,7 +184,7 @@ const handleOpenStatus =()=>{
               if(story.media){
             return(  <div 
               onClick={()=>handleStatusClick(story.id)}
-            className="bg-secondary dark:bg-primary text-white relative h-32 md:h-96 hover:cursor-pointer " key={story.id}>
+            className="bg-secondary dark:bg-primary text-white relative h-32 md:h-96 hover:cursor-pointer flex items-center" key={story.id}>
                
                <div className="w-full h-full bg-slate-400 hidden hover:flex justify-center items-center z-30 hover-show-div bg-opacity-75 absolute inset-0 rounded-3xl">
                <div>
@@ -195,7 +195,7 @@ const handleOpenStatus =()=>{
                  </div>
  
                  <Image
-                   className="w-full z-20 bg-opacity-100"
+                   className="w-full z-20 bg-opacity-100 "
                    alt="profile picture"
                    src={mediaPath+`${story.media}`}
                  />
