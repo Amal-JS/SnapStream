@@ -64,6 +64,7 @@ const Profile = () => {
   const [toggleNewMemoryCreationModal,setToggleNewMeomoryCreationModal] = useState<boolean>(false)
   const [toggleMemory,setToggleMemory] = useState<boolean>(false)
   const [selectedMemory,setSelectedMemory] = useState<UserMemoryOrStatus[] | []>([])
+  const [isMemoryDeleted,setMemoryDeleted] = useState<boolean>(false)
 //update user data in profile
 const fetchUserData = async() => {
 
@@ -207,11 +208,20 @@ const handleOpenStatus = (id:string)=>{
     return 
   }
   const clickedMemory = userData.userMemories.filter(memory => memory.id == id)
-  console.log('clicked memory :',clickedMemory,' id: ',id)
+
   setSelectedMemory(clickedMemory)
   setToggleMemory(prev => !prev)
 }
 
+//When user deletes the memory this function is invoked and this causes the updation of userData in userProfile
+const handleStatusOrMemoryDeleted =()=>{
+  setMemoryDeleted(prev => !prev)
+}
+
+useEffect(()=>{
+  fetchUserData()
+
+},[isMemoryDeleted])
   return (
     <>
      {
@@ -570,7 +580,7 @@ const handleOpenStatus = (id:string)=>{
       </div>
       {
         toggleMemory && 
-        <OpenStatus  userActiveStatuses={selectedMemory}  showStatus={toggleMemory} isOpenedForMemory={true}/>
+        <OpenStatus  userActiveStatuses={selectedMemory}  showStatus={toggleMemory} isOpenedForMemory={true} handleStatusOrMemoryDeleted={handleStatusOrMemoryDeleted}/>
       }
     </>
   );

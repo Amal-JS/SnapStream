@@ -91,10 +91,10 @@ class UserMemories(APIView):
           memory_id = request.data['memory_id']
           if memory_id:
                 try:
-                      print('before count :',Memories.objects.all().count())
+                      print('before count MEMORIES:',Memories.objects.all().count())
                       status = Memories.objects.get(id=memory_id)
                       status.delete()
-                      print('updated count :',Memories.objects.all().count())
+                      print('updated count MEMORIES:',Memories.objects.all().count())
                       print(status)
                       return JsonResponse({'memoryDeleted':True})
                 except Exception as e:

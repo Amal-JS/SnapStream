@@ -26,9 +26,10 @@ interface OpenStatus {
     userActiveStatuses: UserMemoryOrStatus[] | [],
     showStatus:boolean,
     isOpenedForMemory?:boolean
+    handleStatusOrMemoryDeleted?:()=>void
 }
 
-export const OpenStatus :React.FC<OpenStatus> = ({userActiveStatuses,showStatus,isOpenedForMemory = false})=>{
+export const OpenStatus :React.FC<OpenStatus> = ({handleStatusOrMemoryDeleted,userActiveStatuses,showStatus,isOpenedForMemory = false})=>{
 
     const [isModalOpened,setModalToggle] = useState(false)
     const darkThemeEnabled = useAppSelector(state => state.user.darkTheme)
@@ -107,7 +108,7 @@ export const OpenStatus :React.FC<OpenStatus> = ({userActiveStatuses,showStatus,
             customSuccessToast('Deleted the memory.')
             //update user active statuses
             setModalToggle(false)
-            navigate('/userprofile/')
+            handleStatusOrMemoryDeleted && handleStatusOrMemoryDeleted()
 
         }else{
             customErrorToast("Memory couldn't be deleted ")
@@ -130,6 +131,7 @@ export const OpenStatus :React.FC<OpenStatus> = ({userActiveStatuses,showStatus,
                 console.log('custom error toast shown');
                 //update user active statuses
                 setModalToggle(false)
+                handleStatusOrMemoryDeleted && handleStatusOrMemoryDeleted()
             }else{
                 customErrorToast("Status couldn't be deleted ")
             }
