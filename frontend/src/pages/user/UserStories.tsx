@@ -5,7 +5,7 @@ import sampleImage from "../../assets/logos/logo_type_b_black.png";
 import { Image, ModalBody } from "@nextui-org/react";
 import { SideNav } from "./SideNav";
 import { useAppSelector } from "../../hooks/redux";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import axiosInstance from "../../axios/axiosInstance";
 import { mediaPath, rootUrlPath, statusRoot } from "../../utils/url";
 import { customErrorToast, customSuccessToast } from "../../Toast";
@@ -126,7 +126,9 @@ const handleOpenStatus =()=>{
     fetchUserStories();
   }, []);
 
-
+const handleToggleShowStatus = useCallback(()=>{
+    setShowStatus(prev => !prev)
+},[showStatus])
   return (
     <>
     <CustomModal isDismissable={true} modalToggle={isModalOpened}  >
@@ -225,7 +227,7 @@ const handleOpenStatus =()=>{
           </div>
         )}
         {showStatus && 
-        <OpenStatus  userActiveStatuses={selectedStatus} showStatus={true}/>
+        <OpenStatus  userActiveStatuses={selectedStatus} showStatus={true} handleToggleState={handleToggleShowStatus}/>
         }
       </div>
     </>
