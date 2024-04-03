@@ -1,7 +1,7 @@
 import { IoAddCircleOutline } from "react-icons/io5";
 import { SideNav } from './SideNav';
 import { Button, Image } from "@nextui-org/react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   MdOutlineCalendarViewMonth,
   MdOutlineVideoLibrary,
@@ -61,7 +61,6 @@ const Profile = () => {
   const [profilePictureUpdated, setProfilePictureUpdated] = useState(false);
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
-  const [toggleNewMemoryCreationModal,setToggleNewMeomoryCreationModal] = useState<boolean>(false)
   const [toggleMemory,setToggleMemory] = useState<boolean>(false)
   const [selectedMemory,setSelectedMemory] = useState<UserMemoryOrStatus[] | []>([])
   const [isMemoryDeleted,setMemoryDeleted] = useState<boolean>(false)
@@ -70,10 +69,10 @@ const fetchUserData = async() => {
 
     const response = await axiosInstance.post(authRoot+'getUserProfileData/',{user_id:userId})
     
+    console.log('fetch user data ');
     
     if (response.data.userData){
       setUserData(response.data.userData)
-      console.log('memories',response.data.userData.userMemories);
       
       const profilePictureUrl = response.data.userData.profilePicture
       //update user state
@@ -84,6 +83,7 @@ const fetchUserData = async() => {
 
     }
   }
+
 
   //initail call
   useEffect(()=>{
@@ -214,14 +214,17 @@ const handleOpenStatus = (id:string)=>{
 }
 
 //When user deletes the memory this function is invoked and this causes the updation of userData in userProfile
-const handleStatusOrMemoryDeleted =()=>{
+const handleStatusOrMemoryDeleted = useCallback(()=>{
   setMemoryDeleted(prev => !prev)
-}
-
-useEffect(()=>{
   fetchUserData()
-
 },[isMemoryDeleted])
+
+const handleToggleMemory = useCallback(()=>{
+  setToggleMemory(false)
+},[toggleMemory])
+
+
+console.log('toggle open status ',toggleMemory)
   return (
     <>
      {
@@ -580,7 +583,11 @@ useEffect(()=>{
       </div>
       {
         toggleMemory && 
-        <OpenStatus  userActiveStatuses={selectedMemory}  showStatus={toggleMemory} isOpenedForMemory={true} handleStatusOrMemoryDeleted={handleStatusOrMemoryDeleted}/>
+        <OpenStatus  userActiveStatuses={selectedMemory} 
+         showStatus={toggleMemory} isOpenedForMemory={true} 
+         handleStatusOrMemoryDeleted={handleStatusOrMemoryDeleted}
+         handleToggleState={handleToggleMemory}
+         />
       }
     </>
   );

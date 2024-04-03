@@ -19,12 +19,12 @@ interface StatusProps {
 export const Status :React.FC<StatusProps>= ({isShowingMemory = false, handleUserCreateStatus,statusName,profilePictureUrl,handleOpenStatus})=>{
     return (
         
-        <div className={`text-center hover:cursor-pointer mx-4 min-w-200`} >
+        <div className={`text-center hover:cursor-pointer ml-4 min-w-[100px] `} >
             <div className="relative">
             <div className="flex justify-center"> 
         <div className="open-status text-center">
         
-          <img className="md:mr-0 mr-2  md:ml-0 border-3 dark:border-secondary-border border-primary-border w-14 h-14 md:w-16 md:h-12" 
+          <img className=" md:ml-0 border-3 dark:border-secondary-border border-primary-border w-14 h-14 md:w-16 md:h-12" 
           style={{ borderRadius: "50%" }}
           alt="profile picture"
           onClick={handleOpenStatus}
@@ -36,11 +36,23 @@ export const Status :React.FC<StatusProps>= ({isShowingMemory = false, handleUse
 
 </div>
            {  handleUserCreateStatus &&
-                <FaPlus onClick={(event) => handleUserCreateStatus(event)} className="absolute bottom-[-6px] right-0 md:right-0  text-base text-primary dark:text-secondary"/>
+                <FaPlus onClick={(event) => handleUserCreateStatus(event)} className="absolute bottom-[-6px] right-3 md:right-0  text-base text-primary dark:text-secondary"/>
            }
                 </div>
+                
           </div>
-          <p className="text-sm dark:text-secondary text-primary mt-2" style={{fontSize:'10px'}}>{statusName}</p>
+          
+<div className="w-50 flex justify-center">
+<div className="w-50 ">
+
+          <p className="text-sm  dark:text-secondary text-primary mt-2" style={{fontSize:'10px'}}>{statusName.slice(0,10)}</p>
+          <p className="md:text-sm dark:text-secondary text-primary" style={{fontSize:'10px'}}>{statusName.slice(11,20)}</p>
+       
+        
+</div>
+
+</div>
+
         </div>
       
     )

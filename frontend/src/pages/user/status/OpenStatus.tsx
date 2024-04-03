@@ -11,6 +11,7 @@ import { useAppSelector } from "../../../hooks/redux"
 import axiosInstance from "../../../axios/axiosInstance"
 import { statusRoot } from "../../../utils/url"
 import { useNavigate } from "react-router-dom"
+import React from "react"
 
 
 interface UserMemoryOrStatus {
@@ -26,10 +27,11 @@ interface OpenStatus {
     userActiveStatuses: UserMemoryOrStatus[] | [],
     showStatus:boolean,
     isOpenedForMemory?:boolean
-    handleStatusOrMemoryDeleted?:()=>void
+    handleStatusOrMemoryDeleted?:()=>void,
+    handleToggleState?:()=>void
 }
 
-export const OpenStatus :React.FC<OpenStatus> = ({handleStatusOrMemoryDeleted,userActiveStatuses,showStatus,isOpenedForMemory = false})=>{
+export const OpenStatus :React.FC<OpenStatus> = React.memo(({handleToggleState,handleStatusOrMemoryDeleted,userActiveStatuses,showStatus,isOpenedForMemory = false})=>{
 
     const [isModalOpened,setModalToggle] = useState(false)
     const darkThemeEnabled = useAppSelector(state => state.user.darkTheme)
@@ -44,7 +46,8 @@ export const OpenStatus :React.FC<OpenStatus> = ({handleStatusOrMemoryDeleted,us
     const navigate = useNavigate()
     //modal open close
     const handleModalToggle = () => {
-        setModalToggle((prev) => !prev)   
+        setModalToggle((prev) => !prev) 
+        handleToggleState && handleToggleState()  
     }
    //open status
    const handleShowStatus = ()=>{
@@ -69,6 +72,7 @@ export const OpenStatus :React.FC<OpenStatus> = ({handleStatusOrMemoryDeleted,us
         if (isModalOpened) {
             timer = setTimeout(() => {
                 setModalToggle(false);
+                handleToggleState && handleToggleState()
                 setProgress(100); // Reset progress when closing modal
             }, userActiveStatuses.length * 10000); // 10 seconds per userActiveStatuses item
         }
@@ -107,6 +111,7 @@ export const OpenStatus :React.FC<OpenStatus> = ({handleStatusOrMemoryDeleted,us
         if(response.data.memoryDeleted){
             customSuccessToast('Deleted the memory.')
             //update user active statuses
+            handleToggleState && handleToggleState()
             setModalToggle(false)
             handleStatusOrMemoryDeleted && handleStatusOrMemoryDeleted()
 
@@ -131,6 +136,7 @@ export const OpenStatus :React.FC<OpenStatus> = ({handleStatusOrMemoryDeleted,us
                 console.log('custom error toast shown');
                 //update user active statuses
                 setModalToggle(false)
+                handleToggleState && handleToggleState()
                 handleStatusOrMemoryDeleted && handleStatusOrMemoryDeleted()
             }else{
                 customErrorToast("Status couldn't be deleted ")
@@ -203,7 +209,7 @@ export const OpenStatus :React.FC<OpenStatus> = ({handleStatusOrMemoryDeleted,us
             </CustomModal>
         </>
     )
-}
+})
 
 
 
