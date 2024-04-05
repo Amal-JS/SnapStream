@@ -19,6 +19,7 @@ import { UserHomeStatus } from "./status/UserHomeStatus";
         <div className="flex w-full h-screen p-3 mt-5 md:mt-3">
             <div className="w-full md:w-5/12 p-1 md:p-5 md:ml-36 bg-secondary dark:bg-primary  md:border-r-3 border-r-secondary-border dark:border-r-primary-border flex-col justify-center">
             <Post/>
+            <Post/>
             </div>
             <div className="hidden px-4 md:flex md:justify-center w-7/12" >
                 <p>fasdfasdfsdfsd</p>
