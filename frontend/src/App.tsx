@@ -16,6 +16,7 @@ import { useAppSelector } from './hooks/redux.ts'
 
 import { ToolTip } from './Components/Tooltip/Tooltip.tsx'
 import { AuthenticatedRoute } from './pages/auth/AuthenticatedRoute.tsx'
+import { CreatePost } from './pages/user/Post/CreatePost.tsx'
 
 
 
@@ -58,6 +59,7 @@ function App() {
     <Route path='/userprofile/' element={<UserProfile />} />
     <Route path='/viewstories/' element={<UserStories />}/>
     <Route path='/edituserprofile/:id' element={<UserEdit />}/>
+    <Route path='/createpost/' element={<CreatePost/>}/>
     </Route>
 
     <Route path='*' element={<PageNotFound />}/>
