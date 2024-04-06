@@ -35,7 +35,7 @@ useEffect(()=>{
         placeholder={placeholder}
         className={`w-full border-1 block p-2.5
                   border-secondary-border dark:border-primary-border rounded-xl text-primary 
-                 dark:text-secondary dark:bg-primary
+                 dark:text-secondary dark:bg-primary my-2
                  ${  inputError && 'border-[3px] border-red-500'}`} 
                 //   onChange={}
                   onFocus={handleFocus}
