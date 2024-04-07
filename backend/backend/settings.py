@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     #custom apps
     
     'auth_app',
-    'status'
+    'status',
+    'post',
 ]
 
 MIDDLEWARE = [
