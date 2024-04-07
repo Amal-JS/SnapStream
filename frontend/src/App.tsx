@@ -18,6 +18,7 @@ import { ToolTip } from './Components/Tooltip/Tooltip.tsx'
 import { AuthenticatedRoute } from './pages/auth/AuthenticatedRoute.tsx'
 import { CreatePost } from './pages/user/Post/CreatePost.tsx'
 import { EditPost } from './pages/user/Post/EditPost.tsx'
+import { InitialPage } from './pages/user/IntitalPage.tsx'
 
 
 
@@ -39,13 +40,17 @@ function App() {
   return (
   <>
  {/* <ToolTip/> */}
- <Toast />
+  <Toast />
+
+  
+  
+
  <GoogleOAuthProvider clientId={import.meta.env.VITE_REACT_APP_GOOGLE_API_TOKEN}>
  
   <BrowserRouter>
  
   <Routes>
-
+    {/* <Route index element={<InitialPage />}/> */}
     <Route path='/signup' element={<Signup/>} />
     <Route path='/forgotpassword/' element={<ForgotPassword/>}/>
     <Route path='/login' element={<Login/>}/>
@@ -69,7 +74,8 @@ function App() {
   </Routes>
   </BrowserRouter>
 
-  </GoogleOAuthProvider>
+  </GoogleOAuthProvider> 
+
   </>
   )
 }

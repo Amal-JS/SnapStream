@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
 import userReducer from './authSlice';
+import initialPageReducer from './initialPageSlice'
 
 export const store  = configureStore({
     reducer:{
-        user:userReducer
+        user:userReducer,
+        initialPageSlice:initialPageReducer
     }
 })
 

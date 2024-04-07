@@ -6,7 +6,7 @@ import { RiHeartLine } from "react-icons/ri";
 import { IoHeartSharp } from "react-icons/io5";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@nextui-org/react";
-
+import { useAppSelector } from "../../../hooks/redux";
 
 export const Post = () => {
   const [content, setContent] = useState<string>("");
@@ -48,10 +48,9 @@ export const Post = () => {
     setShowMore(prev => !prev)
   }
  
-
   return (
     <div className="w-full ">
-  
+
  
       <PostHeader />
       {/* media file */}

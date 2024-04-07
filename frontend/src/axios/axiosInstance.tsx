@@ -1,7 +1,7 @@
 import axios from "axios";
 import {rootUrlPath} from '../../src/utils/url'
 
-
+import Cookies from 'universal-cookie';
 // const axiosInstance = axios.create({
 //     baseURL:rootUrlPath,
 //     withCredentials:true
@@ -18,7 +18,9 @@ if(isAuthTokensInLocalStorge){
     refresh_token = authTokens.refresh_token
 }
 
+const cookies = new Cookies();
 
+console.log('document cookie :',cookies.get('refresh_token'))
 const axiosInstance = axios.create({
     baseURL:rootUrlPath, 
     headers:{

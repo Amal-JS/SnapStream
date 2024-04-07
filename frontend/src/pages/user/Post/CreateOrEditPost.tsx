@@ -85,8 +85,6 @@ export const CreateOrEditPost : React.FC<CreateOrEditProps>= ({purpose = '',post
     const handleUpdateFormValues = ()=>{
 
         if(newPostData && (newPostData['description'].length < 3 || newPostData['media'] == (null || ''))){
-            console.log('postData :',postData,'  ','new postData :',newPostData)
-            console.log('submitted data ',newPostData['description'].length,'  ',newPostData['media'])
             customErrorToast('Atleast description and image needed.')
             return false
         }  
