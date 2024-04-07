@@ -4,13 +4,16 @@ import { FaBookmark } from "react-icons/fa";
 import { FaRegComment } from "react-icons/fa";
 import { RiHeartLine } from "react-icons/ri";
 import { IoHeartSharp } from "react-icons/io5";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Button } from "@nextui-org/react";
 
 export const Post = () => {
   const [content, setContent] = useState<string>("");
   const [isPlaceholderVisible, setIsPlaceholderVisible] = useState(true);
   const [isCommentAdded,setCommentAdded] = useState<boolean>(false)
-  
+  const [fullDescription,setFullDescription] = useState<string>('')
+  const [showMore,setShowMore] = useState<boolean>(false)
+  const [showLess,setShowLess] = useState<boolean>(true)
   const handleInput= (event: React.ChangeEvent<HTMLDivElement>) => {
     const { textContent } = event.target;
     
@@ -32,6 +35,15 @@ export const Post = () => {
     setIsPlaceholderVisible(content.trim().length < 2);
     
   };
+
+  useEffect(()=>{
+    setFullDescription("Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quamaccusantium sapiente possimus eaque blanditiis reiciendis, velaspernatur neque, molestias atque voluptatum labore? Alias sit iustovitae quasi! In, accusamus tempora.")
+  },[])
+
+  const handleShowFullContent = ()=> {
+    setShowLess(prev => !prev)
+    setShowMore(prev => !prev)
+  }
 
   return (
     <div className="w-full ">
@@ -67,10 +79,20 @@ export const Post = () => {
             <span className=" text-small font-semibold text-primary dark:text-secondary hover:cursor-pointer">
               Bijoy J r vbm{" "}
             </span>
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quam
-            accusantium sapiente possimus eaque blanditiis reiciendis, vel
-            aspernatur neque, molestias atque voluptatum labore? Alias sit iusto
-            vitae quasi! In, accusamus tempora.
+            {
+              fullDescription.length < 10 ?
+              fullDescription :
+              showMore ?
+              fullDescription
+              :
+                fullDescription.slice(0,10)
+            }
+            {
+              fullDescription.length > 10 && showLess && <span className="mx-2 font-bold hover:cursor-pointer" onClick={handleShowFullContent}>.....Show more</span>
+            }
+            {
+              fullDescription.length > 10 && showMore && <span className="mx-2 font-bold hover:cursor-pointer" onClick={handleShowFullContent}>Show less</span>
+            }
           </p>
         </div>
 
