@@ -1,9 +1,16 @@
 import { CreateOrEditPost } from "./CreateOrEditPost"
 
+interface PostData {
+    description : string,
+    media : File | null | string,
+    location ?: string
+}
+
+
 export const CreatePost = ()=>{
 
-    const handleSubmission = ()=>{
-        console.log('created post');
+    const handleSubmission = (postData : PostData)=>{
+        console.log('created post ',postData);
         
     }
     return (

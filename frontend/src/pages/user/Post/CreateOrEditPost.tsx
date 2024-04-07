@@ -21,16 +21,18 @@ interface PostError {
 interface CreateOrEditProps {
     purpose?:string,
     postData?:PostData,
-    handleSubmission?:()=>void
+    handleSubmission?:(postData:PostData)=>void
 }
 
-export const CreateOrEditPost : React.FC<CreateOrEditProps>= ({purpose,postData,handleSubmission})=>{
+export const CreateOrEditPost : React.FC<CreateOrEditProps>= ({purpose = '',postData,handleSubmission})=>{
 
     const [newPostData,setNewPostData] = useState<PostData>({
         description : '',
         media : null,
         location : ''
     })
+
+
 
     const [postError,setPostError] = useState<PostError>({
         description:'',
@@ -44,7 +46,7 @@ export const CreateOrEditPost : React.FC<CreateOrEditProps>= ({purpose,postData,
         const {files} = event.target as HTMLInputElement;
         
         // if(value === '' || !files) return;
-        console.log(postData);
+        console.log(newPostData);
 
     setNewPostData(prev => 
         {
@@ -59,20 +61,54 @@ export const CreateOrEditPost : React.FC<CreateOrEditProps>= ({purpose,postData,
     }
 
     useEffect(()=>{
-        if(newPostData.description.length>3 && newPostData.media !== null)  setFormFilled(false)
-        else setFormFilled(true)
-    
+      
+        if(purpose === 'Create'){
+            if(newPostData.description.length>3 && newPostData.media !== null)  setFormFilled(false)
+            else setFormFilled(true)
+        }
+        
+
+
+    },[newPostData])
+
+    useEffect(()=>{
+        if (purpose === 'Edit'){
+            if(postData){
+                if(postData.description.length>3 && postData.media !== null)  setFormFilled(false)
+            else setFormFilled(true)
+            }
+        }
     },[postData])
 
+
+
+    const handleUpdateFormValues = ()=>{
+
+        if(newPostData && (newPostData['description'].length < 3 || newPostData['media'] == (null || ''))){
+            console.log('postData :',postData,'  ','new postData :',newPostData)
+            console.log('submitted data ',newPostData['description'].length,'  ',newPostData['media'])
+            customErrorToast('Atleast description and image needed.')
+            return false
+        }  
+
+        return true
+    }
     const handleOnClick = ()=>{
-        handleSubmission && handleSubmission()
+        purpose === 'Create' ?
+         newPostData && handleSubmission && handleSubmission(newPostData)  
+         :
+         postData && handleUpdateFormValues() && handleSubmission && handleSubmission(newPostData)  
     }
 
     const handleEmptyFormSubmission =()=>{
-    
-        
         formFilled && customErrorToast('Atleast description and image needed.')
     }
+
+    useEffect(()=>{
+            if(postData){
+                setNewPostData(postData)
+            }
+    },[])
     return (
         <SideNav>
         <div className="flex justify-center mt-24 p-2 ">
@@ -88,17 +124,25 @@ export const CreateOrEditPost : React.FC<CreateOrEditProps>= ({purpose,postData,
         {
             newPostData && newPostData.media ?
             <div className="flex justify-center object-cover">
-            <img className={`my-5 h-96 md:h-[550px]`} src={URL.createObjectURL(newPostData.media as File)}/>
-        </div>
-
-        : postData && postData.media &&
+              {typeof newPostData.media === 'string' ? (
+                <img className={`my-5 h-96 md:h-[550px]`} src={newPostData.media} />
+              ) : (
+                <img
+                  className={`my-5 h-96 md:h-[550px]`}
+                  src={URL.createObjectURL(newPostData.media as File)}
+                  onLoad={() => URL.revokeObjectURL(newPostData.media as string)}
+                  alt="Preview"
+                />
+              )}
+            </div>
+            : postData && postData.media && 
         <div className="flex justify-center object-cover">
             <img className={`my-5 h-96 md:h-[550px]`} src={postData.media as string}/>
         </div>
         }
        
   
-        <CustomButton formFilled={formFilled} handleOnClick={handleOnClick} label="Create" handleOnPress={handleEmptyFormSubmission}/>
+        <CustomButton formFilled={formFilled} handleOnClick={handleOnClick} label={`${purpose === 'Create' ? 'Create' : 'Update'}`}  handleOnPress={handleEmptyFormSubmission}/>
         
       
         <div className="h-16 "></div>

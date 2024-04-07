@@ -48,7 +48,7 @@ export const PostHeader = ()=>{
 
 </DropdownTrigger>
 <DropdownMenu aria-label="Static Actions"  >
-  <DropdownItem key="new" onClick={()=>navigate('/editpost/')}>Edit</DropdownItem>
+  <DropdownItem key="new" onClick={()=>navigate('/editpost/asfasdfasdfsd/')}>Edit</DropdownItem>
   <DropdownItem key="copy">Report</DropdownItem>
   {/* <DropdownItem key="delete" className="text-danger" color="danger">
     Delete file
