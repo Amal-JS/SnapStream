@@ -4,8 +4,9 @@ import { FaBookmark } from "react-icons/fa";
 import { FaRegComment } from "react-icons/fa";
 import { RiHeartLine } from "react-icons/ri";
 import { IoHeartSharp } from "react-icons/io5";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@nextui-org/react";
+
 
 export const Post = () => {
   const [content, setContent] = useState<string>("");
@@ -14,9 +15,11 @@ export const Post = () => {
   const [fullDescription,setFullDescription] = useState<string>('')
   const [showMore,setShowMore] = useState<boolean>(false)
   const [showLess,setShowLess] = useState<boolean>(true)
+
+
+
   const handleInput= (event: React.ChangeEvent<HTMLDivElement>) => {
     const { textContent } = event.target;
-    
     
     if (textContent){
     setContent(textContent);
@@ -44,9 +47,12 @@ export const Post = () => {
     setShowLess(prev => !prev)
     setShowMore(prev => !prev)
   }
+ 
 
   return (
     <div className="w-full ">
+  
+ 
       <PostHeader />
       {/* media file */}
       <div className="h-96 md:h-[550px]">
@@ -73,7 +79,7 @@ export const Post = () => {
         <p className=" text-small font-semibold text-primary dark:text-secondary my-2">
           1000 likes{" "}
         </p>
-
+         
         <div className="mt-1 flex mr-3 mb-2">
           <p className=" text-small font-semibold text-primary dark:text-secondary ">
             <span className=" text-small font-semibold text-primary dark:text-secondary hover:cursor-pointer">
