@@ -9,6 +9,7 @@ import { TextArea } from "../../../Components/Form/TextArea";
 import { customErrorToast } from "../../../Toast";
 
 interface PostData {
+    id?:string
     description : string,
     media : File | null | string,
     location ?: string
@@ -46,7 +47,7 @@ export const CreateOrEditPost : React.FC<CreateOrEditProps>= ({purpose = '',post
         const {files} = event.target as HTMLInputElement;
         
         // if(value === '' || !files) return;
-        console.log(newPostData);
+        // console.log(newPostData);
 
     setNewPostData(prev => 
         {
