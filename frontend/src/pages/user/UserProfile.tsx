@@ -26,6 +26,7 @@ import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { userProfilePictureUpdated } from "../../Redux/authSlice";
 import { Status } from "./status/Status";
 import { OpenStatus } from "./status/OpenStatus";
+import { PostView } from "./Post/PostView";
 
 interface UserMemoryOrStatus {
   id: string;
@@ -75,6 +76,14 @@ const Profile = () => {
 
   const [selectedTab,setTabSelected] = useState<string>('posts')
   const [userPostData,setUserPostData] = useState<PostData[] | []>([])
+  const [showPost,setShowPost] = useState<boolean>(false)
+  const [selectedPost,setSeletedPost] = useState<PostData>({
+    id:'',
+    userId:'',
+    description : '',
+    media : '',
+    location : ''
+  })
   //update user data in profile
   const fetchUserData = async () => {
     const response = await axiosInstance.post(
@@ -244,8 +253,14 @@ const Profile = () => {
     setToggleMemory(false);
   }, [toggleMemory]);
 
-  console.log("toggle open status ", toggleMemory);
-  console.log('user posts ',userPostData);
+  // console.log("toggle open status ", toggleMemory);
+  // console.log('user posts ',userPostData);
+
+  const handleUserClickedPost = (postData : PostData)=>{
+    setShowPost(prev => !prev)
+    setSeletedPost(postData)
+  }
+  console.log('show post ',showPost);
   
   return (
     <>
@@ -388,6 +403,7 @@ const Profile = () => {
                   return (
                     <div 
                     key={post.id}
+                    onClick={()=>handleUserClickedPost(post)}
             className="bg-secondary dark:bg-primary text-white relative h-32 md:h-96 hover:cursor-pointer flex items-center" >
                
                <div className="w-full h-full bg-slate-400 hidden hover:flex justify-center items-center z-30 hover-show-div bg-opacity-75 absolute inset-0 rounded-3xl">
@@ -479,6 +495,11 @@ const Profile = () => {
 
         {/* posts */}
       </div>
+      {showPost &&
+      <PostView  openModal={showPost} postDataUserClicked={selectedPost}/>
+      }
+
+
       {toggleMemory && (
         <OpenStatus
           userActiveStatuses={selectedMemory}
@@ -488,6 +509,8 @@ const Profile = () => {
           handleToggleState={handleToggleMemory}
         />
       )}
+
+      
     </>
   );
 };
