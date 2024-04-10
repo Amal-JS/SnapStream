@@ -1,12 +1,10 @@
 import { PostHeader } from "./PostHeader";
-import { FaRegBookmark } from "react-icons/fa";
-import { FaBookmark } from "react-icons/fa";
-import { FaRegComment } from "react-icons/fa";
-import { RiHeartLine } from "react-icons/ri";
-import { IoHeartSharp } from "react-icons/io5";
+
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@nextui-org/react";
 import { useAppSelector } from "../../../hooks/redux";
+import { PostAction } from "./PostAction";
+import { CommentDiv } from "./CommentDiv";
 
 export const Post = () => {
   const [content, setContent] = useState<string>("");
@@ -15,8 +13,15 @@ export const Post = () => {
   const [fullDescription,setFullDescription] = useState<string>('')
   const [showMore,setShowMore] = useState<boolean>(false)
   const [showLess,setShowLess] = useState<boolean>(true)
+  const comments = [{'id':'commentid1','content':{'description':'aldsjfasd asd fsldf alsdf sdf'},'authorId':'lklkjlj'},
+                    {'id':'commentid2','content':{'description':'lsadflskdfl alsdfkjs asdf sadf ','authorId':'lkladfasdfkjlj'},'authorId':'lklkjlj'},
+                    {'id':'commentid3','content':{'description':'a sfas asfd sadf sadf s dffa sdf','reply':'commentid1'},'authorId':'lklasdfaasdfsdkjlj'},
+                    {'id':'commentid4','content':{'description':'a sfas asfd sadf sadf s dffa sdf','reply':'commentid1'},'authorId':'lklkjlj'},
+                    {'id':'commentid5','content':{'description':'a sfas asfd sadf sadf s dffa sdf','reply':'commentid3'},'authorId':'lklasdfdsfkjlj'},
+                    
+]
 
-
+  const [showCommentDiv,setShowCommentDiv] = useState<boolean>(false)
 
   const handleInput= (event: React.ChangeEvent<HTMLDivElement>) => {
     const { textContent } = event.target;
@@ -48,6 +53,10 @@ export const Post = () => {
     setShowMore(prev => !prev)
   }
  
+  const handleComment=()=>
+    {
+            setShowCommentDiv(prev => !prev)
+    }
   return (
     <div className="w-full ">
 
@@ -64,15 +73,8 @@ export const Post = () => {
         />
 </div> 
         <div className="flex mt-3">
-          <div className="w-1/2 flex ">
-            <RiHeartLine className=" mr-3  text-primary dark:text-secondary text-2xl md:text-3xl font-light hover:cursor-pointer" />
-            <IoHeartSharp className=" mr-3  text-red-600 text-2xl md:text-3xl font-light hover:cursor-pointer" />
-            <FaRegComment className=" mr-3  text-primary dark:text-secondary text-2xl md:text-3xl font-light hover:cursor-pointer" />
-          </div>
-          <div className="w-1/2 mr-1 flex justify-end">
-            <FaRegBookmark className="text-primary dark:text-secondary text-2xl md:text-2xl hover:cursor-pointer" />
-            <FaBookmark className="text-primary dark:text-secondary text-2xl md:text-2xl hover:cursor-pointer" />
-          </div>
+
+         <PostAction postId={'alsdlsdflskdfj'} handleShowCommentsDiv={handleComment}/>
         </div>
 
         <p className=" text-small font-semibold text-primary dark:text-secondary my-2">
@@ -114,12 +116,14 @@ export const Post = () => {
         suppressContentEditableWarning={true}
         
       >
-        {isPlaceholderVisible && <div className="placeholder text-primary dark:text-secondary">Add a new comment...</div>}
+        {isPlaceholderVisible && <div className="placeholder text-primary dark:text-secondary border-b-2 border-secondary-border dark:border-primary-border">Add a new comment...</div>}
       </div>
       <div className="w-2/12 ">
         { isCommentAdded && <p className="font-bold text-small text-btn-enabled">Post</p> }
       </div>
       </div>
+      {
+        showCommentDiv && <CommentDiv comments={comments}/>  }
       <div className="h-16">
 
       </div>
