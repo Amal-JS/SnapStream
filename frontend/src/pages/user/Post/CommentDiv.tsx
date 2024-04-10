@@ -27,7 +27,14 @@ export const CommentDiv : React.FC<CommentProps>= React.memo(({comments})=>{
             comments.length === 0 ?
             <div> <p className="text-primary dark:text-secondary text-base ">No comments added.</p></div>
             :
-<div> comments </div>
+<div> 
+    {
+    comments && 
+    comments.map(comment=>{
+        return <p key={comment.id} className="text-small my-1 text-primary dark:text-secondary ">{comment.content.description}</p>
+    })
+}
+</div>
         }
         </div>
         </>

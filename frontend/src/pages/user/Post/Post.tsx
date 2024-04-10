@@ -103,9 +103,15 @@ export const Post = () => {
           </p>
         </div>
 
-        <p className=" text-small  text-primary dark:text-secondary my-2 hover:cursor-pointer">
-          View all 50 comments{" "}
-        </p>
+        
+          {
+            comments.length> 0 ?
+            <p className=" text-small  text-primary dark:text-secondary my-2 hover:cursor-pointer" onClick={handleComment}>View all {comments.length} comments</p>
+            :
+            <p className=" text-small  text-primary dark:text-secondary my-2 hover:cursor-pointer">No comments added.</p>
+          }
+          
+        
         <div className="flex">
       <div
         className="bg-secondary text-primary  dark:text-secondary dark:bg-primary w-10/12 w-max-10/12 border-0 focus:outline-none focus:border-0 focus:ring-0 p-2"
