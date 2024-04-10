@@ -13,13 +13,13 @@ export const Post = () => {
   const [fullDescription,setFullDescription] = useState<string>('')
   const [showMore,setShowMore] = useState<boolean>(false)
   const [showLess,setShowLess] = useState<boolean>(true)
-  const comments = [{'id':'commentid1','content':{'description':'aldsjfasd asd fsldf alsdf sdf'},'authorId':'lklkjlj'},
-                    {'id':'commentid2','content':{'description':'lsadflskdfl alsdfkjs asdf sadf ','authorId':'lkladfasdfkjlj'},'authorId':'lklkjlj'},
-                    {'id':'commentid3','content':{'description':'a sfas asfd sadf sadf s dffa sdf','reply':'commentid1'},'authorId':'lklasdfaasdfsdkjlj'},
-                    {'id':'commentid4','content':{'description':'a sfas asfd sadf sadf s dffa sdf','reply':'commentid1'},'authorId':'lklkjlj'},
-                    {'id':'commentid5','content':{'description':'a sfas asfd sadf sadf s dffa sdf','reply':'commentid3'},'authorId':'lklasdfdsfkjlj'},
-                    
-]
+  const comments = [{'id':'commentid1','content':{'description':'first comment'},'authorId':'first'},
+  {'id':'commentid2','content':{'description':'second comment','authorId':'lkladfasdfkjlj'},'authorId':'second'},
+  {'id':'commentid3','content':{'description':'reply to first comment by third person','reply':'commentid1'},'authorId':'third'},
+  {'id':'commentid4','content':{'description':'reply to second comment','reply':'commentid1'},'authorId':'fourth'},
+  {'id':'commentid5','content':{'description':'reply to third comment reply to the third person','reply':'commentid3'},'authorId':'fifth'},
+  
+  ]
 
   const [showCommentDiv,setShowCommentDiv] = useState<boolean>(false)
 
