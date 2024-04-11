@@ -13,18 +13,34 @@ from post.models import Post
 class PostView(APIView):
     def get(self,request):
         user_id = request.GET.get('userId')
-        user = CustomUser.objects.get(user_id = user_id)
-        posts = Post.objects.filter(user=user)
-        serilizer = UserHomePostSerilizer(posts,many=True)
-        serilizer_data = serilizer.data
-        for key in serilizer_data:
-            key['isUserCommentedOnPost'] = True if Comment.objects.filter(user=user,post=Post.objects.get(id=key['id'])).exists() else False
-            key['isUserSavedThePost'] = True if Saved.objects.filter(user=user,post=Post.objects.get(id=key['id'])).exists() else False
-            key['isUserLikedThePost'] = True if Like.objects.filter(user=user,post=Post.objects.get(id=key['id']),user_liked=True).exists() else False
-            key['totalCommentsCount'] = Comment.objects.filter(post=Post.objects.get(id=key['id'])).count()
-            key['totalLikesCount'] = Like.objects.filter(post=Post.objects.get(id=key['id']),user_liked=True).count() 
-            print('likecount',Like.objects.filter(post=Post.objects.get(id=key['id']),user_liked=True))
-        return JsonResponse({'posts':serilizer_data},status=200)
+        post_id = request.GET.get('post_id')
+        user = None
+        print('1')
+        if user_id:
+            user = CustomUser.objects.get(user_id = user_id)
+            posts = Post.objects.filter(user=user)
+            serilizer = UserHomePostSerilizer(posts,many=True)
+            serilizer_data = serilizer.data
+            for key in serilizer_data:
+                key['isUserCommentedOnPost'] = True if Comment.objects.filter(user=user,post=Post.objects.get(id=key['id'])).exists() else False
+                key['isUserSavedThePost'] = True if Saved.objects.filter(user=user,post=Post.objects.get(id=key['id'])).exists() else False
+                key['isUserLikedThePost'] = True if Like.objects.filter(user=user,post=Post.objects.get(id=key['id']),user_liked=True).exists() else False
+                key['totalCommentsCount'] = Comment.objects.filter(post=Post.objects.get(id=key['id'])).count()
+                key['totalLikesCount'] = Like.objects.filter(post=Post.objects.get(id=key['id']),user_liked=True).count() 
+            return JsonResponse({'posts':serilizer_data},status=200)
+        if post_id:
+            print('2')
+            post = Post.objects.get(id=post_id)
+            serilizer = UserHomePostSerilizer(post)
+            user = post.user
+            print(serilizer.data)
+            serilizer_data_copy = dict(serilizer.data.copy())
+            serilizer_data_copy['isUserCommentedOnPost'] = True if Comment.objects.filter(user=user,post=post).exists() else False
+            serilizer_data_copy['isUserSavedThePost'] = True if Saved.objects.filter(user=user,post=post).exists() else False
+            serilizer_data_copy['isUserLikedThePost'] = True if Like.objects.filter(user=user,post=post,user_liked=True).exists() else False
+            serilizer_data_copy['totalCommentsCount'] = Comment.objects.filter(post=post).count()
+            serilizer_data_copy['totalLikesCount'] = Like.objects.filter(post=post,user_liked=True).count() 
+            return JsonResponse({'posts':serilizer_data_copy},status=200)
     
     def post(self,request):
         try:
@@ -50,16 +66,26 @@ class PostView(APIView):
 class CommentView(APIView):
     def get(self,request):
         user_id = request.GET.get('userId')
-        user = CustomUser.objects.get(user_id = user_id)
-        posts = Post.objects.filter(user=user)
-        serilizer = UserHomePostSerilizer(posts,many=True)
+        post_id = request.GET.get('post_Id')
+        if user_id:
+            user = CustomUser.objects.get(user_id = user_id)
+            posts = Post.objects.filter(user=user)
+            serilizer = UserHomePostSerilizer(posts,many=True)
+        if post_id:
+            post = Post.objects.get(id=post_id)
+            serilizer = UserHomePostSerilizer(post)
         return JsonResponse({'posts':serilizer.data})
     def post(self,request):
         try:
             new_comment_data = request.data
-            user = CustomUser.objects.get(user_id = new_comment_data['user'])
-            post = Post(user=user,media=request.FILES.get('media'),location=new_comment_data['location'],description=new_comment_data['description'])
-            post.save()
+            user = CustomUser.objects.get(user_id = new_comment_data['user_id'])
+            post = Post.objects.get(id=new_comment_data['post_id'])
+            print(request.data)
+            if 'comment' in new_comment_data:
+                comment = Comment(post=post,user=user,description=new_comment_data['description'],comment=Comment.objects.get(id=new_comment_data['comment']))
+            else:
+                comment = Comment(post=post,user=user,description=new_comment_data['description'])
+            comment.save()
             return JsonResponse({'commentCreated':True})
         except Exception as e:
             print('Exception on comment creation :',e)

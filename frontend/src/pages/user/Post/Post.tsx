@@ -5,9 +5,12 @@ import { Button } from "@nextui-org/react";
 import { useAppSelector } from "../../../hooks/redux";
 import { PostAction } from "./PostAction";
 import { CommentDiv } from "./CommentDiv";
-import { mediaPath } from "../../../utils/url";
+import { commentPath, mediaPath, postPath } from "../../../utils/url";
+import axios from "axios";
+import axiosInstance from "../../../axios/axiosInstance";
+import { customErrorToast, customSuccessToast } from "../../../Toast";
 
-interface PostData {
+interface PostDataType {
   id:string,
   media:string,
   description:string,
@@ -23,25 +26,37 @@ interface PostData {
 }
 
 interface PostDataProps {
-  post :PostData
+  postData :PostDataType
 }
 
-export const Post : React.FC<PostDataProps> = ({post}) => {
+export const Post : React.FC<PostDataProps> = ({postData}) => {
+  const [post,setPost] = useState<PostDataType>({
+    id:'',
+    media:'',
+    description:'',
+    location:'',
+    userId:'',
+    username:'',
+    profilePictureUrl:'',
+    isUserCommentedOnPost :false,
+    isUserSavedThePost:false,
+    isUserLikedThePost:false,
+    totalCommentsCount:0,
+    totalLikesCount:0
+  })
   const [content, setContent] = useState<string>("");
   const [isPlaceholderVisible, setIsPlaceholderVisible] = useState(true);
   const [isCommentAdded,setCommentAdded] = useState<boolean>(false)
   const [fullDescription,setFullDescription] = useState<string>('')
   const [showMore,setShowMore] = useState<boolean>(false)
   const [showLess,setShowLess] = useState<boolean>(true)
-  const comments = [{'id':'commentid1','content':{'description':'first comment'},'authorId':'first'},
-  {'id':'commentid2','content':{'description':'second comment','authorId':'lkladfasdfkjlj'},'authorId':'second'},
-  {'id':'commentid3','content':{'description':'reply to first comment by third person','reply':'commentid1'},'authorId':'third'},
-  {'id':'commentid4','content':{'description':'reply to second comment','reply':'commentid1'},'authorId':'fourth'},
-  {'id':'commentid5','content':{'description':'reply to third comment reply to the third person','reply':'commentid3'},'authorId':'fifth'},
-  
-  ]
+  const userId = useAppSelector(state => state.user.userId)
 
   const [showCommentDiv,setShowCommentDiv] = useState<boolean>(false)
+
+  useEffect(()=>{
+      setPost(postData)
+  },[postData])
 
   const handleInput= (event: React.ChangeEvent<HTMLDivElement>) => {
     const { textContent } = event.target;
@@ -77,6 +92,27 @@ export const Post : React.FC<PostDataProps> = ({post}) => {
     {
             setShowCommentDiv(prev => !prev)
     }
+
+    const fetchUserPosts = async ()=>{
+      const response = await axiosInstance.get(postPath+`post/?post_id=${post.id}`)
+      if(response.data.posts && response.status === 200){
+          
+          console.log((response.data.posts));
+          setPost(response.data.posts)
+      
+      }else{
+          customErrorToast('Error fetching posts.')
+      }
+  }
+  const handleNewCommentCreation = async ()=>{
+    const response = await axiosInstance.post(postPath+commentPath,{'user_id':userId,'post_id':post.id,'description':content})
+    if(response.data.commentCreated){
+      customSuccessToast('Comment Added.')
+      fetchUserPosts()
+    }else{
+      customErrorToast('please try to add comment after some time.')
+    }
+  }
   return (
     <div className="w-full ">
 
@@ -101,7 +137,7 @@ export const Post : React.FC<PostDataProps> = ({post}) => {
         <div className="mt-1 flex mr-3 mb-2">
           <p className=" text-small font-semibold text-primary dark:text-secondary ">
             <span className=" text-small font-semibold text-primary dark:text-secondary hover:cursor-pointer">
-              Bijoy J r vbm{" "}
+              {post.username} {" "}
             </span>
             {
               fullDescription.length < 10 ?
@@ -123,7 +159,7 @@ export const Post : React.FC<PostDataProps> = ({post}) => {
         
           {
             post.totalCommentsCount > 0 ?
-            <p className=" text-small  text-primary dark:text-secondary my-2 hover:cursor-pointer" onClick={handleComment}>View all {comments.length} comments</p>
+            <p className=" text-small  text-primary dark:text-secondary my-2 hover:cursor-pointer" onClick={handleComment}>View all {post.totalCommentsCount} comments</p>
             :
             <p className=" text-small  text-primary dark:text-secondary my-2 hover:cursor-pointer">No comments added.</p>
           }
@@ -142,13 +178,13 @@ export const Post : React.FC<PostDataProps> = ({post}) => {
               {isPlaceholderVisible && <div className="placeholder text-primary dark:text-secondary border-b-2 border-secondary-border dark:border-primary-border">Add a new comment...</div>}
             </div>
             <div className="w-2/12 ">
-              { isCommentAdded && <p className="font-bold text-small text-btn-enabled">Post</p> }
+              { isCommentAdded && <p className="font-bold text-small text-btn-enabled hover:cursor-pointer" onClick={handleNewCommentCreation}>Post</p> }
             </div>
       </div>
 }
 
       {
-        showCommentDiv && <CommentDiv comments={comments}/>  }
+        showCommentDiv && <CommentDiv postId={post.id}/>  }
       <div className="h-16">
 
       </div>

@@ -26,7 +26,7 @@ class Comment(models.Model):
     id = models.UUIDField(default = uuid.uuid4,primary_key=True,unique=True)
     post = models.ForeignKey(Post,on_delete=models.CASCADE)
     description = models.CharField(max_length=200)
-    comment = models.ForeignKey('self',blank=True,on_delete=models.CASCADE,related_name='replies')
+    comment = models.ForeignKey('self',null=True,on_delete=models.CASCADE,related_name='replies')
     user = models.ForeignKey(CustomUser,on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 

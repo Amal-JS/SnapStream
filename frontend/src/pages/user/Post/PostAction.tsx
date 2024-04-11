@@ -23,7 +23,6 @@ interface PostActionProps {
 }
 interface PostActionState {
   userLiked: boolean;
-  comments: [];
   userBookmarked: boolean;
   totalLikesCount:number
 }
@@ -34,7 +33,6 @@ export const PostAction: React.FC<PostActionProps> = ({post,
   const userId = useAppSelector((state) => state.user.userId);
   const [postActionState, setPostActionState] = useState<PostActionState>({
     userLiked: false,
-    comments: [],
     userBookmarked: false,
     totalLikesCount:0
   });

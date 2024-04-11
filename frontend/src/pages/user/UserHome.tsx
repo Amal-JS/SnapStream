@@ -49,7 +49,7 @@ interface PostData {
             <div className="w-full md:w-5/12 p-1 md:p-5 md:ml-36 bg-secondary dark:bg-primary  md:border-r-3 border-r-secondary-border dark:border-r-primary-border flex-col justify-center">
            {posts ? 
            posts.map(post=>{
-            return <Post  key={post.id} post={post}/>
+            return <Post  key={post.id} postData={post}/>
            })
            :
            <p className="text-xl text-primary mt-8 dark:text-secondary text-center md:text-start">No new posts to show.</p>
