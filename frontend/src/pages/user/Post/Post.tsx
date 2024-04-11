@@ -97,8 +97,14 @@ export const Post : React.FC<PostDataProps> = ({post}) => {
 
           {
             post.totalLikesCount > 0 && 
+            post.totalLikesCount == 1 ?
+<p className=" text-small font-semibold text-primary dark:text-secondary my-2">
+            {post.totalLikesCount} like
+          </p>
+            :
+
             <p className=" text-small font-semibold text-primary dark:text-secondary my-2">
-            {post.totalLikesCount}
+            {post.totalLikesCount} likes
           </p>
           }
         
