@@ -113,6 +113,12 @@ export const Post : React.FC<PostDataProps> = ({postData}) => {
       customErrorToast('please try to add comment after some time.')
     }
   }
+  const handleCommentsChange = ()=>{
+    console.log('post change on deletion');
+    
+    fetchUserPosts()
+  }
+
   return (
     <div className="w-full ">
 
@@ -184,7 +190,7 @@ export const Post : React.FC<PostDataProps> = ({postData}) => {
 }
 
       {
-        showCommentDiv && <CommentDiv postId={post.id}/>  }
+        showCommentDiv && <CommentDiv postId={post.id} handleUserDataChange={handleCommentsChange}/>  }
       <div className="h-16">
 
       </div>

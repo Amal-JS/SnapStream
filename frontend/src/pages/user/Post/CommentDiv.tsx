@@ -6,7 +6,8 @@ import { IoEllipseSharp } from "react-icons/io5"
 import { customErrorToast } from "../../../Toast"
 
 interface CommentProps {
-    postId:string
+    postId:string,
+    handleUserDataChange:()=> void
 }
 interface PostComments {
   authorId:string,
@@ -15,7 +16,7 @@ interface PostComments {
   comment:string,
   description:string
 }
-export const CommentDiv: React.FC<CommentProps> = React.memo(({ postId }) => {
+export const CommentDiv: React.FC<CommentProps> = React.memo(({ postId , handleUserDataChange}) => {
     const [postComments,setPostComments] = useState<PostComments[] | []>([])
   const fetchPostComments = async ()=>{
     const response = await axiosInstance.get(postPath+commentPath+`?post_id=${postId}`)
@@ -24,6 +25,9 @@ export const CommentDiv: React.FC<CommentProps> = React.memo(({ postId }) => {
       console.log('comments :',response.data.comments);
       
         setPostComments(response.data.comments)
+        if(response.data.comments.length === 0){
+          handleUserDataChange()
+        }
     }else{
       customErrorToast("Couldn't load comments now.Please try again.")
       return ;
@@ -41,9 +45,9 @@ export const CommentDiv: React.FC<CommentProps> = React.memo(({ postId }) => {
         <div className="p-2 my-4 mx-2 bg-secondary dark:bg-primary border-t-2 border-t-secondary-border dark:border-t-primary-border">
        
         {
-          postComments?.length < 1 ?
-              <p className="text-xl text-primary dark:text-secondary">No comments</p>
-              :
+          postComments?.length > 0 &&
+              // <p className="text-xl text-primary dark:text-secondary">No comments</p>
+              // :
               postComments.map(comment=>{
                 return <Comment key={comment.id} comment={comment} handleCommentsChange={handleCommentsChange}/>
               })
