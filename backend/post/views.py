@@ -79,18 +79,20 @@ class LikeView(APIView):
     def post(self,request):
         try:
             new_saved_data = request.data
-            user = CustomUser.objects.get(user_id = new_saved_data['user'])
-            post = Post.objects.get(id=new_saved_data['postId'])
+            user = CustomUser.objects.get(user_id = new_saved_data['user_id'])
+            post = Post.objects.get(id=new_saved_data['post_id'])
             is_user_already_liked_the_post =  Like.objects.filter(post=post,user=user).exists()
             
             if(is_user_already_liked_the_post):
                 like = Like.objects.filter(user=user,post=post).first()
                 like.user_liked = not like.user_liked
-                # like.save()
+                print('like updation :',user.username,' ',like.user_liked)
+                like.save()
                 return JsonResponse({'postStatus':like.user_liked if True else False})
             else:
-                like = Like(post=post,user=user,is_liked=True)
-                # like.save()
+                like = Like(post=post,user=user,user_liked=True)
+                print('like creation :',user.username,' ',like.user_liked)
+                like.save()
             return JsonResponse({'postLiked':True})
         except Exception as e:
             print('Exception on post liking :',e)
@@ -109,9 +111,10 @@ class SavedView(APIView):
     def post(self,request):
         try:
             new_saved_data = request.data
-            user = CustomUser.objects.get(user_id = new_saved_data['user'])
-            post = Post.objects.get(id=new_saved_data['postId'])
+            user = CustomUser.objects.get(user_id = new_saved_data['user_id'])
+            post = Post.objects.get(id=new_saved_data['post_id'])
             saved = Saved(user=user,post=post)
+            print('created the saved object :')
             saved.save()
             return JsonResponse({'postSaved':True})
         except Exception as e:
@@ -123,6 +126,7 @@ class SavedView(APIView):
             post_id = request.data['post_id']
             saved = Saved.objects.filter(user=CustomUser.objects.get(user_id=user_id,post=Post.objects.get(id=post_id)))
             saved.delete()
+            print('deleted the saved object :')
             return JsonResponse({'savedDeleted':True})
         except Exception as e:
             print(e)

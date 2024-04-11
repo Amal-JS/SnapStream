@@ -5,6 +5,7 @@ import { Button } from "@nextui-org/react";
 import { useAppSelector } from "../../../hooks/redux";
 import { PostAction } from "./PostAction";
 import { CommentDiv } from "./CommentDiv";
+import { mediaPath } from "../../../utils/url";
 
 interface PostData {
   id:string,
@@ -86,14 +87,12 @@ export const Post : React.FC<PostDataProps> = ({post}) => {
         <img
           className="w-full  h-full object-cover text-center sm:mb-3 md:mb-2 hover:cursor-pointer "
           alt="profile picture"
-          src={
-            "https://www.adorama.com/alc/wp-content/uploads/2018/11/landscape-photography-tips-yosemite-valley-feature.jpg"
-          }
+          src={mediaPath+post.media}
         />
 </div> 
         <div className="flex mt-3">
 
-         <PostAction postId={'alsdlsdflskdfj'} handleShowCommentsDiv={handleComment}/>
+         <PostAction post={post} handleShowCommentsDiv={handleComment}/>
         </div>
 
           {
