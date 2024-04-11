@@ -1,11 +1,27 @@
 import { BsThreeDots } from "react-icons/bs"
 import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/react"
 import { useNavigate } from "react-router-dom"
+import { mediaPath } from "../../../utils/url"
+import { useAppSelector } from "../../../hooks/redux"
 
+interface PostData {
+  id:string,
+  location?:string,
+  userId:string,
+  username:string,
+  profilePictureUrl:string,
+}
 
-
-export const PostHeader = ()=>{
+interface PostHeaderProps {
+  postHeaderData : PostData
+}
+export const PostHeader : React.FC<PostHeaderProps>= ({postHeaderData})=>{
+  const userId = useAppSelector(state => state.user.userId)
  const navigate = useNavigate()
+ const handleDeletePost = ()=>{
+  console.log('delete post call');
+  
+ }
     return (
         <div className=" flex  bg-secondary dark:bg-primary border-b-3 border-secondary-border dark:border-primary-border">
             <div className="w-3/4 flex ">
@@ -23,13 +39,25 @@ export const PostHeader = ()=>{
                   <img className="w-12 h-w-12 text-center md:w-14 md:h-14 sm:mb-3 md:mb-2 hover:cursor-pointer border-2  dark:border-secondary-border border-primary-border" 
                  style={{ borderRadius: "50%" }}
                  alt="profile picture"
-                 src={ "https://img.freepik.com/premium-vector/user-profile-icon-flat-style-member-avatar-vector-illustration-isolated-background-human-permission-sign-business-concept_157943-15752.jpg?size=338&ext=jpg&ga=GA1.1.1700460183.1708473600&semt=ais"
-              }
+                 src={postHeaderData.profilePictureUrl ?
+                  `${mediaPath+postHeaderData.profilePictureUrl}`
+                   : "https://img.freepik.com/premium-vector/user-profile-icon-flat-style-member-avatar-vector-illustration-isolated-background-human-permission-sign-business-concept_157943-15752.jpg?size=338&ext=jpg&ga=GA1.1.1700460183.1708473600&semt=ais"
+               }
                   />
+                   {/* <img className="w-24 h-24 text-center md:w-64 md:h-64 sm:mb-3 md:mb-2 hover:cursor-pointer border-2  dark:border-secondary-border border-primary-border" 
+                 style={{ borderRadius: "50%" }}
+                 alt="profile picture"
+                 src={postHeaderData.profilePictureUrl ?
+                 `${mediaPath+postHeaderData.profilePictureUrl}`
+                  : "https://img.freepik.com/premium-vector/user-profile-icon-flat-style-member-avatar-vector-illustration-isolated-background-human-permission-sign-business-concept_157943-15752.jpg?size=338&ext=jpg&ga=GA1.1.1700460183.1708473600&semt=ais"
+              } */}
+                  
                   </div>
                   <div className="ml-3">
-                    <p className=" font-bold text-primary dark:text-secondary hover:cursor-pointer" >Bijoy J r vbm </p>
-                    <p className=" text-small font-semibold text-primary dark:text-secondary">Punnathur ,Guruvayoor</p>
+                    <p className=" font-bold text-primary dark:text-secondary hover:cursor-pointer" >{postHeaderData.username}</p>
+                   { postHeaderData?.location && 
+                    <p className=" text-small font-semibold text-primary dark:text-secondary">{postHeaderData.location}</p>
+                  }
                   </div>
                  
             </div>
@@ -47,12 +75,20 @@ export const PostHeader = ()=>{
   </Button>
 
 </DropdownTrigger>
-<DropdownMenu aria-label="Static Actions"  >
-  <DropdownItem key="new" onClick={()=>navigate('/editpost/asfasdfasdfsd/')}>Edit</DropdownItem>
+<DropdownMenu aria-label="Static Actions">
+  <DropdownItem key="new" onClick={() => navigate('/editpost/asfasdfasdfsd/')}>Edit</DropdownItem>
   <DropdownItem key="copy">Report</DropdownItem>
-  {/* <DropdownItem key="delete" className="text-danger" color="danger">
-    Delete file
-  </DropdownItem> */}
+  
+    {userId === postHeaderData.userId ? (
+      <DropdownItem  className="text-danger" onClick={() => handleDeletePost}>
+        Delete file
+      </DropdownItem> )
+      :
+     ( <DropdownItem  className="hidden" >
+        Not showing this
+      </DropdownItem>
+    )}
+  
 </DropdownMenu>
 </Dropdown>
       

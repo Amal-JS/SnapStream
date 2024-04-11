@@ -1,9 +1,10 @@
 from django.http import JsonResponse
 from rest_framework.views import APIView
 from auth_app.models import CustomUser
+from post.models import Comment
 from .serilizers import SavedSerilizer
 from post.models import Like, Saved
-from post.serilizers import PostSerilizer
+from post.serilizers import UserHomePostSerilizer
 
 from post.models import Post
 
@@ -13,8 +14,17 @@ class PostView(APIView):
         user_id = request.GET.get('userId')
         user = CustomUser.objects.get(user_id = user_id)
         posts = Post.objects.filter(user=user)
-        serilizer = PostSerilizer(posts,many=True)
-        return JsonResponse({'posts':serilizer.data})
+        serilizer = UserHomePostSerilizer(posts,many=True)
+        serilizer_data = serilizer.data
+        for key in serilizer_data:
+            key['isUserCommentedOnPost'] = True if Comment.objects.filter(user=user,post=Post.objects.get(id=key['id'])).exists() else False
+            key['isUserSavedThePost'] = True if Saved.objects.filter(user=user,post=Post.objects.get(id=key['id'])).exists() else False
+            key['isUserLikedThePost'] = True if Like.objects.filter(user=user,post=Post.objects.get(id=key['id'])).exists() else False
+            key['totalCommentsCount'] = Comment.objects.filter(post=Post.objects.get(id=key['id'])).count()
+            key['totalLikesCount'] = Like.objects.filter(post=Post.objects.get(id=key['id'])).count()
+        
+        return JsonResponse({'posts':serilizer.data},status=200)
+    
     def post(self,request):
         try:
             new_post_data = request.data
@@ -41,7 +51,7 @@ class CommentView(APIView):
         user_id = request.GET.get('userId')
         user = CustomUser.objects.get(user_id = user_id)
         posts = Post.objects.filter(user=user)
-        serilizer = PostSerilizer(posts,many=True)
+        serilizer = UserHomePostSerilizer(posts,many=True)
         return JsonResponse({'posts':serilizer.data})
     def post(self,request):
         try:

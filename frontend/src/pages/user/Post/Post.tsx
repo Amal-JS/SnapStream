@@ -6,7 +6,26 @@ import { useAppSelector } from "../../../hooks/redux";
 import { PostAction } from "./PostAction";
 import { CommentDiv } from "./CommentDiv";
 
-export const Post = () => {
+interface PostData {
+  id:string,
+  media:string,
+  description:string,
+  location?:string,
+  userId:string,
+  username:string,
+  profilePictureUrl:string,
+  isUserCommentedOnPost :boolean,
+  isUserSavedThePost:boolean,
+  isUserLikedThePost:boolean,
+  totalCommentsCount:number,
+  totalLikesCount:number
+}
+
+interface PostDataProps {
+  post :PostData
+}
+
+export const Post : React.FC<PostDataProps> = ({post}) => {
   const [content, setContent] = useState<string>("");
   const [isPlaceholderVisible, setIsPlaceholderVisible] = useState(true);
   const [isCommentAdded,setCommentAdded] = useState<boolean>(false)
@@ -61,7 +80,7 @@ export const Post = () => {
     <div className="w-full ">
 
  
-      <PostHeader />
+      <PostHeader postHeaderData={post}/>
       {/* media file */}
       <div className="h-96 md:h-[550px]">
         <img
@@ -77,9 +96,13 @@ export const Post = () => {
          <PostAction postId={'alsdlsdflskdfj'} handleShowCommentsDiv={handleComment}/>
         </div>
 
-        <p className=" text-small font-semibold text-primary dark:text-secondary my-2">
-          1000 likes{" "}
-        </p>
+          {
+            post.totalLikesCount > 0 && 
+            <p className=" text-small font-semibold text-primary dark:text-secondary my-2">
+            {post.totalLikesCount}
+          </p>
+          }
+        
          
         <div className="mt-1 flex mr-3 mb-2">
           <p className=" text-small font-semibold text-primary dark:text-secondary ">
@@ -105,29 +128,31 @@ export const Post = () => {
 
         
           {
-            comments.length> 0 ?
+            post.totalCommentsCount > 0 ?
             <p className=" text-small  text-primary dark:text-secondary my-2 hover:cursor-pointer" onClick={handleComment}>View all {comments.length} comments</p>
             :
             <p className=" text-small  text-primary dark:text-secondary my-2 hover:cursor-pointer">No comments added.</p>
           }
           
         
-        <div className="flex">
-      <div
-        className="bg-secondary text-primary  dark:text-secondary dark:bg-primary w-10/12 w-max-10/12 border-0 focus:outline-none focus:border-0 focus:ring-0 p-2"
-        contentEditable="true"
-        onInput={handleInput}
-        onBlur={handleBlur}
-        onFocus={handleFocus}
-        suppressContentEditableWarning={true}
-        
-      >
-        {isPlaceholderVisible && <div className="placeholder text-primary dark:text-secondary border-b-2 border-secondary-border dark:border-primary-border">Add a new comment...</div>}
+        { !post.isUserCommentedOnPost && <div className="flex">
+          <div
+            className="bg-secondary text-primary  dark:text-secondary dark:bg-primary w-10/12 w-max-10/12 border-0 focus:outline-none focus:border-0 focus:ring-0 p-2"
+            contentEditable="true"
+            onInput={handleInput}
+            onBlur={handleBlur}
+            onFocus={handleFocus}
+            suppressContentEditableWarning={true}
+            
+          >
+              {isPlaceholderVisible && <div className="placeholder text-primary dark:text-secondary border-b-2 border-secondary-border dark:border-primary-border">Add a new comment...</div>}
+            </div>
+            <div className="w-2/12 ">
+              { isCommentAdded && <p className="font-bold text-small text-btn-enabled">Post</p> }
+            </div>
       </div>
-      <div className="w-2/12 ">
-        { isCommentAdded && <p className="font-bold text-small text-btn-enabled">Post</p> }
-      </div>
-      </div>
+}
+
       {
         showCommentDiv && <CommentDiv comments={comments}/>  }
       <div className="h-16">
