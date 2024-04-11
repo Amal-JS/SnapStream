@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Saved
+from .models import Comment, Saved
 from .models import Post
 
 #for showing in home page
@@ -25,3 +25,10 @@ class SavedSerilizer(serializers.ModelSerializer):
     class Meta:
         model = Saved
         fields = ['savedId','post']
+
+class CommentSerilizer(serializers.ModelSerializer):
+    authorId = serializers.PrimaryKeyRelatedField(source='user.user_id',read_only=True)
+    authorName = serializers.CharField(source ='user.username',read_only=True)
+    class Meta:
+        model = Comment
+        fields = ['id','description','authorName','authorId','comment']

@@ -112,7 +112,6 @@ export const PostAction: React.FC<PostActionProps> = ({post,
   const notifyUserActions = (message: string) => {
     customSuccessToast(message);
   };
-console.log(postActionState);
 
   return (
     <>

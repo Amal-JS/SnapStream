@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from rest_framework.views import APIView
 from auth_app.models import CustomUser
 from post.models import Comment
-from .serilizers import SavedSerilizer
+from .serilizers import CommentSerilizer, SavedSerilizer
 from post.models import Like, Saved
 from post.serilizers import UserHomePostSerilizer
 
@@ -29,11 +29,9 @@ class PostView(APIView):
                 key['totalLikesCount'] = Like.objects.filter(post=Post.objects.get(id=key['id']),user_liked=True).count() 
             return JsonResponse({'posts':serilizer_data},status=200)
         if post_id:
-            print('2')
             post = Post.objects.get(id=post_id)
             serilizer = UserHomePostSerilizer(post)
             user = post.user
-            print(serilizer.data)
             serilizer_data_copy = dict(serilizer.data.copy())
             serilizer_data_copy['isUserCommentedOnPost'] = True if Comment.objects.filter(user=user,post=post).exists() else False
             serilizer_data_copy['isUserSavedThePost'] = True if Saved.objects.filter(user=user,post=post).exists() else False
@@ -65,16 +63,13 @@ class PostView(APIView):
 
 class CommentView(APIView):
     def get(self,request):
-        user_id = request.GET.get('userId')
-        post_id = request.GET.get('post_Id')
-        if user_id:
-            user = CustomUser.objects.get(user_id = user_id)
-            posts = Post.objects.filter(user=user)
-            serilizer = UserHomePostSerilizer(posts,many=True)
+        post_id = request.GET.get('post_id')
         if post_id:
             post = Post.objects.get(id=post_id)
-            serilizer = UserHomePostSerilizer(post)
-        return JsonResponse({'posts':serilizer.data})
+            comments = Comment.objects.filter(post=post)
+            serilizer = CommentSerilizer(comments,many=True)
+       
+        return JsonResponse({'comments':serilizer.data})
     def post(self,request):
         try:
             new_comment_data = request.data
@@ -98,7 +93,17 @@ class CommentView(APIView):
         except Exception as e:
             print('Exception on comment updation :',e)
         return JsonResponse({'commentUpdated':False})
-    
+    def delete(self,request):
+        try:
+            comment_id = request.data['comment_id']
+            print(request.data)
+            comment = Comment.objects.get(id=comment_id)
+            comment.delete()
+            return JsonResponse({'commentDeleted':True})
+        except Exception as e :
+            print(e)
+            return JsonResponse({'commentDeleted':False})
+
 
 
 
