@@ -90,23 +90,12 @@ export const Post : React.FC<PostDataProps> = ({post}) => {
           src={mediaPath+post.media}
         />
 </div> 
-        <div className="flex mt-3">
+        <div className=" mt-3">
 
          <PostAction post={post} handleShowCommentsDiv={handleComment}/>
         </div>
 
-          {
-            post.totalLikesCount > 0 && 
-            post.totalLikesCount == 1 ?
-<p className=" text-small font-semibold text-primary dark:text-secondary my-2">
-            {post.totalLikesCount} like
-          </p>
-            :
-
-            <p className=" text-small font-semibold text-primary dark:text-secondary my-2">
-            {post.totalLikesCount} likes
-          </p>
-          }
+     
         
          
         <div className="mt-1 flex mr-3 mb-2">

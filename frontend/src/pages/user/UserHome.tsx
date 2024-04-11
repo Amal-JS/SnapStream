@@ -25,13 +25,7 @@ interface PostData {
  const UserHomeComponent = ()=> {
     const userLoggedIn = useAppSelector((state)=>state.user)
     const [posts,setPosts] = useState<PostData[] | []>()
-    if (userLoggedIn.userLoggedIn){
-        console.log('user logged in');
-        
-    }else{
-        console.log('not logged in ');
-        
-    }
+  
     const fetchUserPosts = async ()=>{
         const response = await axiosInstance.get(postPath+`post/?userId=${userLoggedIn.userId}`)
         if(response.data.posts && response.status === 200){

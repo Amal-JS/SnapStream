@@ -14,7 +14,8 @@ interface PostData {
   id: string;
   isUserCommentedOnPost: boolean;
   isUserSavedThePost: boolean;
-  isUserLikedThePost: boolean;
+  isUserLikedThePost: boolean,
+  totalLikesCount:number
 }
 interface PostActionProps {
   post: PostData;
@@ -24,6 +25,7 @@ interface PostActionState {
   userLiked: boolean;
   comments: [];
   userBookmarked: boolean;
+  totalLikesCount:number
 }
 
 export const PostAction: React.FC<PostActionProps> = ({post,
@@ -34,13 +36,15 @@ export const PostAction: React.FC<PostActionProps> = ({post,
     userLiked: false,
     comments: [],
     userBookmarked: false,
+    totalLikesCount:0
   });
 
   useEffect(()=>{
         setPostActionState(prev =>({
             ...prev,
             userLiked:post.isUserLikedThePost,
-            userBookmarked:post.isUserSavedThePost
+            userBookmarked:post.isUserSavedThePost,
+            totalLikesCount:post.totalLikesCount
         }))
   },[])
 
@@ -49,6 +53,7 @@ export const PostAction: React.FC<PostActionProps> = ({post,
       user_id: userId,
       post_id: post.id,
     });
+    console.log(response.data)
     if (response.data.postLiked) {
       notifyUserActions("Post liked.");
     } else if (response.data.postStatus) {
@@ -59,6 +64,16 @@ export const PostAction: React.FC<PostActionProps> = ({post,
   } 
     else {
       customErrorToast("Please try again");
+    }
+
+    if(response.data?.totalLikesCount !== undefined){
+        
+        const likesCount = response.data.totalLikesCount
+        console.log('like count :',likesCount)
+        setPostActionState((prev) => ({
+            ...prev,
+            totalLikesCount: likesCount,
+          }));
     }
     setPostActionState((prev) => ({
       ...prev,
@@ -71,7 +86,7 @@ export const PostAction: React.FC<PostActionProps> = ({post,
       post_id: post.id,
     });
     if (response.data.postSaved) {
-      notifyUserActions("Post liked.");
+      notifyUserActions("Saved the post .");
     } else if (response.data.Status) {
       notifyUserActions("Removed from saved.");
     }
@@ -99,9 +114,11 @@ export const PostAction: React.FC<PostActionProps> = ({post,
   const notifyUserActions = (message: string) => {
     customSuccessToast(message);
   };
+console.log(postActionState);
 
   return (
     <>
+    <div className="flex">
       <div className="w-1/2 flex ">
         {postActionState.userLiked ? (
           <IoHeartSharp
@@ -133,6 +150,19 @@ export const PostAction: React.FC<PostActionProps> = ({post,
           />
         )}
       </div>
+      </div>
+      {
+          
+            postActionState.totalLikesCount == 1 ?
+<p className=" text-small font-semibold text-primary dark:text-secondary my-2">
+            {postActionState.totalLikesCount} like
+          </p>
+            :
+                postActionState.totalLikesCount > 1 &&  
+            <p className=" text-small font-semibold text-primary dark:text-secondary my-2">
+            {postActionState.totalLikesCount} likes
+          </p>
+          }
     </>
   );
 };

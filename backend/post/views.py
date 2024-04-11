@@ -1,3 +1,4 @@
+import json
 from django.http import JsonResponse
 from rest_framework.views import APIView
 from auth_app.models import CustomUser
@@ -19,11 +20,11 @@ class PostView(APIView):
         for key in serilizer_data:
             key['isUserCommentedOnPost'] = True if Comment.objects.filter(user=user,post=Post.objects.get(id=key['id'])).exists() else False
             key['isUserSavedThePost'] = True if Saved.objects.filter(user=user,post=Post.objects.get(id=key['id'])).exists() else False
-            key['isUserLikedThePost'] = True if Like.objects.filter(user=user,post=Post.objects.get(id=key['id'])).exists() else False
+            key['isUserLikedThePost'] = True if Like.objects.filter(user=user,post=Post.objects.get(id=key['id']),user_liked=True).exists() else False
             key['totalCommentsCount'] = Comment.objects.filter(post=Post.objects.get(id=key['id'])).count()
-            key['totalLikesCount'] = Like.objects.filter(post=Post.objects.get(id=key['id'])).count()
-        
-        return JsonResponse({'posts':serilizer.data},status=200)
+            key['totalLikesCount'] = Like.objects.filter(post=Post.objects.get(id=key['id']),user_liked=True).count() 
+            print('likecount',Like.objects.filter(post=Post.objects.get(id=key['id']),user_liked=True))
+        return JsonResponse({'posts':serilizer_data},status=200)
     
     def post(self,request):
         try:
@@ -88,7 +89,7 @@ class LikeView(APIView):
                 like.user_liked = not like.user_liked
                 print('like updation :',user.username,' ',like.user_liked)
                 like.save()
-                return JsonResponse({'postStatus':like.user_liked if True else False})
+                return JsonResponse({'postStatus':like.user_liked if True else False,'totalLikesCount':Like.objects.filter(post=post,user_liked=True).count() })
             else:
                 like = Like(post=post,user=user,user_liked=True)
                 print('like creation :',user.username,' ',like.user_liked)
