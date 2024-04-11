@@ -32,6 +32,10 @@ export const CommentDiv: React.FC<CommentProps> = React.memo(({ postId }) => {
   useEffect(()=>{
     fetchPostComments()
   },[])
+
+  const handleCommentsChange = ()=>{
+    fetchPostComments()
+  }
     return (
         <>
         <div className="p-2 my-4 mx-2 bg-secondary dark:bg-primary border-t-2 border-t-secondary-border dark:border-t-primary-border">
@@ -41,7 +45,7 @@ export const CommentDiv: React.FC<CommentProps> = React.memo(({ postId }) => {
               <p className="text-xl text-primary dark:text-secondary">No comments</p>
               :
               postComments.map(comment=>{
-                return <Comment key={comment.id} comment={comment} />
+                return <Comment key={comment.id} comment={comment} handleCommentsChange={handleCommentsChange}/>
               })
         }
         </div>

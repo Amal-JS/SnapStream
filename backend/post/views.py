@@ -74,8 +74,13 @@ class CommentView(APIView):
         try:
             new_comment_data = request.data
             user = CustomUser.objects.get(user_id = new_comment_data['user_id'])
-            post = Post.objects.get(id=new_comment_data['post_id'])
-            print(request.data)
+            post_id = new_comment_data.get('post_id',None)
+            post = None
+            if post_id:
+                post = Post.objects.get(id=post_id)
+            else:
+                post = Comment.objects.get(id=new_comment_data['comment']).post
+                print(post.user.username)
             if 'comment' in new_comment_data:
                 comment = Comment(post=post,user=user,description=new_comment_data['description'],comment=Comment.objects.get(id=new_comment_data['comment']))
             else:

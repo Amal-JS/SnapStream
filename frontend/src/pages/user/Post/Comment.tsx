@@ -14,7 +14,7 @@ interface Comment {
     comment:string,
     description:string
   }
-export const Comment : React.FC<{comment :Comment}> = ({comment})=>{
+export const Comment : React.FC<{comment :Comment , handleCommentsChange : ()=> void}> = ({comment,handleCommentsChange})=>{
     const [content, setContent] = useState<string>("");
     const [isCommentAdded,setCommentAdded] = useState<boolean>(false)
     const userId = useAppSelector(state => state.user.userId)
@@ -27,6 +27,8 @@ export const Comment : React.FC<{comment :Comment}> = ({comment})=>{
         if (textContent){
         setContent(textContent);
         setCommentAdded(textContent.trim().length > 1)
+        console.log('content updating');
+        
         }
       };
     
@@ -40,46 +42,65 @@ export const Comment : React.FC<{comment :Comment}> = ({comment})=>{
 
     const handleShowReplyBox = ()=>{
         setShowCommentDiv(prev=>!prev)
+        isCommentUpated && setIsCommentUpdated(prev => !prev)
+        
     }
     const handleDeleteComment = async ()=>{
             const response = await axiosInstance.delete(postPath+commentPath,{'data':{'comment_id':comment.id}})
             if ( response.data.commentDeleted){
                 customSuccessToast('Comment Deleted')
+                handleCommentsChange()
             }else{
                 customErrorToast('Please try deleting comment after some time.')
             }
     }
     const handleUpdateComment =  ()=>{
-        handleShowReplyBox()
-        setIsCommentUpdated(prev => !prev)
+        setShowCommentDiv(prev => !prev)
+        isCommentAdded && setCommentAdded(prev => !prev)
+        !isCommentUpated && setIsCommentUpdated(prev => !prev)
        
 }
 
  
 const updateCommentOnDb = async  ()=>{
-    const response = await axiosInstance.patch(postPath+commentPath,{'comment_id':comment.id,'description':content})
+    const response = await axiosInstance.patch(postPath+commentPath,{'comment_id':comment.id,'description':content,'user_id':userId})
 if ( response.data.commentUpdated){
     customSuccessToast('Comment Updated.')
     setIsCommentUpdated(prev => !prev )
     setShowCommentDiv(prev => !prev)
+    handleCommentsChange()
 }else{
     customErrorToast('Please try updating comment after some time.')
 }
 
 }
+const handleReplyCreation = async ()=>{
+    const response = await axiosInstance.post(postPath+commentPath,{'user_id':userId,'description':content,'comment':comment.id})
+    if(response.data.commentCreated){
+        customSuccessToast('Replied.')
+        handleCommentsChange()
+    setShowCommentDiv(prev => !prev)
+    }else{
+        customErrorToast("Couldn't reply now.Try again later.")
+    }
 
+}   
 const handleUpdateOrCreateReply = () =>{
     if (isCommentUpated) {
+        if(content.length < 1) {
+            customErrorToast('Give some text')
+            return 
+        }
         updateCommentOnDb();
         return;
     }
-
+    handleReplyCreation()
 }
     return (
         <div>
         <div className="flex">
                 <div className="w-10/12">
-            <p className="text-primary dark:text-secondary text-base mt-2 my-1">
+            <p className="text-primary text-small dark:text-secondary mt-2 my-1">
                 <span className="text-small text-primary dark:text-secondary mx-2 hover:cursor-pointer"> {comment.authorName} :</span>
                 {comment.description}
                 
@@ -87,16 +108,16 @@ const handleUpdateOrCreateReply = () =>{
 
                 </div>
                 { userId === comment.authorId && 
-                <div className="w-2/12 flex">
+                <div className="w-2/12 flex items-center">
                     <MdModeEdit className="text-primary dark:text-secondary mx-2 hover:cursor-pointer"  onClick={handleUpdateComment} />
                     <FaTrash className="text-primary dark:text-secondary mx-2 hover:cursor-pointer"  onClick={handleDeleteComment} />
                     
                 </div>
                 }
                 
-              { userId !== comment.authorId && 
+              { userId === comment.authorId && 
               <div className="w-2/12 mt-3">
-                <span className="text-small text-btn-enabled hover:cursor-pointer" onClick={handleShowReplyBox}> Reply</span>
+                <span className="text-small text-btn-enabled hover:cursor-pointer ml-2 font-bold" onClick={handleShowReplyBox}> Reply</span>
                 </div>
               }
                 
@@ -117,19 +138,19 @@ const handleUpdateOrCreateReply = () =>{
                 onBlur={handleBlur}
                 onFocus={handleFocus}
                 suppressContentEditableWarning={true}
-              >  {comment.description}</div>
+              > {isCommentUpated && comment.description}</div>
               
              }  
 
 
 
 <div>
-             {isCommentUpated && <span className="text-small text-btn-enabled hover:cursor-pointer font-bold" onClick={handleUpdateOrCreateReply}>{ isCommentUpated ? 
-                    'Update' 
-                    :
-                    'Reply' 
-                }</span> }
-             </div>
+             {isCommentUpated && showCommentDiv ?
+              <span className="text-small text-btn-enabled hover:cursor-pointer font-bold" onClick={handleUpdateOrCreateReply}>Update</span> 
+            : isCommentAdded && showCommentDiv &&
+            <span className="text-small text-btn-enabled hover:cursor-pointer font-bold" onClick={handleUpdateOrCreateReply}>Reply</span> 
+            }
+              </div>
 
 </div>
     ) 
