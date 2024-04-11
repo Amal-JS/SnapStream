@@ -87,8 +87,11 @@ class CommentView(APIView):
         return JsonResponse({'commentCreated':False})
     def patch(self,request):
         try:
-            new_comment_data = request.data
-            print(new_comment_data)
+            updated_comment_data = request.data
+            print(updated_comment_data)
+            comment = Comment.objects.get(id=updated_comment_data['comment_id'])
+            comment.description = updated_comment_data['description']
+            comment.save()
             return JsonResponse({'commentUpdated':True})
         except Exception as e:
             print('Exception on comment updation :',e)

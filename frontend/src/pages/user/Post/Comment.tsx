@@ -5,7 +5,7 @@ import { FaTrash } from "react-icons/fa";
 import axiosInstance from "../../../axios/axiosInstance";
 import { commentPath, postPath } from "../../../utils/url";
 import { customErrorToast, customSuccessToast } from "../../../Toast";
-
+import { FaWindowClose } from "react-icons/fa";
 
 interface Comment {
     authorId:string,
@@ -18,7 +18,7 @@ export const Comment : React.FC<{comment :Comment}> = ({comment})=>{
     const [content, setContent] = useState<string>("");
     const [isCommentAdded,setCommentAdded] = useState<boolean>(false)
     const userId = useAppSelector(state => state.user.userId)
-  
+    const [isCommentUpated,setIsCommentUpdated] = useState<boolean>(false)
     const [showCommentDiv,setShowCommentDiv] = useState<boolean>(false) 
     
     const handleInput= (event: React.ChangeEvent<HTMLDivElement>) => {
@@ -49,6 +49,32 @@ export const Comment : React.FC<{comment :Comment}> = ({comment})=>{
                 customErrorToast('Please try deleting comment after some time.')
             }
     }
+    const handleUpdateComment =  ()=>{
+        handleShowReplyBox()
+        setIsCommentUpdated(prev => !prev)
+       
+}
+
+ 
+const updateCommentOnDb = async  ()=>{
+    const response = await axiosInstance.patch(postPath+commentPath,{'comment_id':comment.id,'description':content})
+if ( response.data.commentUpdated){
+    customSuccessToast('Comment Updated.')
+    setIsCommentUpdated(prev => !prev )
+    setShowCommentDiv(prev => !prev)
+}else{
+    customErrorToast('Please try updating comment after some time.')
+}
+
+}
+
+const handleUpdateOrCreateReply = () =>{
+    if (isCommentUpated) {
+        updateCommentOnDb();
+        return;
+    }
+
+}
     return (
         <div>
         <div className="flex">
@@ -62,7 +88,7 @@ export const Comment : React.FC<{comment :Comment}> = ({comment})=>{
                 </div>
                 { userId === comment.authorId && 
                 <div className="w-2/12 flex">
-                    <MdModeEdit className="text-primary dark:text-secondary mx-2 hover:cursor-pointer"   />
+                    <MdModeEdit className="text-primary dark:text-secondary mx-2 hover:cursor-pointer"  onClick={handleUpdateComment} />
                     <FaTrash className="text-primary dark:text-secondary mx-2 hover:cursor-pointer"  onClick={handleDeleteComment} />
                     
                 </div>
@@ -91,13 +117,20 @@ export const Comment : React.FC<{comment :Comment}> = ({comment})=>{
                 onBlur={handleBlur}
                 onFocus={handleFocus}
                 suppressContentEditableWarning={true}
-                
-              >  </div>
+              >  {comment.description}</div>
               
              }  
-             <div>
-             {isCommentAdded && <span className="text-small text-btn-enabled hover:cursor-pointer" onClick={handleShowReplyBox}> Reply</span> }
+
+
+
+<div>
+             {isCommentUpated && <span className="text-small text-btn-enabled hover:cursor-pointer font-bold" onClick={handleUpdateOrCreateReply}>{ isCommentUpated ? 
+                    'Update' 
+                    :
+                    'Reply' 
+                }</span> }
              </div>
-        </div>
-    )
+
+</div>
+    ) 
 }
