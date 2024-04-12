@@ -1,8 +1,10 @@
 import { BsThreeDots } from "react-icons/bs"
 import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/react"
 import { useNavigate } from "react-router-dom"
-import { mediaPath } from "../../../utils/url"
+import { mediaPath, postPath } from "../../../utils/url"
 import { useAppSelector } from "../../../hooks/redux"
+import axiosInstance from "../../../axios/axiosInstance"
+import { customErrorToast, customSuccessToast } from "../../../Toast"
 
 interface PostData {
   id:string,
@@ -18,8 +20,16 @@ interface PostHeaderProps {
 export const PostHeader : React.FC<PostHeaderProps>= ({postHeaderData})=>{
   const userId = useAppSelector(state => state.user.userId)
  const navigate = useNavigate()
- const handleDeletePost = ()=>{
-  console.log('delete post call');
+ const handleDeletePost = async ()=>{
+  console.log('delete call');
+  
+  const response  = await axiosInstance.delete(postPath+'post/',{'data':{'post_id':postHeaderData.id}})
+  if(response.data.postDeleted){
+    customSuccessToast('Post deleted')
+  }
+  else{
+    customErrorToast('Please try deleting post after some time.')
+  }
   
  }
     return (
@@ -80,7 +90,7 @@ export const PostHeader : React.FC<PostHeaderProps>= ({postHeaderData})=>{
   <DropdownItem key="copy">Report</DropdownItem>
   
     {userId === postHeaderData.userId ? (
-      <DropdownItem  className="text-danger" onClick={() => handleDeletePost}>
+      <DropdownItem  className="text-danger" onClick={handleDeletePost}>
         Delete file
       </DropdownItem> )
       :

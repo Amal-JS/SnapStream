@@ -30,8 +30,6 @@ interface PostData {
         const response = await axiosInstance.get(postPath+`post/?userId=${userLoggedIn.userId}`)
         if(response.data.posts && response.status === 200){
             setPosts(response.data.posts)
-            // console.log((response.data.posts));
-        
         }else{
             customErrorToast('Error fetching posts.')
         }
@@ -47,7 +45,7 @@ interface PostData {
             <UserHomeStatus />
         <div className="flex w-full h-screen p-3 mt-5 md:mt-3">
             <div className="w-full md:w-5/12 p-1 md:p-5 md:ml-36 bg-secondary dark:bg-primary  md:border-r-3 border-r-secondary-border dark:border-r-primary-border flex-col justify-center">
-           {posts ? 
+           {posts && posts?.length > 0 ? 
            posts.map(post=>{
             return <Post  key={post.id} postData={post}/>
            })

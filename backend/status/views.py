@@ -25,7 +25,6 @@ class UserStatus(APIView):
     def get(self,request):
           try:
             user_id = request.GET.get('user_id',None)
-            print(user_id)
             if user_id:
                 user = CustomUser.objects.get(user_id= user_id)
                 if user:
@@ -67,7 +66,6 @@ class UserStatus(APIView):
                       status = Status.objects.get(id=status_id)
                       status.delete()
                       print('updated count :',Status.objects.all().count())
-                      print(status)
                       return JsonResponse({'statusDeleted':True})
                 except Exception as e:
                       
@@ -95,7 +93,6 @@ class UserMemories(APIView):
                       status = Memories.objects.get(id=memory_id)
                       status.delete()
                       print('updated count MEMORIES:',Memories.objects.all().count())
-                      print(status)
                       return JsonResponse({'memoryDeleted':True})
                 except Exception as e:
                       

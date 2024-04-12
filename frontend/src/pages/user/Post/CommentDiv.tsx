@@ -16,7 +16,7 @@ interface PostComments {
   comment:string,
   description:string
 }
-export const CommentDiv: React.FC<CommentProps> = React.memo(({ postId , handleUserDataChange}) => {
+ const CommentDiv: React.FC<CommentProps> = React.memo(({ postId , handleUserDataChange}) => {
     const [postComments,setPostComments] = useState<PostComments[] | []>([])
   const fetchPostComments = async ()=>{
     const response = await axiosInstance.get(postPath+commentPath+`?post_id=${postId}`)
@@ -42,7 +42,7 @@ export const CommentDiv: React.FC<CommentProps> = React.memo(({ postId , handleU
   }
     return (
         <>
-        <div className="p-2 my-4 mx-2 bg-secondary dark:bg-primary border-t-2 border-t-secondary-border dark:border-t-primary-border">
+        <div className="w-full h-full">
        
         {
           postComments?.length > 0 &&
@@ -56,3 +56,5 @@ export const CommentDiv: React.FC<CommentProps> = React.memo(({ postId , handleU
         </>
     )
 })
+
+export default CommentDiv;

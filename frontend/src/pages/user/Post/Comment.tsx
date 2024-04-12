@@ -115,7 +115,7 @@ const handleUpdateOrCreateReply = () =>{
                 </div>
                 }
                 
-              { userId === comment.authorId && 
+              { userId !== comment.authorId && 
               <div className="w-2/12 mt-3">
                 <span className="text-small text-btn-enabled hover:cursor-pointer ml-2 font-bold" onClick={handleShowReplyBox}> Reply</span>
                 </div>

@@ -8,13 +8,20 @@ import { customErrorToast, customSuccessToast } from "../../../Toast";
 import axiosInstance from "../../../axios/axiosInstance";
 import { postPath } from "../../../utils/url";
 import { useAppSelector } from "../../../hooks/redux";
-import { CommentDiv } from "./CommentDiv";
+
 
 interface PostData {
-  id: string;
-  isUserCommentedOnPost: boolean;
-  isUserSavedThePost: boolean;
-  isUserLikedThePost: boolean,
+  id:string,
+  media:string,
+  description:string,
+  location?:string,
+  userId:string,
+  username:string,
+  profilePictureUrl:string,
+  isUserCommentedOnPost :boolean,
+  isUserSavedThePost:boolean,
+  isUserLikedThePost:boolean,
+  totalCommentsCount:number,
   totalLikesCount:number
 }
 interface PostActionProps {
@@ -32,8 +39,8 @@ export const PostAction: React.FC<PostActionProps> = ({post,
 }) => {
   const userId = useAppSelector((state) => state.user.userId);
   const [postActionState, setPostActionState] = useState<PostActionState>({
-    userLiked: false,
-    userBookmarked: false,
+    userLiked: true,
+    userBookmarked: true,
     totalLikesCount:0
   });
 
@@ -44,6 +51,8 @@ export const PostAction: React.FC<PostActionProps> = ({post,
             userBookmarked:post.isUserSavedThePost,
             totalLikesCount:post.totalLikesCount
         }))
+
+        console.log('post in action',post)
   },[])
 
   const handleLike = async () => {
@@ -75,7 +84,7 @@ export const PostAction: React.FC<PostActionProps> = ({post,
     }
     setPostActionState((prev) => ({
       ...prev,
-      ["userLiked"]: !postActionState.userLiked,
+      userLiked: !postActionState.userLiked,
     }));
   };
   const handleSavedDeletion = async () => {
@@ -106,13 +115,13 @@ export const PostAction: React.FC<PostActionProps> = ({post,
 
     setPostActionState((prev) => ({
       ...prev,
-      ["userBookmarked"]: !postActionState.userBookmarked,
+      userBookmarked: !postActionState.userBookmarked,
     }));
   };
   const notifyUserActions = (message: string) => {
     customSuccessToast(message);
   };
-
+// console.log('post action state :',postActionState)
   return (
     <>
     <div className="flex">

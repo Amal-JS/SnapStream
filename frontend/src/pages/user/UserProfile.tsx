@@ -91,7 +91,7 @@ const Profile = () => {
       { user_id: userId }
     );
 
-    console.log("fetch user data ");
+    
 
     if (response.data.userData) {
       setUserData(response.data.userData);
@@ -117,6 +117,7 @@ const Profile = () => {
       const response = await axiosInstance.get(postPath+`post/?userId=${userId}`)
       if(response.data.posts){
         setUserPostData(response.data.posts)
+        console.log(response.data.posts);
       }else{
         customErrorToast("Couldn't get the posts now.Try again later.")
       }
@@ -426,20 +427,6 @@ const Profile = () => {
                 
 
               }
-
-
-
-
-<div className="bg-secondary dark:bg-primary text-center">
-                
-                {selectedTab === 'posts'  && !userPostData?
-                <p className="text-primary dark:text-secondary">No posts.</p> 
-                : 
-                selectedTab === 'saved'  &&
-                <p className="text-primary dark:text-secondary">No saved posts.</p> 
-
-              }
-                </div>
               {/* <div className="bg-red-600 dark:text-secondary text-primary  relative h-32 md:h-96 hover:cursor-pointer ">
                 <div className="w-full h-full bg-slate-400 hidden hover:flex justify-center items-center z-30 hover-show-div bg-opacity-75 absolute  rounded-3xl">
                   <FaRegHeart className="ml-2 dark:text-secondary text-primary  md:text-3xl" />
@@ -489,6 +476,16 @@ const Profile = () => {
 
               
             </div>
+            <div className="bg-secondary dark:bg-primary text-center">
+                
+                {selectedTab === 'posts'  && userPostData.length == 0?
+                <p className="text-primary dark:text-secondary text-center">No posts.</p> 
+                : 
+                selectedTab === 'saved'  &&
+                <p className="text-primary dark:text-secondary">No saved posts.</p> 
+
+              }
+                </div>
           </div>
 
         </div>
@@ -496,7 +493,7 @@ const Profile = () => {
         {/* posts */}
       </div>
       {showPost &&
-      <PostView  openModal={showPost} postDataUserClicked={selectedPost}/>
+      <PostView  openModal={showPost} postDataIdUserClicked={selectedPost.id}/>
       }
 
 

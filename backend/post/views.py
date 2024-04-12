@@ -15,7 +15,6 @@ class PostView(APIView):
         user_id = request.GET.get('userId')
         post_id = request.GET.get('post_id')
         user = None
-        print('1')
         if user_id:
             user = CustomUser.objects.get(user_id = user_id)
             posts = Post.objects.filter(user=user)
@@ -58,6 +57,15 @@ class PostView(APIView):
         except Exception as e:
             print('Exception on post updation :',e)
         return JsonResponse({'postUpdated':False})
+    def delete(self,request):
+        try:
+            post_id = request.data['post_id']
+            post = Post.objects.get(id=post_id)
+            post.delete()
+            return JsonResponse({'postDeleted':True})
+        except Exception as e:
+            print(e)
+            return JsonResponse({'postDeleted':False})
     
 
 
@@ -138,6 +146,7 @@ class LikeView(APIView):
             print('Exception on post liking :',e)
         return JsonResponse({'postLiked':False})
    
+    
 
 
    

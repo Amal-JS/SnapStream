@@ -1,14 +1,17 @@
 import { PostHeader } from "./PostHeader";
 
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { Button } from "@nextui-org/react";
 import { useAppSelector } from "../../../hooks/redux";
 import { PostAction } from "./PostAction";
-import { CommentDiv } from "./CommentDiv";
 import { commentPath, mediaPath, postPath } from "../../../utils/url";
 import axios from "axios";
 import axiosInstance from "../../../axios/axiosInstance";
 import { customErrorToast, customSuccessToast } from "../../../Toast";
+import {Spinner} from "@nextui-org/react";
+import { lazy } from 'react';
+import { LoadingSpinner } from "../../../Components/loading/LoadingSpinner";
+
 
 interface PostDataType {
   id:string,
@@ -54,6 +57,9 @@ export const Post : React.FC<PostDataProps> = ({postData}) => {
 
   const [showCommentDiv,setShowCommentDiv] = useState<boolean>(false)
 
+  const CommentPreview = lazy(() => import('./CommentDiv'));
+
+
   useEffect(()=>{
       setPost(postData)
   },[postData])
@@ -80,8 +86,7 @@ export const Post : React.FC<PostDataProps> = ({postData}) => {
   };
 
   useEffect(()=>{
-    setFullDescription("Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quamaccusantium sapiente possimus eaque blanditiis reiciendis, velaspernatur neque, molestias atque voluptatum labore? Alias sit iustovitae quasi! In, accusamus tempora.")
-  },[])
+    setFullDescription(postData.description)},[])
 
   const handleShowFullContent = ()=> {
     setShowLess(prev => !prev)
@@ -133,8 +138,7 @@ export const Post : React.FC<PostDataProps> = ({postData}) => {
         />
 </div> 
         <div className=" mt-3">
-
-         <PostAction post={post} handleShowCommentsDiv={handleComment}/>
+         <PostAction post={postData} handleShowCommentsDiv={handleComment}/>
         </div>
 
      
@@ -190,10 +194,18 @@ export const Post : React.FC<PostDataProps> = ({postData}) => {
 }
 
       {
-        showCommentDiv && <CommentDiv postId={post.id} handleUserDataChange={handleCommentsChange}/>  }
+        showCommentDiv && 
+        <div className='p-2 my-4 mx-2 bg-secondary dark:bg-primary border-t-2 border-t-secondary-border dark:border-t-primary-border'>
+        <Suspense fallback={<LoadingSpinner />}>
+  <CommentPreview  postId={post.id} handleUserDataChange={handleCommentsChange} />
+ </Suspense>
+
+ </div>
+}
       <div className="h-16">
 
       </div>
     </div>
   );
 };
+{/* //  <CommentDiv postId={post.id} handleUserDataChange={handleCommentsChange}/>   */}
