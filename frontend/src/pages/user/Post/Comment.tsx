@@ -6,6 +6,7 @@ import axiosInstance from "../../../axios/axiosInstance";
 import { commentPath, postPath } from "../../../utils/url";
 import { customErrorToast, customSuccessToast } from "../../../Toast";
 import { FaWindowClose } from "react-icons/fa";
+import React from "react";
 
 interface Comment {
     authorId:string,
@@ -14,7 +15,7 @@ interface Comment {
     comment:string,
     description:string
   }
-export const Comment : React.FC<{comment :Comment , handleCommentsChange : ()=> void}> = ({comment,handleCommentsChange})=>{
+export const Comment : React.FC<{comment :Comment , handleCommentsChange : ()=> void}> = React.memo(({comment,handleCommentsChange})=>{
     const [content, setContent] = useState<string>("");
     const [isCommentAdded,setCommentAdded] = useState<boolean>(false)
     const userId = useAppSelector(state => state.user.userId)
@@ -154,4 +155,4 @@ const handleUpdateOrCreateReply = () =>{
 
 </div>
     ) 
-}
+})

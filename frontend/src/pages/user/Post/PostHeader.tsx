@@ -21,7 +21,6 @@ export const PostHeader : React.FC<PostHeaderProps>= ({postHeaderData})=>{
   const userId = useAppSelector(state => state.user.userId)
  const navigate = useNavigate()
  const handleDeletePost = async ()=>{
-  console.log('delete call');
   
   const response  = await axiosInstance.delete(postPath+'post/',{'data':{'post_id':postHeaderData.id}})
   if(response.data.postDeleted){

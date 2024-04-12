@@ -12,8 +12,9 @@ from post.models import Post
 # Create your views here.
 class PostView(APIView):
     def get(self,request):
-        user_id = request.GET.get('userId')
-        post_id = request.GET.get('post_id')
+        user_id = request.GET.get('userId',None)
+        post_id = request.GET.get('post_id',None)
+        print(request.GET.get('post_id',None),'post id')
         user = None
         if user_id:
             user = CustomUser.objects.get(user_id = user_id)

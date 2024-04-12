@@ -29,6 +29,7 @@ interface PostData {
     const fetchUserPosts = async ()=>{
         const response = await axiosInstance.get(postPath+`post/?userId=${userLoggedIn.userId}`)
         if(response.data.posts && response.status === 200){
+            
             setPosts(response.data.posts)
         }else{
             customErrorToast('Error fetching posts.')

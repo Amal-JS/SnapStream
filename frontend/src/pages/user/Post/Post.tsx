@@ -1,6 +1,6 @@
 import { PostHeader } from "./PostHeader";
 
-import { Suspense, useEffect, useRef, useState } from "react";
+import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@nextui-org/react";
 import { useAppSelector } from "../../../hooks/redux";
 import { PostAction } from "./PostAction";
@@ -11,6 +11,8 @@ import { customErrorToast, customSuccessToast } from "../../../Toast";
 import {Spinner} from "@nextui-org/react";
 import { lazy } from 'react';
 import { LoadingSpinner } from "../../../Components/loading/LoadingSpinner";
+import { useAsyncError } from "react-router-dom";
+import React from "react";
 
 
 interface PostDataType {
@@ -32,7 +34,7 @@ interface PostDataProps {
   postData :PostDataType
 }
 
-export const Post : React.FC<PostDataProps> = ({postData}) => {
+export const Post : React.FC<PostDataProps> = React.memo(({postData}) => {
   const [post,setPost] = useState<PostDataType>({
     id:'',
     media:'',
@@ -56,12 +58,13 @@ export const Post : React.FC<PostDataProps> = ({postData}) => {
   const userId = useAppSelector(state => state.user.userId)
 
   const [showCommentDiv,setShowCommentDiv] = useState<boolean>(false)
-
+  const [commentCount,setCommentCount] = useState<number>(0)
   const CommentPreview = lazy(() => import('./CommentDiv'));
 
 
   useEffect(()=>{
-      setPost(postData)
+      postData.id && fetchUserPosts()
+
   },[postData])
 
   const handleInput= (event: React.ChangeEvent<HTMLDivElement>) => {
@@ -71,6 +74,7 @@ export const Post : React.FC<PostDataProps> = ({postData}) => {
     setContent(textContent);
     setIsPlaceholderVisible(textContent.trim().length === 0)
     setCommentAdded(textContent.trim().length > 1)
+    setShowCommentDiv(false)
     }
 
   };
@@ -99,18 +103,22 @@ export const Post : React.FC<PostDataProps> = ({postData}) => {
     }
 
     const fetchUserPosts = async ()=>{
-      const response = await axiosInstance.get(postPath+`post/?post_id=${post.id}`)
+
+      
+      const response = await axiosInstance.get(postPath+`post/?post_id=${postData.id}`)
+      
       if(response.data.posts && response.status === 200){
           
-          console.log((response.data.posts));
           setPost(response.data.posts)
+          console.log(response.data.posts)
+          setCommentCount(response.data.posts.totalCommentsCount)
       
       }else{
           customErrorToast('Error fetching posts.')
       }
   }
   const handleNewCommentCreation = async ()=>{
-    const response = await axiosInstance.post(postPath+commentPath,{'user_id':userId,'post_id':post.id,'description':content})
+    const response = await axiosInstance.post(postPath+commentPath,{'user_id':userId,'post_id':postData.id,'description':content})
     if(response.data.commentCreated){
       customSuccessToast('Comment Added.')
       fetchUserPosts()
@@ -118,12 +126,18 @@ export const Post : React.FC<PostDataProps> = ({postData}) => {
       customErrorToast('please try to add comment after some time.')
     }
   }
-  const handleCommentsChange = ()=>{
-    console.log('post change on deletion');
+  const handleCommentsCountChange = (count:number)=>{
+    console.log('comment change useCallback  call');
+    setCommentCount(count)
     
-    fetchUserPosts()
+    console.log('call comes on comment deletion ');
+    
   }
-
+useEffect(()=>{
+if(commentCount == 0 ){
+  setIsPlaceholderVisible(prev => !prev)}
+  setCommentAdded(false)
+},[commentCount])
   return (
     <div className="w-full ">
 
@@ -168,14 +182,14 @@ export const Post : React.FC<PostDataProps> = ({postData}) => {
 
         
           {
-            post.totalCommentsCount > 0 ?
+            commentCount > 0 ?
             <p className=" text-small  text-primary dark:text-secondary my-2 hover:cursor-pointer" onClick={handleComment}>View all {post.totalCommentsCount} comments</p>
             :
             <p className=" text-small  text-primary dark:text-secondary my-2 hover:cursor-pointer">No comments added.</p>
           }
           
         
-        { !post.isUserCommentedOnPost && <div className="flex">
+        { (!post.isUserCommentedOnPost || commentCount === 0) && <div className="flex">
           <div
             className="bg-secondary text-primary  dark:text-secondary dark:bg-primary w-10/12 w-max-10/12 border-0 focus:outline-none focus:border-0 focus:ring-0 p-2"
             contentEditable="true"
@@ -197,7 +211,7 @@ export const Post : React.FC<PostDataProps> = ({postData}) => {
         showCommentDiv && 
         <div className='p-2 my-4 mx-2 bg-secondary dark:bg-primary border-t-2 border-t-secondary-border dark:border-t-primary-border'>
         <Suspense fallback={<LoadingSpinner />}>
-  <CommentPreview  postId={post.id} handleUserDataChange={handleCommentsChange} />
+  <CommentPreview  postId={post.id} handleCommentsCountChange={handleCommentsCountChange} />
  </Suspense>
 
  </div>
@@ -207,5 +221,5 @@ export const Post : React.FC<PostDataProps> = ({postData}) => {
       </div>
     </div>
   );
-};
-{/* //  <CommentDiv postId={post.id} handleUserDataChange={handleCommentsChange}/>   */}
+})
+{/* //  <CommentDiv postId={post.id} handleCommentsCountChange={handleCommentsCountChange}/>   */}

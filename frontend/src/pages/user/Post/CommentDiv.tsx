@@ -7,7 +7,7 @@ import { customErrorToast } from "../../../Toast"
 
 interface CommentProps {
     postId:string,
-    handleUserDataChange:()=> void
+    handleCommentsCountChange:(count:number)=> void
 }
 interface PostComments {
   authorId:string,
@@ -16,18 +16,15 @@ interface PostComments {
   comment:string,
   description:string
 }
- const CommentDiv: React.FC<CommentProps> = React.memo(({ postId , handleUserDataChange}) => {
+ const CommentDiv: React.FC<CommentProps> = React.memo(({ postId , handleCommentsCountChange}) => {
     const [postComments,setPostComments] = useState<PostComments[] | []>([])
   const fetchPostComments = async ()=>{
     const response = await axiosInstance.get(postPath+commentPath+`?post_id=${postId}`)
 
     if(response.data.comments){
-      console.log('comments :',response.data.comments);
-      
+   
         setPostComments(response.data.comments)
-        if(response.data.comments.length === 0){
-          handleUserDataChange()
-        }
+       handleCommentsCountChange(response.data.comments.length)
     }else{
       customErrorToast("Couldn't load comments now.Please try again.")
       return ;
@@ -35,7 +32,11 @@ interface PostComments {
   }
   useEffect(()=>{
     fetchPostComments()
-  },[])
+  },[postId])
+
+  useEffect(() => {
+    
+}, [postComments]);
 
   const handleCommentsChange = ()=>{
     fetchPostComments()

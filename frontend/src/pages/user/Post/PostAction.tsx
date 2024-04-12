@@ -51,8 +51,6 @@ export const PostAction: React.FC<PostActionProps> = ({post,
             userBookmarked:post.isUserSavedThePost,
             totalLikesCount:post.totalLikesCount
         }))
-
-        console.log('post in action',post)
   },[])
 
   const handleLike = async () => {
@@ -60,7 +58,6 @@ export const PostAction: React.FC<PostActionProps> = ({post,
       user_id: userId,
       post_id: post.id,
     });
-    console.log(response.data)
     if (response.data.postLiked) {
       notifyUserActions("Post liked.");
     } else if (response.data.postStatus) {
@@ -76,7 +73,6 @@ export const PostAction: React.FC<PostActionProps> = ({post,
     if(response.data?.totalLikesCount !== undefined){
         
         const likesCount = response.data.totalLikesCount
-        console.log('like count :',likesCount)
         setPostActionState((prev) => ({
             ...prev,
             totalLikesCount: likesCount,
@@ -111,7 +107,7 @@ export const PostAction: React.FC<PostActionProps> = ({post,
     customSuccessToast(message);
   };
 // console.log('post action state :',postActionState)
-useEffect(()=>{console.log('post action state :',postActionState)},[postActionState])
+// useEffect(()=>{console.log('post action state :',postActionState)},[postActionState])
   return (
     <>
     <div className="flex">
