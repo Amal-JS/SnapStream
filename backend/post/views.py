@@ -162,21 +162,18 @@ class SavedView(APIView):
             new_saved_data = request.data
             user = CustomUser.objects.get(user_id = new_saved_data['user_id'])
             post = Post.objects.get(id=new_saved_data['post_id'])
-            saved = Saved(user=user,post=post)
-            print('created the saved object :')
-            saved.save()
-            return JsonResponse({'postSaved':True})
+            is_saved_object_exist = Saved.objects.filter(user=user,post=post).exists()
+            if is_saved_object_exist:
+                saved = Saved.objects.filter(user=user,post=post)
+                saved.delete()
+                print('deleted the saved object :')
+                return JsonResponse({'savedDeleted':True})
+            else:
+                saved = Saved(user=user,post=post)
+                saved.save()
+                print('created the saved object :')
+                return JsonResponse({'savedPost':True})
         except Exception as e:
             print('Exception on post saving :',e)
         return JsonResponse({'postSaved':False})
-    def delete(self,request):
-        try:
-            user_id = request.data['user_id']
-            post_id = request.data['post_id']
-            saved = Saved.objects.filter(user=CustomUser.objects.get(user_id=user_id,post=Post.objects.get(id=post_id)))
-            saved.delete()
-            print('deleted the saved object :')
-            return JsonResponse({'savedDeleted':True})
-        except Exception as e:
-            print(e)
-            return JsonResponse({'savedDeleted':False})
+    

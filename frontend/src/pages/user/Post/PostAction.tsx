@@ -39,8 +39,8 @@ export const PostAction: React.FC<PostActionProps> = ({post,
 }) => {
   const userId = useAppSelector((state) => state.user.userId);
   const [postActionState, setPostActionState] = useState<PostActionState>({
-    userLiked: true,
-    userBookmarked: true,
+    userLiked: false,
+    userBookmarked: false,
     totalLikesCount:0
   });
 
@@ -87,41 +87,31 @@ export const PostAction: React.FC<PostActionProps> = ({post,
       userLiked: !postActionState.userLiked,
     }));
   };
-  const handleSavedDeletion = async () => {
-    const response = await axiosInstance.post(postPath + "saved/", {
-      user_id: userId,
-      post_id: post.id,
-    });
-    if (response.data.postSaved) {
-      notifyUserActions("Saved the post .");
-    } else if (response.data.Status) {
-      notifyUserActions("Removed from saved.");
-    }
-  };
-  const handleSaveThePost = async () => {
-    const response = await axiosInstance.delete(postPath + "saved/", {
-      data: { user_id: userId, post_id: post.id },
-    });
-    if (response.data.savedDeleted) {
-      notifyUserActions("Saved Deleted");
+
+  const handleSaveOrDeletePost = async () => {
+    const response = await axiosInstance.post(postPath + "saved/", { 'user_id': userId, 'post_id': post.id },);
+    if (response.data.savedPost) {
+      notifyUserActions("Saved the post");
+      setPostActionState((prev) => ({
+        ...prev,
+        userBookmarked: true
+      }));
     } else if (response.data.savedDeleted) {
-      notifyUserActions("Try again later.");
+      notifyUserActions("Removed from saved.");
+      setPostActionState((prev) => ({
+        ...prev,
+        userBookmarked: false
+      }));
     }
   };
   const handleSaved = () => {
-    postActionState.userBookmarked
-      ? handleSavedDeletion()
-      : handleSaveThePost();
-
-    setPostActionState((prev) => ({
-      ...prev,
-      userBookmarked: !postActionState.userBookmarked,
-    }));
+    handleSaveOrDeletePost()
   };
   const notifyUserActions = (message: string) => {
     customSuccessToast(message);
   };
 // console.log('post action state :',postActionState)
+useEffect(()=>{console.log('post action state :',postActionState)},[postActionState])
   return (
     <>
     <div className="flex">
@@ -144,17 +134,21 @@ export const PostAction: React.FC<PostActionProps> = ({post,
       </div>
 
       <div className="w-1/2 mr-1 flex justify-end">
-        {postActionState.userBookmarked ? (
-          <FaRegBookmark
-            className="text-primary dark:text-secondary text-2xl md:text-2xl hover:cursor-pointer"
-            onClick={handleSaved}
-          />
-        ) : (
+        {postActionState.userBookmarked ?
+        (
           <FaBookmark
             className="text-primary dark:text-secondary text-2xl md:text-2xl hover:cursor-pointer"
             onClick={handleSaved}
           />
-        )}
+        )
+        : 
+        (
+          <FaRegBookmark
+            className="text-primary dark:text-secondary text-2xl md:text-2xl hover:cursor-pointer"
+            onClick={handleSaved}
+          />
+        )
+        }
       </div>
       </div>
       {
