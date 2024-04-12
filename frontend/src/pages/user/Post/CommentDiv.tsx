@@ -24,7 +24,7 @@ interface PostComments {
     if(response.data.comments){
    
         setPostComments(response.data.comments)
-       handleCommentsCountChange(response.data.comments.length)
+        handleCommentsCountChange(response.data.comments.length)
     }else{
       customErrorToast("Couldn't load comments now.Please try again.")
       return ;

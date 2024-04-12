@@ -26,11 +26,11 @@ interface PostData {
 }
 interface PostActionProps {
   post: PostData;
-  handleShowCommentsDiv: () => void;
+  handleShowCommentsDiv?: () => void;
 }
 interface PostActionState {
-  userLiked: boolean;
-  userBookmarked: boolean;
+  isUserLikedThePost: boolean;
+  isUserSavedThePost: boolean;
   totalLikesCount:number
 }
 
@@ -39,19 +39,23 @@ export const PostAction: React.FC<PostActionProps> = ({post,
 }) => {
   const userId = useAppSelector((state) => state.user.userId);
   const [postActionState, setPostActionState] = useState<PostActionState>({
-    userLiked: false,
-    userBookmarked: false,
+    isUserLikedThePost: false,
+    isUserSavedThePost: false,
     totalLikesCount:0
   });
 
   useEffect(()=>{
+       if(post) {
         setPostActionState(prev =>({
             ...prev,
-            userLiked:post.isUserLikedThePost,
-            userBookmarked:post.isUserSavedThePost,
+            isUserLikedThePost:post.isUserLikedThePost,
+            isUserSavedThePost:post.isUserSavedThePost,
             totalLikesCount:post.totalLikesCount
         }))
-  },[])
+        // console.log('post data in setPostAction state');
+        
+       }
+  },[post])
 
   const handleLike = async () => {
     const response = await axiosInstance.post(postPath + "like/", {
@@ -80,7 +84,7 @@ export const PostAction: React.FC<PostActionProps> = ({post,
     }
     setPostActionState((prev) => ({
       ...prev,
-      userLiked: !postActionState.userLiked,
+      isUserLikedThePost: !postActionState.isUserLikedThePost,
     }));
   };
 
@@ -90,13 +94,13 @@ export const PostAction: React.FC<PostActionProps> = ({post,
       notifyUserActions("Saved the post");
       setPostActionState((prev) => ({
         ...prev,
-        userBookmarked: true
+        isUserSavedThePost: true
       }));
     } else if (response.data.savedDeleted) {
       notifyUserActions("Removed from saved.");
       setPostActionState((prev) => ({
         ...prev,
-        userBookmarked: false
+        isUserSavedThePost: false
       }));
     }
   };
@@ -106,13 +110,13 @@ export const PostAction: React.FC<PostActionProps> = ({post,
   const notifyUserActions = (message: string) => {
     customSuccessToast(message);
   };
-// console.log('post action state :',postActionState)
+
 // useEffect(()=>{console.log('post action state :',postActionState)},[postActionState])
   return (
     <>
     <div className="flex">
       <div className="w-1/2 flex ">
-        {postActionState.userLiked ? (
+        {postActionState.isUserLikedThePost ? (
           <IoHeartSharp
             className=" mr-3  text-red-600 text-2xl md:text-3xl font-light hover:cursor-pointer"
             onClick={handleLike}
@@ -130,7 +134,7 @@ export const PostAction: React.FC<PostActionProps> = ({post,
       </div>
 
       <div className="w-1/2 mr-1 flex justify-end">
-        {postActionState.userBookmarked ?
+        {postActionState.isUserSavedThePost ?
         (
           <FaBookmark
             className="text-primary dark:text-secondary text-2xl md:text-2xl hover:cursor-pointer"

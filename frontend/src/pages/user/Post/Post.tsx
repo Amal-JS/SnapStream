@@ -146,7 +146,7 @@ if(commentCount == 0 ){
       {/* media file */}
       <div className="h-96 md:h-[550px]">
         <img
-          className="w-full  h-full object-cover text-center sm:mb-3 md:mb-2 hover:cursor-pointer "
+          className="w-full  h-full object-contain text-center sm:mb-3 md:mb-2 hover:cursor-pointer "
           alt="profile picture"
           src={mediaPath+post.media}
         />

@@ -14,7 +14,6 @@ class PostView(APIView):
     def get(self,request):
         user_id = request.GET.get('userId',None)
         post_id = request.GET.get('post_id',None)
-        print(request.GET.get('post_id',None),'post id')
         user = None
         if user_id:
             user = CustomUser.objects.get(user_id = user_id)
@@ -76,9 +75,13 @@ class CommentView(APIView):
         if post_id:
             post = Post.objects.get(id=post_id)
             comments = Comment.objects.filter(post=post)
-            serilizer = CommentSerilizer(comments,many=True)
-       
-        return JsonResponse({'comments':serilizer.data})
+            if comments :
+                serilizer = CommentSerilizer(comments,many=True)
+                return JsonResponse({'comments':serilizer.data})
+            else :
+                return JsonResponse({'comments':[]})
+            
+        return JsonResponse({'comments':[]})
     def post(self,request):
         try:
             new_comment_data = request.data
