@@ -122,8 +122,14 @@ const Profile = () => {
         customErrorToast("Couldn't get the posts now.Try again later.")
       }
   }
-  const handleUserSelectedTabDataSaved = ()=>{
-    setUserPostData([])
+  const handleUserSelectedTabDataSaved = async ()=>{
+    const response = await axiosInstance.get(postPath+`saved/?user_id=${userId}`)
+    if(response.data.posts){
+      setUserPostData(response.data.posts)
+      console.log(response.data.posts);
+    }else{
+      customErrorToast("Couldn't get the posts now.Try again later.")
+    }
     
   }
   useEffect(()=>{
@@ -165,9 +171,6 @@ const Profile = () => {
     handleModalToggle();
   };
 
-  const handleTabClick = (tabId: string) => {
-    setActiveTab(tabId);
-  };
 
   //croped image string value function
   const handleProfilePictureUpdated = (imgStr: string) => {
@@ -481,7 +484,7 @@ const Profile = () => {
                 {selectedTab === 'posts'  && userPostData.length == 0?
                 <p className="text-primary dark:text-secondary text-center">No posts.</p> 
                 : 
-                selectedTab === 'saved'  &&
+                selectedTab === 'saved'  && userPostData.length == 0  &&
                 <p className="text-primary dark:text-secondary">No saved posts.</p> 
 
               }

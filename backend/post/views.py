@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from rest_framework.views import APIView
 from auth_app.models import CustomUser
 from post.models import Comment
-from .serilizers import CommentSerilizer, SavedSerilizer
+from .serilizers import CommentSerilizer, SavedSerilizer, UserSavedSerilizer
 from post.models import Like, Saved
 from post.serilizers import UserHomePostSerilizer
 
@@ -159,8 +159,8 @@ class SavedView(APIView):
         user_id = request.GET.get('user_id')
         user  = CustomUser.objects.get(user_id = user_id)
         saved_posts = Saved.objects.filter(user=user)
-        serializer = SavedSerilizer(saved_posts,many=True)
-        return JsonResponse({'savedPosts':serializer.data})
+        serializer = UserSavedSerilizer(saved_posts,many=True)
+        return JsonResponse({'posts':serializer.data})
     def post(self,request):
         try:
             new_saved_data = request.data
