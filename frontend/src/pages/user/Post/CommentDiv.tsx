@@ -7,7 +7,8 @@ import { customErrorToast } from "../../../Toast"
 
 interface CommentProps {
     postId:string,
-    handleCommentsCountChange:(count:number)=> void
+    handleCommentsCountChange:(count:number)=> void,
+    postViewCommentUpdate?:boolean
 }
 interface PostComments {
   authorId:string,
@@ -15,8 +16,9 @@ interface PostComments {
   id:string,
   comment:string,
   description:string
+  
 }
- const CommentDiv: React.FC<CommentProps> = React.memo(({ postId , handleCommentsCountChange}) => {
+ const CommentDiv: React.FC<CommentProps> = React.memo(({ postId , handleCommentsCountChange,postViewCommentUpdate}) => {
     const [postComments,setPostComments] = useState<PostComments[] | []>([])
   const fetchPostComments = async ()=>{
     const response = await axiosInstance.get(postPath+commentPath+`?post_id=${postId}`)
@@ -32,7 +34,8 @@ interface PostComments {
   }
   useEffect(()=>{
     fetchPostComments()
-  },[postId])
+    console.log(' post view comment update :',postViewCommentUpdate)
+  },[postId,postViewCommentUpdate])
 
   useEffect(() => {
     
@@ -53,6 +56,8 @@ interface PostComments {
                 return <Comment key={comment.id} comment={comment} handleCommentsChange={handleCommentsChange}/>
               })
         }
+      
+
         </div>
         </>
     )

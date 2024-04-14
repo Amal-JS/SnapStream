@@ -21,7 +21,7 @@ export const CreatePost = ()=>{
         
         if(response.data.postCreated){
             customSuccessToast('Post created Successfully.')
-            navigate('/userprofile/')
+            navigate('/profile/')
         }else{
             customErrorToast("Post couldn't be created now.")
         return
