@@ -8,7 +8,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/',include('auth_app.urls')),
     path('status/',include('status.urls')),
-    path('post/',include('post.urls'))
+    path('post/',include('post.urls')),
+    path('search/',include('search.urls')),
     
 ]
 

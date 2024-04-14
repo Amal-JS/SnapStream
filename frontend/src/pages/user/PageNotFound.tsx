@@ -1,8 +1,10 @@
 
 import "../../App.css";
 import { Link } from "react-router-dom";
+import { useAppSelector } from "../../hooks/redux";
 
 export const PageNotFound = () => {
+  const userLoggedIn = useAppSelector(state =>state.user.userLoggedIn)
   return (
     <>
       <div className="h-screen">
@@ -11,7 +13,9 @@ export const PageNotFound = () => {
             <Link to={'/login'}>SnapStream </Link> 
           </h2>
 
-          <div>
+        {
+          !userLoggedIn && 
+<div>
             <Link
               to="/login"
               className="text-base font-medium bg-btn-enabled text-white px-5 py-2 border-r-2 rounded-xl"
@@ -26,6 +30,8 @@ export const PageNotFound = () => {
               Sign up
             </Link>
           </div>
+        }
+          
 
         </div>
 

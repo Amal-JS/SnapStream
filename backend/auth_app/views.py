@@ -415,13 +415,14 @@ class UserProfileData(APIView):
     def post(self,request):
         #change to user_id
         id = request.data['user_id']
+        print(request.data)
         user = CustomUser.objects.get(user_id=id)
         memories_of_user = Memories.objects.filter(user=user)
-        print('memories of user :',memories_of_user)
         return JsonResponse(
             {'userData':
              {
             'username':user.username,
+            'userId':user.user_id,
             'bio':user.bio,
             'fullName':user.full_name,
             'profilePicture':str(user.profile_picture) if user.profile_picture else '',

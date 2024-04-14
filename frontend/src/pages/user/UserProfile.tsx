@@ -15,7 +15,7 @@ import { BsClipboard2Heart } from "react-icons/bs";
 import { useModal } from "../../hooks/useModal";
 import { CustomModal, modalContentType } from "../../Components/Modal/Modal";
 import { ModalTitle } from "../../Components/Modal/ModalTitle";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { ModalBody } from "../../Components/Modal/ModalBody";
 import { ImageUpload } from "../../Components/ImageCrop/ImageUpload";
 import "react-image-crop/dist/ReactCrop.css";
@@ -37,6 +37,7 @@ interface UserMemoryOrStatus {
 }
 
 interface UserData {
+  userId:string,
   username: string;
   profilePicture: string;
   bio: string;
@@ -60,6 +61,7 @@ const Profile = () => {
   //user id in state
   const userId = useAppSelector((state) => state.user.userId);
   const [userData, setUserData] = useState<UserData>({
+    userId:'',
     username: "",
     profilePicture: "",
     fullName: "",
@@ -84,11 +86,13 @@ const Profile = () => {
     media : '',
     location : ''
   })
+  const parms = useParams()
+  const [isProfilePictureUpdating,setProfilePictureUpdating] = useState<boolean>(false)
   //update user data in profile
   const fetchUserData = async () => {
     const response = await axiosInstance.post(
       authRoot + "getUserProfileData/",
-      { user_id: userId }
+      { user_id: parms.userId ? parms.userId : userId }
     );
 
     
@@ -98,10 +102,11 @@ const Profile = () => {
 
       const profilePictureUrl = response.data.userData.profilePicture;
       //update user state
-      if (profilePictureUrl) {
+      if (profilePictureUrl && isProfilePictureUpdating) {
         dispatch(
           userProfilePictureUpdated({ profilePictureUrl: profilePictureUrl })
         );
+        setProfilePictureUpdating(false)
       }
     }
   };
@@ -109,8 +114,13 @@ const Profile = () => {
   //initail call
   useEffect(() => {
     fetchUserData();
-
   }, []);
+
+
+  useEffect(() => {
+    fetchUserData();
+  }, [parms.userId]);
+
 
   //fetch data based on the initiall call
   const handleUserSelectedTabDataPosts = async ()=>{
@@ -198,11 +208,15 @@ const Profile = () => {
 
   // Reload the component when profilePictureUpdated state changes
   useEffect(() => {
-    navigate("/userprofile/");
+   parms.userId ?
+    navigate(`/user/${parms.userId}/`)
+   :
+    navigate("/profile/");
   }, [profilePictureUpdated]);
 
   //upload profile picture
   const handleUploadProfilePicture = () => {
+    setProfilePictureUpdating(true)
     const modalContent = () => {
       return (
         <>
@@ -289,10 +303,10 @@ const Profile = () => {
             <div className="flex justify-start  md:justify-between  md:pl-3 pr-3 mb-5">
               <div className="pl-4 mb-4 w-4/12  mt-4">
                 <img
-                  className="w-24 h-24 text-center md:w-64 md:h-64 sm:mb-3 md:mb-2 hover:cursor-pointer border-2  dark:border-secondary-border border-primary-border"
+                  className={`w-24 h-24 text-center md:w-64 md:h-64 sm:mb-3 md:mb-2 ${userId === userData.userId && 'hover:cursor-pointer border-2'}  dark:border-secondary-border border-primary-border`}
                   style={{ borderRadius: "50%" }}
                   alt="profile picture"
-                  onClick={handleUploadProfilePicture}
+                  onClick={userId === userData.userId ? handleUploadProfilePicture : ()=>{console.log('')}}
                   src={
                     userData.profilePicture
                       ? `http://localhost:8000/media/${userData.profilePicture}`
@@ -306,17 +320,40 @@ const Profile = () => {
                 </h2>
 
                 <div className="flex md:mt-0 mt-4 pl-2 md:pl-1">
-                  <Button className="bg-gray-600 dark">
+                {
+                  userId === userData.userId &&
+<Button className="bg-gray-600 dark">
                     <Link to="/edituserprofile/ljlaksjf">
                       <h3 className="text-base  font-medium dark:text-secondary text-primary  ">
                         Edit Profile
                       </h3>
                     </Link>
                   </Button>
-                  <Button className="bg-gray-600 ml-4 dark">
+                  
+                }  
+                  <Button className={`bg-gray-600 ${userId === userData.userId && 'ml-4'} dark`}>
                     <Link to="/viewstories/">
                       <h3 className="text-base  font-medium dark:text-secondary text-primary  ">
                         View stories
+                      </h3>
+                    </Link>
+                  </Button>
+                </div>
+                <div className="flex  mt-4 md:mt-16 pl-2 md:pl-1">
+                
+<Button className="bg-btn-enabled w-24 md:w-36">
+                    <Link to="/edituserprofile/ljlaksjf">
+                      <h3 className="text-base  font-medium dark:text-secondary text-primary  ">
+                        Follow
+                      </h3>
+                    </Link>
+                  </Button>
+                  
+                 
+                  <Button className={`bg-btn-enabled ml-5 md:ml-10 w-24 md:w-36`}>
+                    <Link to="/viewstories/">
+                      <h3 className="text-base  font-medium dark:text-secondary text-primary  ">
+                        Message
                       </h3>
                     </Link>
                   </Button>
@@ -353,12 +390,15 @@ const Profile = () => {
           </div>
           {/* profile second secion */}
           <div className="flex  overflow-x-auto border-b-0 mt-5 dark:text-secondary text-primary  mb-5 no-scrollbar">
-            <Status
-              handleOpenStatus={handleOpenMemory}
-              handleUserCreateStatus={handleCreateMemory}
-              statusName="Create new memory"
-              isShowingMemory={true}
-            />
+           
+           { userData.userId === userId && 
+           <Status
+           handleOpenStatus={handleOpenMemory}
+           handleUserCreateStatus={handleCreateMemory}
+           statusName="Create new memory"
+           isShowingMemory={true}
+         />
+           } 
             {userData.userMemories &&
               userData.userMemories.map((memory) => {
                 return (

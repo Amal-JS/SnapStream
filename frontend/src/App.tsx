@@ -21,7 +21,6 @@ import { EditPost } from './pages/user/Post/EditPost.tsx'
 import { InitialPage } from './pages/user/IntitalPage.tsx'
 
 
-
 function App() {
 
   const userState = useAppSelector(state => state.user)
@@ -62,7 +61,9 @@ function App() {
     <Route path='/' element={<AuthenticatedRoute />}>
     <Route index  element={<UserHome />} />
     <Route path='/password/reset' element={<ForgotPassword/>}/>
-    <Route path='/userprofile/' element={<UserProfile />} />
+    <Route path='/profile/' element={<UserProfile />} />
+    <Route path='/user/:userId' element={<UserProfile />} />
+    
     <Route path='/viewstories/' element={<UserStories />}/>
     <Route path='/edituserprofile/:id' element={<UserEdit />}/>
     <Route path='/createpost/' element={<CreatePost/>}/>

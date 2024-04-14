@@ -8,10 +8,11 @@ interface ModalProps {
     isDismissable : boolean,
     children : ReactNode,
     size?:string 
+    handleOnClose?:()=>void
     }
 
 
-export const CustomModal : React.FC<ModalProps>= ({modalToggle,children,isDismissable = true,size = 'md'}) => {
+export const CustomModal : React.FC<ModalProps>= ({modalToggle,children,isDismissable = true,size = 'md',handleOnClose}) => {
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
 
 
@@ -22,6 +23,7 @@ export const CustomModal : React.FC<ModalProps>= ({modalToggle,children,isDismis
       <Modal isOpen={modalToggle} onOpenChange={onOpenChange} isDismissable={isDismissable} 
       size={size as "md" | "xs" | "sm" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl" | "full"}
       hideCloseButton={true} 
+      onClose={handleOnClose ? handleOnClose : ()=>{}}
       className="bg-secondary dark:bg-primary dark:border-2 dark:border-secondary-border " placement={'center'}>
         <ModalContent>
    

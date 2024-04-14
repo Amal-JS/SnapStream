@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'auth_app',
     'status',
     'post',
+    'search'
 ]
 
 MIDDLEWARE = [
