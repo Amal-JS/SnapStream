@@ -107,11 +107,13 @@ const Profile = () => {
 
       const profilePictureUrl = response.data.userData.profilePicture;
       //update user state
-      if (profilePictureUrl && isProfilePictureUpdating) {
+      if (profilePictureUrl && profilePictureUpdated ) {
+        console.log(' profile picture updating')
         dispatch(
           userProfilePictureUpdated({ profilePictureUrl: profilePictureUrl })
         );
         setProfilePictureUpdating(false)
+        setProfilePictureUpdated(false)
       }
     }
   };
@@ -216,7 +218,7 @@ const Profile = () => {
    parms.userId ?
     navigate(`/user/${parms.userId}/`)
    :
-    navigate("/profile/");
+    fetchUserData()
     
   }, [profilePictureUpdated,isFollowOrUnfollowSuccessfull]);
 
