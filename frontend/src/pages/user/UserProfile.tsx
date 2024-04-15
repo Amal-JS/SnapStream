@@ -341,7 +341,9 @@ const Profile = () => {
                 </div>
                 <div className="flex  mt-4 md:mt-16 pl-2 md:pl-1">
                 
-<Button className="bg-btn-enabled w-24 md:w-36">
+                { userId !== userData.userId &&
+                <>
+                <Button className="bg-btn-enabled w-24 md:w-36">
                     <Link to="/edituserprofile/ljlaksjf">
                       <h3 className="text-base  font-medium dark:text-secondary text-primary  ">
                         Follow
@@ -357,6 +359,9 @@ const Profile = () => {
                       </h3>
                     </Link>
                   </Button>
+                </>
+                }
+
                 </div>
               </div>
             </div>

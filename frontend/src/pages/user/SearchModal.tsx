@@ -81,7 +81,7 @@ export const SearchModal :React.FC<ModalProps> = ({isModalOpened,handleModalTogg
                 })
             }
     </div>
-    :
+    :  usersSearchData.length === 0 && searchValue &&
     <p className="text-center text-primary mt-5 dark:text-secondary">
         No results..
     </p>
