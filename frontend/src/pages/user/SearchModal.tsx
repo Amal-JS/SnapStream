@@ -66,7 +66,7 @@ export const SearchModal :React.FC<ModalProps> = ({isModalOpened,handleModalTogg
             {
                 usersSearchData.map(user=>{
                     return   <div className="w-full  p-3 my-2 flex hover:cursor-pointer border-b-2 border-b-secondary-border dark:border-b-primary-border" 
-    key={user.userId} onClick={()=>handleModalToggle}
+    key={user.userId} onClick={()=>handleModalToggle()}
                     > 
                  <Link to={`/user/${user.userId}/`}  replace className="w-full flex" >
                             <div className="w-5/12 md:w-3/12 flex items-center ">

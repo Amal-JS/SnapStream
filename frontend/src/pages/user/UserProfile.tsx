@@ -43,6 +43,7 @@ interface UserData {
   bio: string;
   fullName: string;
   userMemories?: UserMemoryOrStatus[] | [];
+  hasUserFollowingCurrentProfilePageUser?:boolean
 }
 
 interface PostData {
@@ -88,10 +89,14 @@ const Profile = () => {
   })
   const parms = useParams()
   const [isProfilePictureUpdating,setProfilePictureUpdating] = useState<boolean>(false)
+  const [isFollowOrUnfollowSuccessfull,setFollowOrUnfollowSuccessfull] = useState<boolean>(false)
   //update user data in profile
   const fetchUserData = async () => {
     const response = await axiosInstance.post(
       authRoot + "getUserProfileData/",
+      parms.userId ?
+      { user_id: parms.userId ? parms.userId : userId,profile_checking_user_id:userId }
+      :
       { user_id: parms.userId ? parms.userId : userId }
     );
 
@@ -212,7 +217,18 @@ const Profile = () => {
     navigate(`/user/${parms.userId}/`)
    :
     navigate("/profile/");
-  }, [profilePictureUpdated]);
+    
+  }, [profilePictureUpdated,isFollowOrUnfollowSuccessfull]);
+
+   // Reload the component when follow or unfollow state changes
+   useEffect(() => {
+ fetchUserData()
+ console.log('is follow calling ');
+ isFollowOrUnfollowSuccessfull && setFollowOrUnfollowSuccessfull(prev => !prev)
+   }, [isFollowOrUnfollowSuccessfull]);
+ 
+
+
 
   //upload profile picture
   const handleUploadProfilePicture = () => {
@@ -278,8 +294,23 @@ const Profile = () => {
     setShowPost(prev => !prev)
     setSeletedPost(postData)
   }
-  console.log('show post ',showPost);
-  
+
+const   handleUserFollowOrUnfollow = async ()=>{
+  if(parms.userId){
+    const response = await axiosInstance.post('follow/',{follower_id:userId,followee_id:parms.userId})
+    if(response.data.followeeUnFollowedSuccessfull && response.status == 200){
+      customSuccessToast('Unfollowed Successfully.')
+      setFollowOrUnfollowSuccessfull(true)
+    }else if(response.data.followRequestSendSuccessfull){
+      customSuccessToast('Follow request successfull.')
+      setFollowOrUnfollowSuccessfull(true)
+    }else{
+      customErrorToast('please try following again later.')
+    }
+}
+}
+
+
   return (
     <>
       {isModalOpened && modalContent && (
@@ -342,22 +373,27 @@ const Profile = () => {
                 <div className="flex  mt-4 md:mt-16 pl-2 md:pl-1">
                 
                 { userId !== userData.userId &&
+
+                
                 <>
-                <Button className="bg-btn-enabled w-24 md:w-36">
-                    <Link to="/edituserprofile/ljlaksjf">
+                <Button className="bg-btn-enabled w-24 md:w-36" onClick={handleUserFollowOrUnfollow}>
                       <h3 className="text-base  font-medium dark:text-secondary text-primary  ">
-                        Follow
+                        {
+                          userData.hasUserFollowingCurrentProfilePageUser && userData.hasUserFollowingCurrentProfilePageUser 
+                          ?
+                          'Unfollow'
+                          :
+                          'Follow'
+                        }
+                     
                       </h3>
-                    </Link>
                   </Button>
                   
                  
                   <Button className={`bg-btn-enabled ml-5 md:ml-10 w-24 md:w-36`}>
-                    <Link to="/viewstories/">
                       <h3 className="text-base  font-medium dark:text-secondary text-primary  ">
                         Message
                       </h3>
-                    </Link>
                   </Button>
                 </>
                 }

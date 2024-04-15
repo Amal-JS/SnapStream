@@ -11,6 +11,7 @@ from django.views import View
 
 import requests
 from backend  import settings
+from follow.models import Follow
 from status.serilizers import MemoriesWithStatusSerializer
 from status.models import Memories
 from status.serilizers import MemoriesSerilizer
@@ -415,7 +416,19 @@ class UserProfileData(APIView):
     def post(self,request):
         #change to user_id
         id = request.data['user_id']
-        print(request.data)
+        profile_checking_user_id = request.data.get('profile_checking_user_id',None)
+        hass_user_following_current_profile_page_user = False
+        # has_user_already_send_the_follow_request = False
+
+        if(profile_checking_user_id):
+            hass_user_following_current_profile_page_user = Follow.objects.filter(follower=CustomUser\
+            .objects.get(user_id=profile_checking_user_id),followee=CustomUser.objects.get\
+             (user_id=id),is_accepted=True).exists()
+            # if not hass_user_following_current_profile_page_user : # if false then two cases , either follow request not accepted
+            #     has_user_already_send_the_follow_request = Follow.objects.filter(follower=CustomUser\
+            # .objects.get(user_id=profile_checking_user_id),followee=CustomUser.objects.get\
+            #  (user_id=id),is_accepted=False).exists()
+                
         user = CustomUser.objects.get(user_id=id)
         memories_of_user = Memories.objects.filter(user=user)
         return JsonResponse(
@@ -426,5 +439,7 @@ class UserProfileData(APIView):
             'bio':user.bio,
             'fullName':user.full_name,
             'profilePicture':str(user.profile_picture) if user.profile_picture else '',
-            'userMemories':MemoriesWithStatusSerializer(memories_of_user,many=True).data
+            'userMemories':MemoriesWithStatusSerializer(memories_of_user,many=True).data,
+            'hasUserFollowingCurrentProfilePageUser':hass_user_following_current_profile_page_user,
+            # 'hasUserAlreadySendTheFollowRequest' :has_user_already_send_the_follow_request
             } })

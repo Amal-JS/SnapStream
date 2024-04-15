@@ -10,6 +10,7 @@ urlpatterns = [
     path('status/',include('status.urls')),
     path('post/',include('post.urls')),
     path('search/',include('search.urls')),
+    path('follow/',include('follow.urls')),
     
 ]
 
