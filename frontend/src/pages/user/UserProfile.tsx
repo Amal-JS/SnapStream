@@ -43,7 +43,10 @@ interface UserData {
   bio: string;
   fullName: string;
   userMemories?: UserMemoryOrStatus[] | [];
-  hasUserFollowingCurrentProfilePageUser?:boolean
+  hasUserFollowingCurrentProfilePageUser?:boolean,
+  userPostCount:number,
+  userFollowersCount:number,
+  userFollowingCount:number
 }
 
 interface PostData {
@@ -67,6 +70,9 @@ const Profile = () => {
     profilePicture: "",
     fullName: "",
     bio: "",
+  userPostCount : 0,
+  userFollowersCount : 0,
+  userFollowingCount : 0
   });
   const [profilePictureUpdated, setProfilePictureUpdated] = useState(false);
   const navigate = useNavigate();
@@ -408,19 +414,19 @@ const   handleUserFollowOrUnfollow = async ()=>{
             <div>
               <div className="flex mb-7  md:pl-32 ">
                 <h2 className=" dark:text-secondary text-primary  text-sm md:text-xl mr-4 ">
-                  2 posts
+                  {userData.userPostCount} posts
                 </h2>
                 <h2
                   className=" dark:text-secondary text-primary  text-sm md:text-xl mr-4 hover:cursor-pointer"
                   onClick={() => showUserFollowers()}
                 >
-                  304 followers
+                  {userData.userFollowersCount} followers
                 </h2>
                 <h2
                   className=" dark:text-secondary text-primary  text-sm md:text-xl hover:cursor-pointer"
                   onClick={() => showUserFollowing()}
                 >
-                  735 following
+                    {userData.userFollowingCount} following
                 </h2>
               </div>
               <div className="md:pl-32 mb-4 p-3">

@@ -11,6 +11,7 @@ from django.views import View
 
 import requests
 from backend  import settings
+from post.models import Post
 from follow.models import Follow
 from status.serilizers import MemoriesWithStatusSerializer
 from status.models import Memories
@@ -417,20 +418,23 @@ class UserProfileData(APIView):
         #change to user_id
         id = request.data['user_id']
         profile_checking_user_id = request.data.get('profile_checking_user_id',None)
-        hass_user_following_current_profile_page_user = False
+        has_user_following_current_profile_page_user = False
         # has_user_already_send_the_follow_request = False
 
         if(profile_checking_user_id):
-            hass_user_following_current_profile_page_user = Follow.objects.filter(follower=CustomUser\
+            has_user_following_current_profile_page_user = Follow.objects.filter(follower=CustomUser\
             .objects.get(user_id=profile_checking_user_id),followee=CustomUser.objects.get\
              (user_id=id),is_accepted=True).exists()
-            # if not hass_user_following_current_profile_page_user : # if false then two cases , either follow request not accepted
+            # if not has_user_following_current_profile_page_user : # if false then two cases , either follow request not accepted
             #     has_user_already_send_the_follow_request = Follow.objects.filter(follower=CustomUser\
             # .objects.get(user_id=profile_checking_user_id),followee=CustomUser.objects.get\
             #  (user_id=id),is_accepted=False).exists()
                 
         user = CustomUser.objects.get(user_id=id)
         memories_of_user = Memories.objects.filter(user=user)
+        user_post_count = Post.objects.filter(user=user).count()
+        user_followers_count = Follow.objects.filter(followee=user).count()
+        user_following_count = Follow.objects.filter(follower=user).count()
         return JsonResponse(
             {'userData':
              {
@@ -440,6 +444,9 @@ class UserProfileData(APIView):
             'fullName':user.full_name,
             'profilePicture':str(user.profile_picture) if user.profile_picture else '',
             'userMemories':MemoriesWithStatusSerializer(memories_of_user,many=True).data,
-            'hasUserFollowingCurrentProfilePageUser':hass_user_following_current_profile_page_user,
+            'hasUserFollowingCurrentProfilePageUser':has_user_following_current_profile_page_user,
+            'userPostCount' :user_post_count,
+            'userFollowersCount':user_followers_count,
+            'userFollowingCount':user_following_count
             # 'hasUserAlreadySendTheFollowRequest' :has_user_already_send_the_follow_request
             } })
