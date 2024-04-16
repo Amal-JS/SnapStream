@@ -57,6 +57,12 @@ interface PostData {
   location ?: string
 }
 
+interface FollowerData {
+  username:string,
+  fullName:string,
+  profilePictureUrl:string,
+  userId:string
+}
 const Profile = () => {
   const [activeTab, setActiveTab] = useState("profile");
   const { isModalOpened, handleModalToggle } = useModal();
@@ -96,6 +102,9 @@ const Profile = () => {
   const parms = useParams()
   const [isFollowOrUnfollowSuccessfull,setFollowOrUnfollowSuccessfull] = useState<boolean>(false)
   const [profileToggle,setProfileToggle] = useState<boolean>(false)
+
+  const [followerOrFolloweeData,setFollowerOrFolloweeData] = useState<FollowerData[] | []>([])
+  const [follwerOrFolloweeContent,setfollowerOrFolloweeContent] = useState<JSX.Element | null>(null)
   //update user data in profile
   const fetchUserData = async () => {
     const response = await axiosInstance.post(
@@ -138,7 +147,6 @@ const Profile = () => {
 
   //fetch data based on the initiall call
   const handleUserSelectedTabDataPosts = async ()=>{
-    console.log('parms.user id ',parms.userId)
       const response = await axiosInstance.get(postPath+`post/?userId=${parms.userId ? parms.userId : userId}`)
       if(response.data.posts){
         setUserPostData(response.data.posts)
@@ -163,27 +171,69 @@ const Profile = () => {
     handleUserSelectedTabDataSaved()
   },[selectedTab,profileToggle])
 
+  const  handleContentCreationFollowerFollwee = (usersData:FollowerData[] | [])=>{
+    setfollowerOrFolloweeContent(<div>
+      {
+        followerOrFolloweeData.length > 0 ?
+        
+        usersData.map(follower=>{
+          return <div className="w-full  p-3 my-2 flex hover:cursor-pointer border-b-2 border-b-secondary-border dark:border-b-primary-border" 
+          key={follower.userId} > 
+                       <Link to={`/user/${follower.userId}/`}  replace className="w-full flex" >
+                                  <div className="w-5/12 md:w-3/12 flex items-center ">
+                                  <img className="w-16 h-16 rounded-[50%]" src={follower.profilePictureUrl ? mediaPath+follower.profilePictureUrl : 'sldjfl'} />
+                                  </div>
+                                  <div className="7/12 md:w-9/12">
+                                  <p className="ml-3 my-2 text-primary dark:text-secondary text-base   text-start">{follower.username}</p>
+                                  <p className="ml-3 my-2 text-primary dark:text-secondary text-[12px] text-start">{follower.fullName}</p>
+                                  </div>
+                                  </Link>
+                                  </div>
+        })
+        :
+         <p className="text-center text-base text-primary dark:text-secondary my-5">No followers.</p>
+      }
+      </div>)
+  }
+
+  useEffect(()=>{
+   handleContentCreationFollowerFollwee(followerOrFolloweeData.length > 0 ? followerOrFolloweeData : [])
+    console.log('use effect followe or er content changed',followerOrFolloweeData);
+    
+  },[followerOrFolloweeData])
+
+
   const handleProfileToggle = ()=>{
     parms.userId ? setProfileToggle(true) : setProfileToggle(false) }
-  const showUserFollowers = () => {
-    console.log("all follower");
 
-    setModalContent((prev) => ({
-      isDismissable: true,
-      modalToggle: isModalOpened,
-      title: "Followers",
-      handleModalToggle: handleModalToggle,
-    }));
+
+  const showUserFollowers = () => {
+    const fetchUserFollowers = async ()=>{
+      console.log(parms.userId ? 'parms call' : 'userID call');
+      
+        const response = await axiosInstance.get(`follow/?user_id=${parms.userId ? parms.userId : userId}`)
+        if (response.data.followersData){
+          setFollowerOrFolloweeData(response.data.followersData)
+        }else{
+          customErrorToast("Couldn't get followers now.please try again later")
+        }
+    }
+
+    fetchUserFollowers()
     handleModalToggle();
   };
+
   const showUserFollowing = () => {
-    console.log("all following");
-    setModalContent((prev) => ({
-      isDismissable: true,
-      modalToggle: isModalOpened,
-      title: "Following",
-      handleModalToggle: handleModalToggle,
-    }));
+    const fetchUserFollowing = async ()=>{
+        const response = await axiosInstance.get(`follow/?user_id=${parms.userId ? parms.userId : userId}&followee=true`)
+        if (response.data.followersData){
+          setFollowerOrFolloweeData(response.data.followersData)
+        }else{
+          customErrorToast("Couldn't get followers now.please try again later")
+        }
+    }
+
+    fetchUserFollowing()
     handleModalToggle();
   };
 
@@ -297,9 +347,7 @@ const Profile = () => {
     setToggleMemory(false);
   }, [toggleMemory]);
 
-  // console.log("toggle open status ", toggleMemory);
-  // console.log('user posts ',userPostData);
-
+  
   const handleUserClickedPost = (postData : PostData)=>{
     setShowPost(prev => !prev)
     setSeletedPost(postData)
@@ -320,10 +368,14 @@ const   handleUserFollowOrUnfollow = async ()=>{
 }
 }
 
-
+const handleFollowModalClose = ()=>{
+  setFollowerOrFolloweeData([])
+  console.log('close empty setFollowerOrFolloweeData([])',followerOrFolloweeData);
+  
+}
   return (
     <>
-      {isModalOpened && modalContent && (
+      {/* {isModalOpened && modalContent && (
         <CustomModal
           isDismissable={modalContent.isDismissable}
           modalToggle={modalContent.isDismissable}
@@ -335,7 +387,18 @@ const   handleUserFollowOrUnfollow = async ()=>{
           ></ModalTitle>
           <ModalBody>{modalContent && modalContent.content}</ModalBody>
         </CustomModal>
-      )}
+      )} */}
+
+      {isModalOpened && followerOrFolloweeData &&
+      <CustomModal isDismissable={true} modalToggle={isModalOpened} handleOnClose={handleFollowModalClose}>
+        <ModalTitle handleModalToggle={handleModalToggle} isDismissable={true}/>
+        <ModalBody >
+          {
+            follwerOrFolloweeContent
+          }
+        </ModalBody>
+        </CustomModal>
+      }
       <div className="w-full  p-2 dark:bg-primary bg-secondary md:pl-64 mb-5">
         {/* profile first secion */}
         <div className=" dark:border-primary-border border-secondary-border border-b-2  mt-6">

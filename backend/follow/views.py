@@ -3,11 +3,23 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 
 from auth_app.models import CustomUser
+from follow.serializers import FollowingSerializer
+from follow.serializers import FollowerSerializer
 from follow.models import Follow
 
 
 
 class FollowOrUnfollow(APIView):
+    def get(self,request):
+        user_id = request.GET.get('user_id',None)
+        user = CustomUser.objects.get(user_id=user_id)
+        if request.GET.get('followee',None):
+            followers= Follow.objects.filter( follower=user)
+            serializer = FollowingSerializer(followers,many=True)
+        else:
+            followee = Follow.objects.filter(followee=user)
+            serializer= FollowerSerializer(followee,many=True)
+        return JsonResponse({'followersData':serializer.data})
     def post(self,request):
         try:
             
