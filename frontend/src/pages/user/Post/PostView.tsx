@@ -134,7 +134,7 @@ export const PostView: React.FC<PostViewProps> = ({
       ></ModalTitle>
       <ModalBody>
         <div className="w-full  h-full bg-secondary dark:bg-primary p-5 ">
-          {/* <PostHeader postHeaderData={post}/> */}
+          <PostHeader postHeaderData={post}/>
           <div className="w-full bg-secondary my-2 dark:bg-primary md:flex md:justify-center">
             <div className=" mb-3 md:w-1/2">
               <img

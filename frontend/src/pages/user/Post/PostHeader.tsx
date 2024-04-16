@@ -85,9 +85,16 @@ export const PostHeader : React.FC<PostHeaderProps>= ({postHeaderData})=>{
 
 </DropdownTrigger>
 <DropdownMenu aria-label="Static Actions">
-  <DropdownItem key="new" onClick={() => navigate(`/editpost/${postHeaderData.id}/`)}>Edit</DropdownItem>
   <DropdownItem key="copy">Report</DropdownItem>
-  
+  {userId === postHeaderData.userId ? (
+      <DropdownItem  className="text-danger" onClick={() => navigate(`/editpost/${postHeaderData.id}/`)}>
+        Edit
+      </DropdownItem> )
+      :
+     ( <DropdownItem  className="hidden" >
+        Not showing this
+      </DropdownItem>
+    )}
     {userId === postHeaderData.userId ? (
       <DropdownItem  className="text-danger" onClick={handleDeletePost}>
         Delete file
