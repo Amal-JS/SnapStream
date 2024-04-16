@@ -88,8 +88,8 @@ const Profile = () => {
     location : ''
   })
   const parms = useParams()
-  const [isProfilePictureUpdating,setProfilePictureUpdating] = useState<boolean>(false)
   const [isFollowOrUnfollowSuccessfull,setFollowOrUnfollowSuccessfull] = useState<boolean>(false)
+  const [profileToggle,setProfileToggle] = useState<boolean>(false)
   //update user data in profile
   const fetchUserData = async () => {
     const response = await axiosInstance.post(
@@ -112,9 +112,9 @@ const Profile = () => {
         dispatch(
           userProfilePictureUpdated({ profilePictureUrl: profilePictureUrl })
         );
-        setProfilePictureUpdating(false)
         setProfilePictureUpdated(false)
       }
+      
     }
   };
 
@@ -126,21 +126,22 @@ const Profile = () => {
 
   useEffect(() => {
     fetchUserData();
+    handleUserSelectedTabDataPosts()
   }, [parms.userId]);
 
 
   //fetch data based on the initiall call
   const handleUserSelectedTabDataPosts = async ()=>{
-      const response = await axiosInstance.get(postPath+`post/?userId=${userId}`)
+    console.log('parms.user id ',parms.userId)
+      const response = await axiosInstance.get(postPath+`post/?userId=${parms.userId ? parms.userId : userId}`)
       if(response.data.posts){
         setUserPostData(response.data.posts)
-        console.log(response.data.posts);
       }else{
         customErrorToast("Couldn't get the posts now.Try again later.")
       }
   }
   const handleUserSelectedTabDataSaved = async ()=>{
-    const response = await axiosInstance.get(postPath+`saved/?user_id=${userId}`)
+    const response = await axiosInstance.get(postPath+`saved/?user_id=${parms.userId ? parms.userId : userId}`)
     if(response.data.posts){
       setUserPostData(response.data.posts)
       console.log(response.data.posts);
@@ -154,8 +155,10 @@ const Profile = () => {
     handleUserSelectedTabDataPosts()
     : selectedTab === 'saved' &&
     handleUserSelectedTabDataSaved()
-  },[selectedTab])
+  },[selectedTab,profileToggle])
 
+  const handleProfileToggle = ()=>{
+    parms.userId ? setProfileToggle(true) : setProfileToggle(false) }
   const showUserFollowers = () => {
     console.log("all follower");
 
@@ -177,6 +180,7 @@ const Profile = () => {
     }));
     handleModalToggle();
   };
+
   const createNewMemory = () => {
     console.log("create new memory");
     setModalContent((prev) => ({
@@ -225,7 +229,6 @@ const Profile = () => {
    // Reload the component when follow or unfollow state changes
    useEffect(() => {
  fetchUserData()
- console.log('is follow calling ');
  isFollowOrUnfollowSuccessfull && setFollowOrUnfollowSuccessfull(prev => !prev)
    }, [isFollowOrUnfollowSuccessfull]);
  
@@ -234,7 +237,6 @@ const Profile = () => {
 
   //upload profile picture
   const handleUploadProfilePicture = () => {
-    setProfilePictureUpdating(true)
     const modalContent = () => {
       return (
         <>

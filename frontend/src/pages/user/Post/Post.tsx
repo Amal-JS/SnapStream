@@ -110,7 +110,6 @@ export const Post : React.FC<PostDataProps> = React.memo(({postData}) => {
       if(response.data.posts && response.status === 200){
           
           setPost(response.data.posts)
-          console.log(response.data.posts)
           setCommentCount(response.data.posts.totalCommentsCount)
       
       }else{
