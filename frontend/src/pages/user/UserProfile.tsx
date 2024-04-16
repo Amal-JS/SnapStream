@@ -516,7 +516,7 @@ const handleFollowModalClose = ()=>{
             {userData.userMemories &&
               userData.userMemories.map((memory) => {
                 return (
-                  <>
+                  <div>
                     {memory.name && (
                       <Status
                         key={memory.id}
@@ -525,7 +525,7 @@ const handleFollowModalClose = ()=>{
                         profilePictureUrl={memory.media?.slice(6)}
                       />
                     )}
-                  </>
+                  </div>
                 );
               })}
           </div>
