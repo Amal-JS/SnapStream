@@ -55,8 +55,17 @@ class PostView(APIView):
         return JsonResponse({'postCreated':False})
     def patch(self,request):
         try:
-            new_post_data = request.data
-            print(new_post_data)
+            updated_post_data = request.data
+            post_id = updated_post_data['id']
+            description = updated_post_data['description']
+            location = updated_post_data['location']
+            media = request.FILES.get('media',None)
+            post = Post.objects.get(id=post_id)
+            post.description = description
+            post.location = location
+            if media:
+                post.media = media
+            post.save()
             return JsonResponse({'postUpdated':True})
         except Exception as e:
             print('Exception on post updation :',e)

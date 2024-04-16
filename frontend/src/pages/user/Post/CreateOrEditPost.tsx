@@ -7,6 +7,7 @@ import { Image } from "@nextui-org/react";
 import { SideNav } from "../SideNav";
 import { TextArea } from "../../../Components/Form/TextArea";
 import { customErrorToast } from "../../../Toast";
+import { mediaPath } from "../../../utils/url";
 
 interface PostData {
     id?:string
@@ -34,7 +35,7 @@ export const CreateOrEditPost : React.FC<CreateOrEditProps>= ({purpose = '',post
     })
 
 
-
+  
     const [postError,setPostError] = useState<PostError>({
         description:'',
         media:''
@@ -107,15 +108,16 @@ export const CreateOrEditPost : React.FC<CreateOrEditProps>= ({purpose = '',post
             if(postData){
                 setNewPostData(postData)
             }
-    },[])
+    },[postData && postData.id])
+
     return (
         <SideNav>
         <div className="flex justify-center mt-24 p-2 ">
             <div className="w-full mx-2 my-3 md:w-2/4 px-2 py-4  border-3 border-secodary-border dark:border-primary-border">
                 <p className="text-4xl mb-7 text-primary dark:text-secondary text-center">{purpose ? purpose : 'Create'} post</p>
                 {/* <TextInput handleChange={handleOnChange} name="description" placeholder="Tell about the post.." error={postError.description} Icon={PiNotepadBold}/> */}
-                <TextArea name='description' placeholder={` ${postData ? postData.description : 'Tell about the post..'}`} error={postError.description} handleChange={handleOnChange}/>
-                <TextInput handleChange={handleOnChange} placeholder={` ${postData ? postData.location : 'Mention the location.if you want..'}`} name="location"  error={''} Icon={MdLocationPin}/>
+                <TextArea name='description' placeholder={` ${newPostData ? newPostData.description : 'Tell about the post..'}`} error={postError.description} handleChange={handleOnChange}/>
+                <TextInput handleChange={handleOnChange} placeholder={` ${newPostData ? newPostData.location : 'Mention the location.if you want..'}`} name="location"  error={''} Icon={MdLocationPin}/>
                 <div className="mt-7 mb-10 flex" >
             <label htmlFor="media" className="px-6 w-2/4 text-primary dark:text-gray-400 text-small md:text-xl font-medium">Select  Image</label>
             <input type="file" id='media' name='media' onChange={handleOnChange} />
@@ -124,7 +126,7 @@ export const CreateOrEditPost : React.FC<CreateOrEditProps>= ({purpose = '',post
             newPostData && newPostData.media ?
             <div className="flex justify-center object-cover">
               {typeof newPostData.media === 'string' ? (
-                <img className={`my-5 h-96 md:h-[550px]`} src={newPostData.media} />
+                <img className={`my-5 h-96 md:h-[550px]`} src={mediaPath+newPostData.media} />
               ) : (
                 <img
                   className={`my-5 h-96 md:h-[550px]`}
@@ -136,11 +138,11 @@ export const CreateOrEditPost : React.FC<CreateOrEditProps>= ({purpose = '',post
             </div>
             : postData && postData.media && 
         <div className="flex justify-center object-cover">
-            <img className={`my-5 h-96 md:h-[550px]`} src={postData.media as string}/>
+            <img className={`my-5 h-96 md:h-[550px]`} src={mediaPath+postData.media as string}/>
         </div>
         }
        
-  
+     
         <CustomButton formFilled={formFilled} handleOnClick={handleOnClick} label={`${purpose === 'Create' ? 'Create' : 'Update'}`}  handleOnPress={handleEmptyFormSubmission}/>
         
       
