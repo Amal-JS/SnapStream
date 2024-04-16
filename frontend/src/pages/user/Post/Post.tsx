@@ -30,8 +30,11 @@ interface PostDataType {
   totalLikesCount:number
 }
 
+interface PostData{
+  id:string
+}
 interface PostDataProps {
-  postData :PostDataType
+  postData:PostData
 }
 
 export const Post : React.FC<PostDataProps> = React.memo(({postData}) => {
@@ -90,7 +93,7 @@ export const Post : React.FC<PostDataProps> = React.memo(({postData}) => {
   };
 
   useEffect(()=>{
-    setFullDescription(postData.description)},[])
+    setFullDescription(post.description)},[])
 
   const handleShowFullContent = ()=> {
     setShowLess(prev => !prev)
@@ -151,7 +154,7 @@ if(commentCount == 0 ){
         />
 </div> 
         <div className=" mt-3">
-         <PostAction post={postData} handleShowCommentsDiv={handleComment}/>
+         <PostAction post={post} handleShowCommentsDiv={handleComment}/>
         </div>
 
      

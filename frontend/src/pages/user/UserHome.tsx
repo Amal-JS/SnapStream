@@ -9,17 +9,6 @@ import { customErrorToast } from "../../Toast";
 
 interface PostData {
     id:string,
-    media:string,
-    description:string,
-    location?:string,
-    userId:string,
-    username:string,
-    profilePictureUrl:string,
-    isUserCommentedOnPost :boolean,
-    isUserSavedThePost:boolean,
-    isUserLikedThePost:boolean,
-    totalCommentsCount:number,
-    totalLikesCount:number
 }
 
  const UserHomeComponent = ()=> {
