@@ -15,6 +15,7 @@ import { useAppSelector } from "../../../hooks/redux";
 interface PostViewProps {
   postDataIdUserClicked: string;
   openModal: boolean;
+  profileVisitingUserId?:string | null
 }
 
 interface PostDataType {
@@ -35,6 +36,7 @@ interface PostDataType {
 export const PostView: React.FC<PostViewProps> = ({
   postDataIdUserClicked,
   openModal,
+  profileVisitingUserId
 }) => {
   const { isModalOpened, handleModalToggle } = useModal(true);
   const [commentsCount, setCommentsCount] = useState<number>(0);
@@ -62,7 +64,7 @@ export const PostView: React.FC<PostViewProps> = ({
 
   const fetchUserPosts = async () => {
     const response = await axiosInstance.get(
-      postPath + `post/?post_id=${postDataIdUserClicked}`
+      postPath + `post/?post_id=${postDataIdUserClicked}&userId=${profileVisitingUserId ? profileVisitingUserId : ''}`
     );
 
     if (response.data.posts && response.status === 200) {

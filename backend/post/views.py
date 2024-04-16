@@ -14,8 +14,9 @@ class PostView(APIView):
     def get(self,request):
         user_id = request.GET.get('userId',None)
         post_id = request.GET.get('post_id',None)
+        print(request.data)
         user = None
-        if user_id:
+        if user_id and not post_id:
             user = CustomUser.objects.get(user_id = user_id)
             posts = Post.objects.filter(user=user)
             serilizer = UserHomePostSerilizer(posts,many=True)
@@ -29,8 +30,11 @@ class PostView(APIView):
             return JsonResponse({'posts':serilizer_data},status=200)
         if post_id:
             post = Post.objects.get(id=post_id)
+            
             serilizer = UserHomePostSerilizer(post)
-            user = post.user
+            if user_id:
+                user = CustomUser.objects.get(user_id=user_id)
+            user = user if user else post.user
             serilizer_data_copy = dict(serilizer.data.copy())
             serilizer_data_copy['isUserCommentedOnPost'] = True if Comment.objects.filter(user=user,post=post).exists() else False
             serilizer_data_copy['isUserSavedThePost'] = True if Saved.objects.filter(user=user,post=post).exists() else False

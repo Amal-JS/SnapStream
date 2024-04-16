@@ -581,7 +581,7 @@ const   handleUserFollowOrUnfollow = async ()=>{
         {/* posts */}
       </div>
       {showPost &&
-      <PostView  openModal={showPost} postDataIdUserClicked={selectedPost.id}/>
+      <PostView  openModal={showPost} postDataIdUserClicked={selectedPost.id} profileVisitingUserId={parms.userId && userId && userId} />
       }
 
 
