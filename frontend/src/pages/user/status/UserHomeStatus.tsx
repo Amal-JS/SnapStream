@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { Key, useEffect, useState } from "react"
 import { useAppSelector } from "../../../hooks/redux"
 import { Status } from "./Status"
 import { CreateStatus } from "./CreateStatus"
@@ -16,12 +16,19 @@ interface UserStatus {
     
 }
 
+interface UserFollowerStatus {
+    id:string,
+    profilePictureUrl:string,
+    username:string
+}
+
+
 export const UserHomeStatus = () =>{
     const loggedUserProfilePicture = useAppSelector(state => state.user.profilePictureUrl)
     const [showUserStatuses,setShowUserStatuses] = useState<boolean>(false)
     const {isModalOpened,handleModalToggle} = useModal()
     const userId = useAppSelector(state => state.user.userId)
-
+    const [userFollowerStatuses,setUserActiveStatusesFollowerStatuses] = useState<UserFollowerStatus[] | []>([])
     // open modal to create status
     const handleUserCreateStatus = ()=>{
        handleModalToggle()
@@ -39,18 +46,25 @@ const getUserCurrentActiveStatuses = async ()=>{
 
         const response = await axiosInstance.post(statusRoot + 'userStatus/',{'user_id':userId})
         if(response.data.statuses){
-            setUserActiveStatuses(response.data.statuses[0])
-            if(response.data.statuses[0].length == 0){
-                customErrorToast('No active status for user')
+            console.log(response.data)
+            setUserActiveStatuses(response.data.statuses)
+            if (response.data.userFollowerStatuses[0]) {
+                // Set follower statuses to state
+                setUserActiveStatusesFollowerStatuses(response.data.userFollowerStatuses);
             }
         }
         else{
             customErrorToast("Status can't be accessed now")
         }
     }
+
+    // useEffect(()=>{console.log(userFollowerStatuses, ' useEffect')
+
+// },[userFollowerStatuses])
+    useEffect(()=>{
+        getUserCurrentActiveStatuses()},[])
     //toggle to show status
     const handleOpenStatus =()=>{
-        getUserCurrentActiveStatuses()
          
         if(userActiveStatuses?.length == 0){
          
@@ -69,25 +83,15 @@ const getUserCurrentActiveStatuses = async ()=>{
                 
                 />
             
-                <Status handleOpenStatus={handleOpenStatus}  statusName={'View Story'} profilePictureUrl={loggedUserProfilePicture}/>
-                <Status handleOpenStatus={handleOpenStatus}  statusName={'View Story'} profilePictureUrl={loggedUserProfilePicture}/>
-                <Status handleOpenStatus={handleOpenStatus}  statusName={'View Story'} profilePictureUrl={loggedUserProfilePicture}/>
-                <Status handleOpenStatus={handleOpenStatus}  statusName={'View Story'} profilePictureUrl={loggedUserProfilePicture}/>
-                <Status handleOpenStatus={handleOpenStatus}  statusName={'View Story'} profilePictureUrl={loggedUserProfilePicture}/>
-                <Status handleOpenStatus={handleOpenStatus}  statusName={'View Story'} profilePictureUrl={loggedUserProfilePicture}/>
-                <Status handleOpenStatus={handleOpenStatus}  statusName={'View Story'} profilePictureUrl={loggedUserProfilePicture}/>
-                <Status handleOpenStatus={handleOpenStatus}  statusName={'View Story'} profilePictureUrl={loggedUserProfilePicture}/>
-                <Status handleOpenStatus={handleOpenStatus}  statusName={'View Story'} profilePictureUrl={loggedUserProfilePicture}/>
-                <Status handleOpenStatus={handleOpenStatus}  statusName={'View Story'} profilePictureUrl={loggedUserProfilePicture}/>
-                <Status handleOpenStatus={handleOpenStatus}  statusName={'View Story'} profilePictureUrl={loggedUserProfilePicture}/>
-                <Status handleOpenStatus={handleOpenStatus}  statusName={'View Story'} profilePictureUrl={loggedUserProfilePicture}/>
-                <Status handleOpenStatus={handleOpenStatus}  statusName={'View Story'} profilePictureUrl={loggedUserProfilePicture}/>
-                <Status handleOpenStatus={handleOpenStatus}  statusName={'View Story'} profilePictureUrl={loggedUserProfilePicture}/>
-                <Status handleOpenStatus={handleOpenStatus}  statusName={'View Story'} profilePictureUrl={loggedUserProfilePicture}/>
-                <Status handleOpenStatus={handleOpenStatus}  statusName={'View Story'} profilePictureUrl={loggedUserProfilePicture}/>
-                <Status handleOpenStatus={handleOpenStatus}  statusName={'View Story'} profilePictureUrl={loggedUserProfilePicture}/>
-                <Status handleOpenStatus={handleOpenStatus}  statusName={'View Story'} profilePictureUrl={loggedUserProfilePicture}/>
-            
+            {userFollowerStatuses.length > 0 &&
+            userFollowerStatuses.map(status=>{
+                return  <Status key={status[0].id} handleOpenStatus={handleOpenStatus}  statusName={status[0].username} profilePictureUrl={status[0].profilePictureUrl}/>
+               
+
+            })
+            }
+               
+               
             {isModalOpened &&
             <CreateStatus handleUserActiveStatuses={handleUserActiveStatuses} isModalOpened={isModalOpened} handleModalToggle={handleModalToggle}/>
             }

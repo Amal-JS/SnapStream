@@ -21,3 +21,16 @@ class MemoriesWithStatusSerializer(serializers.ModelSerializer):
     class Meta:
         model = Memories
         fields = ['id', 'name', 'description', 'media','authorId']
+
+
+
+class FollowerStatusSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source='user.username')
+    profilePictureUrl = serializers.CharField(source='user.profile_picture.url')
+    class Meta:
+        model = Memories
+        fields = ['id','username','profilePictureUrl']
+
+
+
+

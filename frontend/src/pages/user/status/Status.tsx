@@ -16,7 +16,10 @@ interface StatusProps {
 
 }
 
+
 export const Status :React.FC<StatusProps>= ({isShowingMemory = false, handleUserCreateStatus,statusName,profilePictureUrl,handleOpenStatus})=>{
+    
+    // console.log(statusName,profilePictureUrl);
     return (
         
         <div className={`text-center hover:cursor-pointer ml-4 min-w-[100px] `} >
@@ -29,6 +32,9 @@ export const Status :React.FC<StatusProps>= ({isShowingMemory = false, handleUse
           alt="profile picture"
           onClick={handleOpenStatus}
           src={profilePictureUrl ?
+            profilePictureUrl.startsWith('/media') ?
+            `http://localhost:8000/${profilePictureUrl}`
+            :
           `http://localhost:8000/media/${profilePictureUrl}`
            : "https://img.freepik.com/premium-vector/user-profile-icon-flat-style-member-avatar-vector-illustration-isolated-background-human-permission-sign-business-concept_157943-15752.jpg?size=338&ext=jpg&ga=GA1.1.1700460183.1708473600&semt=ais"
        }
@@ -45,8 +51,8 @@ export const Status :React.FC<StatusProps>= ({isShowingMemory = false, handleUse
 <div className="w-50 flex justify-center">
 <div className="w-50 ">
 
-          <p className="text-sm  dark:text-secondary text-primary mt-2" style={{fontSize:'10px'}}>{statusName.slice(0,10)}</p>
-          <p className="md:text-sm dark:text-secondary text-primary" style={{fontSize:'10px'}}>{statusName.slice(11,20)}</p>
+          <p className="text-sm  dark:text-secondary text-primary mt-2" style={{fontSize:'10px'}}>{statusName}</p>
+          {/* <p className="md:text-sm dark:text-secondary text-primary" style={{fontSize:'10px'}}>{statusName.slice(11,20)}</p> */}
        
         
 </div>

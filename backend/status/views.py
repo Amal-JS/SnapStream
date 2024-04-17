@@ -4,7 +4,8 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from django.db.models import Q
 from auth_app.models import CustomUser
-from status.serilizers import MemoriesSerilizer
+from status.serilizers import FollowerStatusSerializer
+from follow.models import Follow
 from status.serilizers import StatusSerilizer
 from .models import Memories, Status
 from django.core.exceptions import ValidationError
@@ -20,6 +21,15 @@ def get_user_active_statues(user):
                 serializer = StatusSerilizer(user_current_active_statuses,many=True)
                 return serializer.data
 
+def get_user_follwing_active_statues(user):
+     # Get current active statuses within the last 24 hours
+                now = datetime.datetime.now()
+                twenty_four_hours_ago = now - datetime.timedelta(hours=24)
+                user_current_active_statuses = Status.objects.filter(
+                    Q(user=user) & Q(created_at__gte=twenty_four_hours_ago)
+                )
+                serializer = FollowerStatusSerializer(user_current_active_statuses,many=True)
+                return serializer.data
 
 class UserStatus(APIView):
     def get(self,request):
@@ -37,7 +47,7 @@ class UserStatus(APIView):
                 
     def post(self, request):
         try:
-            user_id = request.data.get('user_id')
+            user_id = request.data['user_id']
             user = CustomUser.objects.get(user_id=user_id)
             description = request.data.get('description')
             # Get media file from request.FILES
@@ -49,8 +59,16 @@ class UserStatus(APIView):
                     print(status.media,status.description)
                 # get the active statues
                 response = get_user_active_statues(user)
-                return JsonResponse({'statuses': [response], 'statusCreationSuccess': True})
-            except ValidationError as e:
+                user_following = Follow.objects.filter(followee=user)
+                user_following_data = []
+                for follow in user_following:
+                    #  follower_user = CustomUser.objects.get(id=follower)
+                     active_statuses = get_user_follwing_active_statues(follow.follower)
+                     if active_statuses:
+                          user_following_data.append(get_user_follwing_active_statues(follow.follower)) 
+                print(user_following_data)
+                return JsonResponse({'statuses': response, 'statusCreationSuccess': True,'userFollowerStatuses':user_following_data})
+            except Exception as e:
                 print(e)
                 return JsonResponse({'error': str(e)}, status=400)
         except Exception as e:
