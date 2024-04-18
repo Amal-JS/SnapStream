@@ -70,7 +70,7 @@ export const SearchModal :React.FC<ModalProps> = ({isModalOpened,handleModalTogg
                     > 
                  <Link to={`/user/${user.userId}/`}  replace className="w-full flex" >
                             <div className="w-5/12 md:w-3/12 flex items-center ">
-                            <img className="w-16 h-16 rounded-[50%]" src={user.profilePictureUrl ? mediaPath+user.profilePictureUrl : 'sldjfl'} />
+                            <img className="w-16 h-16 rounded-[50%]" src={user.profilePictureUrl ? mediaPath+user.profilePictureUrl : 'https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0='} />
                             </div>
                             <div className="7/12 md:w-9/12">
                             <p className="ml-3 my-2 text-primary dark:text-secondary text-base   text-start">{user.username}</p>

@@ -19,7 +19,7 @@ interface UserMemoryOrStatus {
     description?:string,
     media?:string,
     authorId:string,
-    name?:string
+    name?:string,
     
 }
 
@@ -28,10 +28,12 @@ interface OpenStatus {
     showStatus:boolean,
     isOpenedForMemory?:boolean
     handleStatusOrMemoryDeleted?:()=>void,
-    handleToggleState?:()=>void
+    handleToggleState?:()=>void,
+    
+    handleOnClose?:()=>void
 }
 
-export const OpenStatus :React.FC<OpenStatus> = React.memo(({handleToggleState,handleStatusOrMemoryDeleted,userActiveStatuses,showStatus,isOpenedForMemory = false})=>{
+export const OpenStatus :React.FC<OpenStatus> = React.memo(({handleToggleState,handleStatusOrMemoryDeleted,userActiveStatuses,showStatus,isOpenedForMemory = false,handleOnClose})=>{
 
     const [isModalOpened,setModalToggle] = useState(false)
     const darkThemeEnabled = useAppSelector(state => state.user.darkTheme)
@@ -152,7 +154,7 @@ export const OpenStatus :React.FC<OpenStatus> = React.memo(({handleToggleState,h
   
     return(
         <>
-            <CustomModal isDismissable={true} modalToggle={isModalOpened} >
+            <CustomModal isDismissable={true} modalToggle={isModalOpened} handleOnClose={handleOnClose} >
                 <ModalTitle handleModalToggle={handleModalToggle} isDismissable={true}/>
                 <ModalBody>
                     <div className="h-screen p-3 bg-secondary dark:bg-primary">

@@ -355,7 +355,7 @@ const Profile = () => {
 
 const   handleUserFollowOrUnfollow = async ()=>{
   if(parms.userId){
-    const response = await axiosInstance.post('follow/',{follower_id:userId,followee_id:parms.userId})
+    const response = await axiosInstance.post('follow/',{followee_id:userId,follower_id:parms.userId})
     if(response.data.followeeUnFollowedSuccessfull && response.status == 200){
       customSuccessToast('Unfollowed Successfully.')
       setFollowOrUnfollowSuccessfull(true)
@@ -450,7 +450,7 @@ const handleFollowModalClose = ()=>{
                 
                 <>
                 <Button className="bg-btn-enabled w-24 md:w-36" onClick={handleUserFollowOrUnfollow}>
-                      <h3 className="text-base  font-medium dark:text-secondary text-primary  ">
+                      <h3 className="text-base  font-medium text-secondary  ">
                         {
                           userData.hasUserFollowingCurrentProfilePageUser && userData.hasUserFollowingCurrentProfilePageUser 
                           ?
@@ -464,7 +464,7 @@ const handleFollowModalClose = ()=>{
                   
                  
                   <Button className={`bg-btn-enabled ml-5 md:ml-10 w-24 md:w-36`}>
-                      <h3 className="text-base  font-medium dark:text-secondary text-primary  ">
+                      <h3 className="text-base  font-medium text-secondary   ">
                         Message
                       </h3>
                   </Button>

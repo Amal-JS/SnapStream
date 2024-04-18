@@ -17,7 +17,7 @@ interface UserStatus {
 }
 
 interface UserFollowerStatus {
-    id:string,
+    userId:string,
     profilePictureUrl:string,
     username:string
 }
@@ -29,6 +29,9 @@ export const UserHomeStatus = () =>{
     const {isModalOpened,handleModalToggle} = useModal()
     const userId = useAppSelector(state => state.user.userId)
     const [userFollowerStatuses,setUserActiveStatusesFollowerStatuses] = useState<UserFollowerStatus[] | []>([])
+    const [seletedUserFollowerStatuses,setSeletedUserFollowerStatuses] = useState<UserStatus[] | []>([])
+    const [toggleFollowerStaus,setToggleFollowerStatus] = useState<boolean>(false)
+    const [showUserFollowerStatuses,setShowUserFollowerStatuses] = useState<boolean>(false)
     // open modal to create status
     const handleUserCreateStatus = ()=>{
        handleModalToggle()
@@ -46,9 +49,9 @@ const getUserCurrentActiveStatuses = async ()=>{
 
         const response = await axiosInstance.post(statusRoot + 'userStatus/',{'user_id':userId})
         if(response.data.statuses){
-            console.log(response.data)
+            // console.log(response.data)
             setUserActiveStatuses(response.data.statuses)
-            if (response.data.userFollowerStatuses[0]) {
+            if (response.data.userFollowerStatuses) {
                 // Set follower statuses to state
                 setUserActiveStatusesFollowerStatuses(response.data.userFollowerStatuses);
             }
@@ -73,6 +76,22 @@ const getUserCurrentActiveStatuses = async ()=>{
         }
        
     }
+
+    const handleOpenUserFollowerStatus = async (userId:string)=>{
+const response =  await axiosInstance.get(statusRoot+`?user_id=${userId}`)
+        if (response.data.statuses){
+            setSeletedUserFollowerStatuses(response.data.statuses)
+            setToggleFollowerStatus(prev => !prev)
+        }else{
+            customErrorToast("Status can't be accessed now")
+        }
+
+    }
+    const handleOnCloseToggleFollowerStatus =  ()=>{
+        setShowUserFollowerStatuses(prev => !prev)
+        setSeletedUserFollowerStatuses([])
+        setToggleFollowerStatus(prev => !prev)
+    }
     return(
         <>
         <div className="border-2 border-t-0 px-3  dark:border-primary-border border-secondary-border py-2 bg:secondary
@@ -85,7 +104,7 @@ const getUserCurrentActiveStatuses = async ()=>{
             
             {userFollowerStatuses.length > 0 &&
             userFollowerStatuses.map(status=>{
-                return  <Status key={status[0].id} handleOpenStatus={handleOpenStatus}  statusName={status[0].username} profilePictureUrl={status[0].profilePictureUrl}/>
+                return  <Status key={status.userId} handleOpenStatus={()=>handleOpenUserFollowerStatus(status.userId)}  statusName={status.username} profilePictureUrl={status.profilePictureUrl}/>
                
 
             })
@@ -96,7 +115,11 @@ const getUserCurrentActiveStatuses = async ()=>{
             <CreateStatus handleUserActiveStatuses={handleUserActiveStatuses} isModalOpened={isModalOpened} handleModalToggle={handleModalToggle}/>
             }
             {showUserStatuses &&
-            <OpenStatus userActiveStatuses={userActiveStatuses ? userActiveStatuses : []} showStatus={showUserStatuses}/>
+            <OpenStatus userActiveStatuses={userActiveStatuses ? userActiveStatuses : []} showStatus={showUserStatuses} handleOnClose={handleOnCloseToggleFollowerStatus}/>
+            }
+
+{toggleFollowerStaus &&
+            <OpenStatus userActiveStatuses={seletedUserFollowerStatuses} showStatus={showUserFollowerStatuses}/>
             }
                  </div>
             </div>

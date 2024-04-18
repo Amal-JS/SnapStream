@@ -422,8 +422,8 @@ class UserProfileData(APIView):
         # has_user_already_send_the_follow_request = False
 
         if(profile_checking_user_id):
-            has_user_following_current_profile_page_user = Follow.objects.filter(follower=CustomUser\
-            .objects.get(user_id=profile_checking_user_id),followee=CustomUser.objects.get\
+            has_user_following_current_profile_page_user = Follow.objects.filter(followee=CustomUser\
+            .objects.get(user_id=profile_checking_user_id),follower=CustomUser.objects.get\
              (user_id=id),is_accepted=True).exists()
             # if not has_user_following_current_profile_page_user : # if false then two cases , either follow request not accepted
             #     has_user_already_send_the_follow_request = Follow.objects.filter(follower=CustomUser\

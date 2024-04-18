@@ -33,6 +33,7 @@ class FollowOrUnfollow(APIView):
                 follow.delete()
                 return JsonResponse({'followeeUnFollowedSuccessfull':True})
             else:
+                print('follower name :',follower.username,' follwee username :',followee.username)
                 follow = Follow(follower=follower,followee=followee,is_accepted=True)
                 follow.save()
             return JsonResponse({'followRequestSendSuccessfull':True})

@@ -4,6 +4,7 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from django.db.models import Q
 from auth_app.models import CustomUser
+from search.serializers import SearchUserSerializer
 from status.serilizers import FollowerStatusSerializer
 from follow.models import Follow
 from status.serilizers import StatusSerilizer
@@ -21,15 +22,14 @@ def get_user_active_statues(user):
                 serializer = StatusSerilizer(user_current_active_statuses,many=True)
                 return serializer.data
 
-def get_user_follwing_active_statues(user):
+def check_user_follwing_active_statues(user):
      # Get current active statuses within the last 24 hours
                 now = datetime.datetime.now()
                 twenty_four_hours_ago = now - datetime.timedelta(hours=24)
-                user_current_active_statuses = Status.objects.filter(
+                user_current_active_statuses_exists = Status.objects.filter(
                     Q(user=user) & Q(created_at__gte=twenty_four_hours_ago)
-                )
-                serializer = FollowerStatusSerializer(user_current_active_statuses,many=True)
-                return serializer.data
+                ).exists()
+                return user_current_active_statuses_exists
 
 class UserStatus(APIView):
     def get(self,request):
@@ -48,6 +48,7 @@ class UserStatus(APIView):
     def post(self, request):
         try:
             user_id = request.data['user_id']
+            print('status call')
             user = CustomUser.objects.get(user_id=user_id)
             description = request.data.get('description')
             # Get media file from request.FILES
@@ -60,13 +61,16 @@ class UserStatus(APIView):
                 # get the active statues
                 response = get_user_active_statues(user)
                 user_following = Follow.objects.filter(followee=user)
+                # print(Follow.objects.filter(follower=user))
                 user_following_data = []
+                print('user_following   ',user_following)
                 for follow in user_following:
                     #  follower_user = CustomUser.objects.get(id=follower)
-                     active_statuses = get_user_follwing_active_statues(follow.follower)
+                     active_statuses = check_user_follwing_active_statues(follow.follower)
                      if active_statuses:
-                          user_following_data.append(get_user_follwing_active_statues(follow.follower)) 
-                print(user_following_data)
+                          user_data_serializer = SearchUserSerializer(follow.follower)
+                          user_following_data.append(user_data_serializer.data) 
+                print('user_following_data    ',user_following_data)
                 return JsonResponse({'statuses': response, 'statusCreationSuccess': True,'userFollowerStatuses':user_following_data})
             except Exception as e:
                 print(e)
@@ -115,3 +119,11 @@ class UserMemories(APIView):
                 except Exception as e:
                       
                       return JsonResponse({'memoryDeleted':False})
+                
+class UserActiveStatusView(APIView):
+      def get(self,request):
+            user_id = request.GET.get('user_id',None)
+            if user_id:
+                  user = CustomUser.objects.get(user_id= user_id)
+                  user_active_statuses = get_user_active_statues(user)
+                  return JsonResponse({'statuses':user_active_statuses})
